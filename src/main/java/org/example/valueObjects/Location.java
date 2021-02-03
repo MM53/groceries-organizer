@@ -11,4 +11,16 @@ public class Location {
         this.place = place;
         this.shelf = shelf;
     }
+
+    public String getRoom() {
+        return room;
+    }
+
+    public String getPlace() {
+        return place;
+    }
+
+    public String getShelf() {
+        return shelf;
+    }
 }

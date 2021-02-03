@@ -1,4 +1,4 @@
 package org.example.repositories;
 
-public class StoredItemRepository {
+public interface StoredItemRepository {
 }

@@ -1,6 +1,6 @@
 package org.example.units;
 
-public enum Weight implements Unit{
+public enum Weight implements Unit {
     GRAM(1, "g"),
     KILOGRAM(1000, "kg");
 

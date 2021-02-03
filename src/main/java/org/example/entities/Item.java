@@ -2,27 +2,29 @@ package org.example.entities;
 
 import org.example.units.UnitTypes;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class Item {
 
-    private final String primaryName;
-    private final List<String> alternativeNames;
-    private final UnitTypes unitType;
+    private String primaryName;
+    private List<ItemNameAlternative> alternativeNames;
+    private UnitTypes unitType;
 
-    public Item(String primaryName, List<String> alternativeNames, UnitTypes unitType) {
+    public Item(String primaryName, List<ItemNameAlternative> alternativeNames, UnitTypes unitType) {
         this.primaryName = primaryName;
         this.alternativeNames = alternativeNames;
         this.unitType = unitType;
     }
 
-    public void addAlternativeName(String name) {
+    public void addAlternativeName(ItemNameAlternative name) {
         alternativeNames.add(name);
     }
 
     public List<String> getAllNames() {
-        List<String> names = new ArrayList<>(alternativeNames);
+        List<String> names = alternativeNames.stream()
+                                             .map(ItemNameAlternative::getName)
+                                             .collect(Collectors.toList());
         names.add(0, primaryName);
         return names;
     }
@@ -31,7 +33,7 @@ public class Item {
         return primaryName;
     }
 
-    public List<String> getAlternativeNames() {
+    public List<ItemNameAlternative> getAlternativeNames() {
         return alternativeNames;
     }
 

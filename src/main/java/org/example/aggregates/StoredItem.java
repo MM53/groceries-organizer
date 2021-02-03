@@ -1,7 +1,8 @@
-package org.example.entities;
+package org.example.aggregates;
 
+import org.example.entities.Item;
+import org.example.entities.ItemLocation;
 import org.example.exceptions.UnitMismatchException;
-import org.example.repositories.StoredItemRepository;
 import org.example.services.AmountService;
 import org.example.units.Weight;
 import org.example.valueObjects.Amount;
@@ -15,17 +16,17 @@ public class StoredItem {
 
     private final UUID id;
     private final Item item;
-    private final List<StoredItemLocation> locations;
+    private final List<ItemLocation> locations;
 
     private final AmountService amountService = new AmountService();
 
-    public StoredItem(UUID id, Item item, List<StoredItemLocation> locations) {
+    public StoredItem(UUID id, Item item, List<ItemLocation> locations) {
         this.id = id;
         this.item = item;
         this.locations = locations;
     }
 
-    public void addLocation(StoredItemLocation itemLocation) throws UnitMismatchException {
+    public void addLocation(ItemLocation itemLocation) throws UnitMismatchException {
         if (item.getUnitType().equals(itemLocation.getAmount().getUnit().getType())) {
             locations.add(itemLocation);
         } else {
@@ -34,10 +35,10 @@ public class StoredItem {
     }
 
     public void addLocation(Location location, Amount amount) throws UnitMismatchException {
-        addLocation(new StoredItemLocation(location, amount));
+        addLocation(new ItemLocation(location, amount));
     }
 
-    public void removeLocation(StoredItemLocation itemLocation) {
+    public void removeLocation(ItemLocation itemLocation) {
         locations.remove(itemLocation);
     }
 
@@ -49,13 +50,13 @@ public class StoredItem {
         return item;
     }
 
-    public List<StoredItemLocation> getLocations() {
+    public List<ItemLocation> getLocations() {
         return locations;
     }
 
     public Amount getTotalAmount() throws RuntimeException {
         return locations.stream()
-                        .map(StoredItemLocation::getAmount)
+                        .map(ItemLocation::getAmount)
                         .reduce(amountService::addAmounts)
                         .orElse(new Amount(0, Weight.GRAM));
     }
@@ -64,9 +65,9 @@ public class StoredItem {
         return getTotalAmount().isMoreThan(requestedAmount);
     }
 
-    public void take(Amount requestedAmount, List<StoredItemLocation> locations) {
-        Iterator<StoredItemLocation> locationIterator = locations.iterator();
-        StoredItemLocation location;
+    public void take(Amount requestedAmount, List<ItemLocation> locations) {
+        Iterator<ItemLocation> locationIterator = locations.iterator();
+        ItemLocation location;
         Amount requestedAmountLeft = requestedAmount;
         do {
             location = locationIterator.next();

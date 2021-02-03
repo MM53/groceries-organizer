@@ -17,4 +17,8 @@ public class Pieces implements Unit {
         return "";
     }
 
+    @Override
+    public String name() {
+        return "PIECES";
+    }
 }
