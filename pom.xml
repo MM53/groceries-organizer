@@ -136,7 +136,8 @@
                         </goals>
                         <configuration>
                             <sourceDirs>
-                                <sourceDir>src/main/java</sourceDir>
+                                <source>src/main/kotlin</source>
+                                <source>src/main/java</source>
                             </sourceDirs>
                             <annotationProcessorPaths>
                                 <annotationProcessorPath>
@@ -158,6 +159,7 @@
                                 <source>target/generated-sources/annotations</source>
                                 <source>target/generated-sources/kaptKotlin</source>
                                 <source>src/main/java</source>
+                                <source>src/main/kotlin</source>
                                 <source>target/generated-sources/kapt/compile</source>
                             </sourceDirs>
                         </configuration>
@@ -174,6 +176,7 @@
                     <jvmTarget>15</jvmTarget>
                 </configuration>
             </plugin>
+
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
