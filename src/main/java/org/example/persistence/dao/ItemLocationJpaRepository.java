@@ -3,6 +3,7 @@ package org.example.persistence.dao;
 import org.example.entities.ItemLocation;
 import org.example.persistence.dao.jpa.ItemLocationEntityRepository;
 import org.example.persistence.entities.ItemLocationEntity;
+import org.example.persistence.entities.ItemLocationEntityConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -22,31 +23,21 @@ public class ItemLocationJpaRepository implements org.example.repositories.ItemL
     }
 
     @Override
-    public void save(ItemLocation location) {
-        ItemLocationEntity entity = new ItemLocationEntity();
-        entity.setId(location.getId());
-        entity.setLocation(location.getLocation());
-        entity.setAmount(location.getAmount());
-        jpaRepository.save(entity);
+    public void save(ItemLocation itemLocation) {
+        jpaRepository.save(ItemLocationEntityConverter.convertToEntity(itemLocation));
     }
 
     @Override
     public Optional<ItemLocation> findLocationById(UUID id) {
         return jpaRepository.findById(id)
-                            .map(this::convertFromEntity);
+                            .map(ItemLocationEntityConverter::convertFromEntity);
     }
 
     @Override
     public List<ItemLocation> getAll() {
         return jpaRepository.findAll()
                             .stream()
-                            .map(this::convertFromEntity)
+                            .map(ItemLocationEntityConverter::convertFromEntity)
                             .collect(Collectors.toList());
-    }
-
-    private ItemLocation convertFromEntity(ItemLocationEntity entity) {
-        return new ItemLocation(entity.getId(),
-                                entity.getLocation(),
-                                entity.getAmount());
     }
 }
