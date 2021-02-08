@@ -3,15 +3,16 @@ package org.example.entities;
 import org.example.units.UnitTypes;
 
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 public class Item {
 
     private String primaryName;
-    private List<ItemNameAlternative> alternativeNames;
+    private Set<ItemNameAlternative> alternativeNames;
     private UnitTypes unitType;
 
-    public Item(String primaryName, List<ItemNameAlternative> alternativeNames, UnitTypes unitType) {
+    public Item(String primaryName, Set<ItemNameAlternative> alternativeNames, UnitTypes unitType) {
         this.primaryName = primaryName;
         this.alternativeNames = alternativeNames;
         this.unitType = unitType;
@@ -33,7 +34,7 @@ public class Item {
         return primaryName;
     }
 
-    public List<ItemNameAlternative> getAlternativeNames() {
+    public Set<ItemNameAlternative> getAlternativeNames() {
         return alternativeNames;
     }
 

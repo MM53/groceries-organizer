@@ -2,6 +2,7 @@ package org.example.aggregates;
 
 import org.example.entities.Item;
 import org.example.entities.ItemLocation;
+import org.example.entities.MinimumAmount;
 import org.example.exceptions.UnitMismatchException;
 import org.example.services.AmountService;
 import org.example.units.Weight;
@@ -10,20 +11,23 @@ import org.example.valueObjects.Location;
 
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 public class StoredItem {
 
     private final UUID id;
     private final Item item;
-    private final List<ItemLocation> locations;
+    private final Set<ItemLocation> locations;
+    private final MinimumAmount minimumAmount;
 
     private final AmountService amountService = new AmountService();
 
-    public StoredItem(UUID id, Item item, List<ItemLocation> locations) {
+    public StoredItem(UUID id, Item item, Set<ItemLocation> locations, MinimumAmount minimumAmount) {
         this.id = id;
         this.item = item;
         this.locations = locations;
+        this.minimumAmount = minimumAmount;
     }
 
     public void addLocation(ItemLocation itemLocation) throws UnitMismatchException {
@@ -50,8 +54,12 @@ public class StoredItem {
         return item;
     }
 
-    public List<ItemLocation> getLocations() {
+    public Set<ItemLocation> getLocations() {
         return locations;
+    }
+
+    public MinimumAmount getMinimumAmount() {
+        return minimumAmount;
     }
 
     public Amount getTotalAmount() throws RuntimeException {
