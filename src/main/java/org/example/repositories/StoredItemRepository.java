@@ -1,6 +1,7 @@
 package org.example.repositories;
 
 import org.example.aggregates.StoredItem;
+import org.example.entities.Item;
 
 import java.util.List;
 import java.util.Optional;
@@ -10,6 +11,8 @@ public interface StoredItemRepository {
     public void save(StoredItem storedItem);
 
     public Optional<StoredItem> findById(UUID id);
+
+    public Optional<StoredItem> findByReferencedItem(Item item);
 
     public List<StoredItem> getAll();
 }

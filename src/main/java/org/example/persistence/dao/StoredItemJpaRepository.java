@@ -1,6 +1,7 @@
 package org.example.persistence.dao;
 
 import org.example.aggregates.StoredItem;
+import org.example.entities.Item;
 import org.example.entities.ItemLocation;
 import org.example.entities.MinimumAmount;
 import org.example.persistence.dao.jpa.ItemLocationEntityRepository;
@@ -34,7 +35,7 @@ public class StoredItemJpaRepository implements StoredItemRepository {
 
     @Override
     public void save(StoredItem storedItem) {
-        storedItem.getLocations().forEach(this::saveItemLocation);
+        storedItem.getItemLocations().forEach(this::saveItemLocation);
         saveMinimumAmount(storedItem.getMinimumAmount());
 
         storedItemEntityRepository.save(StoredItemEntityConverter.convertToEntity(storedItem));
@@ -51,6 +52,12 @@ public class StoredItemJpaRepository implements StoredItemRepository {
     @Override
     public Optional<StoredItem> findById(UUID id) {
         return storedItemEntityRepository.findById(id)
+                                         .map(StoredItemEntityConverter::convertFromEntity);
+    }
+
+    @Override
+    public Optional<StoredItem> findByReferencedItem(Item item) {
+        return storedItemEntityRepository.findByItem_PrimaryName(item.getPrimaryName())
                                          .map(StoredItemEntityConverter::convertFromEntity);
     }
 

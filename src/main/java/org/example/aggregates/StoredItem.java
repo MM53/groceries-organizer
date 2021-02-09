@@ -17,25 +17,29 @@ import java.util.UUID;
 public class StoredItem {
 
     private final UUID id;
-    private final Item item;
-    private final Set<ItemLocation> locations;
+    private final String itemReference;
+    private final Set<ItemLocation> itemLocations;
     private final MinimumAmount minimumAmount;
 
     private final AmountService amountService = new AmountService();
 
-    public StoredItem(UUID id, Item item, Set<ItemLocation> locations, MinimumAmount minimumAmount) {
+    public StoredItem(String itemReference, Set<ItemLocation> itemLocations, MinimumAmount minimumAmount) {
+        this(UUID.randomUUID(), itemReference, itemLocations, minimumAmount);
+    }
+
+    public StoredItem(UUID id, String itemReference, Set<ItemLocation> itemLocations, MinimumAmount minimumAmount) {
         this.id = id;
-        this.item = item;
-        this.locations = locations;
+        this.itemReference = itemReference;
+        this.itemLocations = itemLocations;
         this.minimumAmount = minimumAmount;
     }
 
     public void addLocation(ItemLocation itemLocation) throws UnitMismatchException {
-        if (item.getUnitType().equals(itemLocation.getAmount().getUnit().getType())) {
-            locations.add(itemLocation);
-        } else {
-            throw new UnitMismatchException(item.getUnitType(), itemLocation.getAmount().getUnit().getType());
-        }
+//        if (item.getUnitType().equals(itemLocation.getAmount().getUnit().getType())) {
+            itemLocations.add(itemLocation);
+//        } else {
+//            throw new UnitMismatchException(item.getUnitType(), itemLocation.getAmount().getUnit().getType());
+//        }
     }
 
     public void addLocation(Location location, Amount amount) throws UnitMismatchException {
@@ -43,19 +47,19 @@ public class StoredItem {
     }
 
     public void removeLocation(ItemLocation itemLocation) {
-        locations.remove(itemLocation);
+        itemLocations.remove(itemLocation);
     }
 
     public UUID getId() {
         return id;
     }
 
-    public Item getItem() {
-        return item;
+    public String getItemReference() {
+        return itemReference;
     }
 
-    public Set<ItemLocation> getLocations() {
-        return locations;
+    public Set<ItemLocation> getItemLocations() {
+        return itemLocations;
     }
 
     public MinimumAmount getMinimumAmount() {
@@ -63,10 +67,10 @@ public class StoredItem {
     }
 
     public Amount getTotalAmount() throws RuntimeException {
-        return locations.stream()
-                        .map(ItemLocation::getAmount)
-                        .reduce(amountService::addAmounts)
-                        .orElse(new Amount(0, Weight.GRAM));
+        return itemLocations.stream()
+                            .map(ItemLocation::getAmount)
+                            .reduce(amountService::addAmounts)
+                            .orElse(new Amount(0, Weight.GRAM));
     }
 
     public boolean hasEnough(Amount requestedAmount) {
