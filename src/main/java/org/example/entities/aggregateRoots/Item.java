@@ -3,7 +3,10 @@ package org.example.entities.aggregateRoots;
 import org.example.entities.ItemName;
 import org.example.units.UnitTypes;
 
-import java.util.*;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Objects;
+import java.util.Set;
 
 public class Item {
 
@@ -25,7 +28,13 @@ public class Item {
     }
 
     public void addAlternativeName(ItemName name) {
-        names.add(name);
+        if (name.getItemReference().equals(this.id)) {
+            names.add(name);
+        }
+    }
+
+    public void addAlternativeName(String name) {
+        names.add(new ItemName(name, this.id));
     }
 
     public String getId() {

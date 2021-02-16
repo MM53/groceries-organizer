@@ -1,12 +1,15 @@
 package org.example.persistence.jooq.dao;
 
-import org.example.entities.aggregateRoots.StoredItem;
-import org.example.entities.aggregateRoots.Item;
 import org.example.entities.ItemLocation;
 import org.example.entities.MinimumAmount;
+import org.example.entities.aggregateRoots.Item;
+import org.example.entities.aggregateRoots.StoredItem;
+import org.example.exceptions.UnitMismatchException;
 import org.example.persistence.jooq.configuration.JooqConnection;
-import org.example.persistence.jooq.mapper.ItemLocationMapper;
-import org.example.persistence.jooq.mapper.MinimumAmountMapper;
+import org.example.persistence.jooq.mapper.collectors.ListRecordCollector;
+import org.example.persistence.jooq.mapper.collectors.OptionalRecordCollector;
+import org.example.persistence.jooq.mapper.records.ItemLocationMapper;
+import org.example.persistence.jooq.mapper.records.MinimumAmountMapper;
 import org.example.repositories.StoredItemRepository;
 import org.jooq.DSLContext;
 import org.jooq.Record;
@@ -14,11 +17,10 @@ import org.jooq.Table;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 import static org.example.persistence.jooq.generated.Tables.*;
 
@@ -31,6 +33,11 @@ public class JooqStoredItemRepository implements StoredItemRepository {
                                                                  .on(STORED_ITEM.MINIMUM_AMOUNT_REFERENCE.eq(MINIMUM_AMOUNT.ID))
                                                                  .join(ITEM_LOCATION)
                                                                  .on(ITEM_LOCATION.STORED_ITEM_REFERENCE.eq(STORED_ITEM.ID));
+    private static final ListRecordCollector<StoredItem> LIST_RECORD_COLLECTOR = new ListRecordCollector<>(STORED_ITEM.ID,
+                                                                                                           JooqStoredItemRepository::storedItemFromRecord,
+                                                                                                           JooqStoredItemRepository::updateStoredItemFromRecord);
+    private static final OptionalRecordCollector<StoredItem> OPTIONAL_RECORD_COLLECTOR = new OptionalRecordCollector<>(JooqStoredItemRepository::storedItemFromRecord,
+                                                                                                                       JooqStoredItemRepository::updateStoredItemFromRecord);
 
     @Autowired
     public JooqStoredItemRepository(JooqConnection connection) {
@@ -57,46 +64,36 @@ public class JooqStoredItemRepository implements StoredItemRepository {
 
         return context.fetch(JOINED_TABLE, STORED_ITEM.ID.eq(id.toString()))
                       .stream()
-                      .collect(Collectors.groupingBy(record -> record.get(STORED_ITEM.ID)))
-                      .values()
-                      .stream()
-                      .map(JooqStoredItemRepository::mapFromJoinedRecord)
-                      .findAny();
+                      .collect(OPTIONAL_RECORD_COLLECTOR);
     }
 
     @Override
     public Optional<StoredItem> findByReferencedItem(Item item) {
         return context.fetch(JOINED_TABLE, STORED_ITEM.ITEM_REFERENCE.eq(item.getId()))
                       .stream()
-                      .collect(Collectors.groupingBy(record -> record.get(STORED_ITEM.ID)))
-                      .values()
-                      .stream()
-                      .map(JooqStoredItemRepository::mapFromJoinedRecord)
-                      .findAny();
+                      .collect(OPTIONAL_RECORD_COLLECTOR);
     }
 
     @Override
     public List<StoredItem> getAll() {
         return context.fetch(JOINED_TABLE)
                       .stream()
-                      .collect(Collectors.groupingBy(record -> record.get(STORED_ITEM.ID)))
-                      .values()
-                      .stream()
-                      .map(JooqStoredItemRepository::mapFromJoinedRecord)
-                      .collect(Collectors.toList());
+                      .collect(LIST_RECORD_COLLECTOR);
     }
 
-    private static StoredItem mapFromJoinedRecord(List<Record> records) {
-        final Record firstRecord = records.get(0);
+    private static StoredItem storedItemFromRecord(Record record) {
+        return new StoredItem(UUID.fromString(record.get(STORED_ITEM.ID)),
+                              record.get(STORED_ITEM.ITEM_REFERENCE),
+                              new HashSet<>(),
+                              record.into(MINIMUM_AMOUNT).into(MinimumAmount.class));
+    }
 
-        MinimumAmount minimumAmount = firstRecord.into(MINIMUM_AMOUNT).into(MinimumAmount.class);
-        Set<ItemLocation> itemLocations = records.stream()
-                                                 .map(record -> record.into(ITEM_LOCATION).into(ItemLocation.class))
-                                                 .collect(Collectors.toSet());
-
-        return new StoredItem(UUID.fromString(firstRecord.get(STORED_ITEM.ID)),
-                              firstRecord.get(STORED_ITEM.ITEM_REFERENCE),
-                              itemLocations,
-                              minimumAmount);
+    private static StoredItem updateStoredItemFromRecord(Record record, StoredItem storedItem) {
+        try {
+            storedItem.addItemLocation(record.into(ITEM_LOCATION).into(ItemLocation.class));
+        } catch (UnitMismatchException e) {
+            e.printStackTrace();
+        }
+        return storedItem;
     }
 }

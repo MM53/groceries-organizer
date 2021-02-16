@@ -3,8 +3,9 @@ package org.example.persistence.jooq.dao;
 import org.example.entities.ItemName;
 import org.example.entities.aggregateRoots.Item;
 import org.example.persistence.jooq.configuration.JooqConnection;
+import org.example.persistence.jooq.mapper.collectors.ListRecordCollector;
+import org.example.persistence.jooq.mapper.collectors.OptionalRecordCollector;
 import org.example.repositories.ItemRepository;
-import org.example.units.UnitTypes;
 import org.jooq.DSLContext;
 import org.jooq.Record;
 import org.jooq.Table;
@@ -13,7 +14,6 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import static org.example.persistence.jooq.generated.Tables.ITEM;
 import static org.example.persistence.jooq.generated.Tables.ITEM_NAME;
@@ -25,6 +25,12 @@ public class JooqItemRepository implements ItemRepository {
 
     private static final Table<Record> JOINED_TABLE = ITEM.leftJoin(ITEM_NAME)
                                                           .on(ITEM_NAME.ITEM_REFERENCE.eq(ITEM.ID));
+    private static final ListRecordCollector<Item> LIST_RECORD_COLLECTOR = new ListRecordCollector<>(ITEM.ID,
+                                                                                                     JooqItemRepository::itemFromRecord,
+                                                                                                     JooqItemRepository::updateItemFromRecord);
+    private static final OptionalRecordCollector<Item> OPTIONAL_RECORD_COLLECTOR = new OptionalRecordCollector<>(JooqItemRepository::itemFromRecord,
+                                                                                                                 JooqItemRepository::updateItemFromRecord);
+
 
     @Autowired
     public JooqItemRepository(JooqConnection connection) {
@@ -41,40 +47,28 @@ public class JooqItemRepository implements ItemRepository {
     public Optional<Item> findItemById(String id) {
         return context.fetch(JOINED_TABLE, ITEM.ID.eq(id))
                       .stream()
-                      .collect(Collectors.groupingBy(record -> record.getValue(ITEM.ID)))
-                      .values()
-                      .stream()
-                      .map(JooqItemRepository::mapFromJoinedRecord)
-                      .findAny();
+                      .collect(OPTIONAL_RECORD_COLLECTOR);
     }
 
     @Override
-    public Optional<Item> findItemForName(String name) {
-        return context.fetch(JOINED_TABLE, ITEM_NAME.NAME.eq(name))
-                      .stream()
-                      .collect(Collectors.groupingBy(record -> record.getValue(ITEM.ID)))
-                      .values()
-                      .stream()
-                      .map(JooqItemRepository::mapFromJoinedRecord)
-                      .findAny();
+    public Optional<Item> findItemByName(String name) {
+        return context.fetchOptional(ITEM_NAME, ITEM_NAME.NAME.eq(name))
+                      .flatMap(record -> findItemById(record.getItemReference()));
     }
 
     @Override
     public List<Item> getAll() {
         return context.fetch(JOINED_TABLE)
                       .stream()
-                      .collect(Collectors.groupingBy(record -> record.getValue(ITEM.ID)))
-                      .values()
-                      .stream()
-                      .map(JooqItemRepository::mapFromJoinedRecord)
-                      .collect(Collectors.toList());
+                      .collect(LIST_RECORD_COLLECTOR);
     }
 
-    private static Item mapFromJoinedRecord(List<Record> records) {
-        return new Item(records.get(0).getValue(ITEM.ID),
-                        records.stream()
-                               .filter(record -> record.getValue(ITEM_NAME.NAME) != null)
-                               .map(record -> record.into(ITEM_NAME).into(ItemName.class)).collect(Collectors.toSet()),
-                        UnitTypes.valueOf(records.get(0).getValue(ITEM.UNIT_TYPE)));
+    private static Item itemFromRecord(Record record) {
+        return record.into(ITEM).into(Item.class);
+    }
+
+    private static Item updateItemFromRecord(Record record, Item item) {
+        item.addAlternativeName(record.into(ITEM_NAME).into(ItemName.class));
+        return item;
     }
 }

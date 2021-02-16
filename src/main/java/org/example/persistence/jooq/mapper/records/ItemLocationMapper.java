@@ -1,4 +1,4 @@
-package org.example.persistence.jooq.mapper;
+package org.example.persistence.jooq.mapper.records;
 
 import org.example.entities.ItemLocation;
 import org.example.persistence.jooq.generated.tables.records.ItemLocationRecord;

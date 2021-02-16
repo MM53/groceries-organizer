@@ -2,8 +2,8 @@ package org.example.persistence.jooq.configuration;
 
 import org.example.entities.ItemLocation;
 import org.example.entities.MinimumAmount;
-import org.example.persistence.jooq.mapper.ItemLocationMapper;
-import org.example.persistence.jooq.mapper.MinimumAmountMapper;
+import org.example.persistence.jooq.mapper.records.ItemLocationMapper;
+import org.example.persistence.jooq.mapper.records.MinimumAmountMapper;
 import org.jooq.Record;
 import org.jooq.RecordMapper;
 import org.jooq.RecordMapperProvider;

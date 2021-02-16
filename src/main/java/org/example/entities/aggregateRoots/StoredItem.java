@@ -33,7 +33,7 @@ public class StoredItem {
         this.minimumAmount = minimumAmount;
     }
 
-    public void addLocation(ItemLocation itemLocation) throws UnitMismatchException {
+    public void addItemLocation(ItemLocation itemLocation) throws UnitMismatchException {
 //        if (item.getUnitType().equals(itemLocation.getAmount().getUnit().getType())) {
             itemLocations.add(itemLocation);
 //        } else {
@@ -41,8 +41,8 @@ public class StoredItem {
 //        }
     }
 
-    public void addLocation(Location location, Amount amount) throws UnitMismatchException {
-        addLocation(new ItemLocation(this.id, location, amount));
+    public void addItemLocation(Location location, Amount amount) throws UnitMismatchException {
+        addItemLocation(new ItemLocation(this.id, location, amount));
     }
 
     public void removeLocation(ItemLocation itemLocation) {

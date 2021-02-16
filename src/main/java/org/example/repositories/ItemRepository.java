@@ -10,7 +10,7 @@ public interface ItemRepository {
 
     public Optional<Item> findItemById(String id);
 
-    public Optional<Item> findItemForName(String name);
+    public Optional<Item> findItemByName(String name);
 
     public List<Item> getAll();
 }
