@@ -9,16 +9,17 @@ import java.util.UUID;
 public class ItemLocation {
 
     private UUID id;
+    private UUID storedItemReference;
     private Location location;
     private Amount amount;
 
-    public ItemLocation(Location location, Amount amount) {
-        this.location = location;
-        this.amount = amount;
+    public ItemLocation(UUID storedItemReference, Location location, Amount amount) {
+        this(UUID.randomUUID(), storedItemReference, location, amount);
     }
 
-    public ItemLocation(UUID id, Location location, Amount amount) {
+    public ItemLocation(UUID id, UUID storedItemReference, Location location, Amount amount) {
         this.id = id;
+        this.storedItemReference = storedItemReference;
         this.location = location;
         this.amount = amount;
     }
@@ -47,16 +48,24 @@ public class ItemLocation {
         this.amount = amount;
     }
 
+    public UUID getStoredItemReference() {
+        return storedItemReference;
+    }
+
+    public void setStoredItemReference(UUID storedItemReference) {
+        this.storedItemReference = storedItemReference;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (!(o instanceof ItemLocation)) return false;
         ItemLocation that = (ItemLocation) o;
-        return Objects.equals(id, that.id) && Objects.equals(location, that.location) && Objects.equals(amount, that.amount);
+        return Objects.equals(id, that.id) && Objects.equals(storedItemReference, that.storedItemReference) && Objects.equals(location, that.location) && Objects.equals(amount, that.amount);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, location, amount);
+        return Objects.hash(id, storedItemReference, location, amount);
     }
 }

@@ -1,6 +1,5 @@
 package org.example.aggregates;
 
-import org.example.entities.Item;
 import org.example.entities.ItemLocation;
 import org.example.entities.MinimumAmount;
 import org.example.exceptions.UnitMismatchException;
@@ -43,7 +42,7 @@ public class StoredItem {
     }
 
     public void addLocation(Location location, Amount amount) throws UnitMismatchException {
-        addLocation(new ItemLocation(location, amount));
+        addLocation(new ItemLocation(this.id, location, amount));
     }
 
     public void removeLocation(ItemLocation itemLocation) {

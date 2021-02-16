@@ -3,26 +3,27 @@ package org.example.entities;
 import org.example.valueObjects.Amount;
 
 import java.util.Objects;
+import java.util.UUID;
 
 public class MinimumAmount {
 
-    private String itemName;
+    private UUID id;
     private Amount amount;
 
     public MinimumAmount() {
     }
 
-    public MinimumAmount(String itemName, Amount amount) {
-        this.itemName = itemName;
+    public MinimumAmount(UUID id, Amount amount) {
+        this.id = id;
         this.amount = amount;
     }
 
-    public String getItemName() {
-        return itemName;
+    public UUID getId() {
+        return id;
     }
 
-    public void setItemName(String itemName) {
-        this.itemName = itemName;
+    public void setId(UUID id) {
+        this.id = id;
     }
 
     public Amount getAmount() {
@@ -36,13 +37,13 @@ public class MinimumAmount {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (!(o instanceof MinimumAmount)) return false;
         MinimumAmount that = (MinimumAmount) o;
-        return Objects.equals(itemName, that.itemName) && Objects.equals(amount, that.amount);
+        return Objects.equals(id, that.id) && Objects.equals(amount, that.amount);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(itemName, amount);
+        return Objects.hash(id, amount);
     }
 }
