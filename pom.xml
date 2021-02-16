@@ -9,10 +9,14 @@
     <version>1.0-SNAPSHOT</version>
 
     <properties>
-        <maven.compiler.source>15</maven.compiler.source>
-        <maven.compiler.target>15</maven.compiler.target>
         <org.springframework.version>5.3.3</org.springframework.version>
-        <kotlin.version>1.4.30</kotlin.version>
+        <org.springframework.data.version>2.4.3</org.springframework.data.version>
+        <com.h2database.version>1.4.200</com.h2database.version>
+        <org.junit.jupiter.version>5.7.0</org.junit.jupiter.version>
+        <org.jooq.version>3.14.7</org.jooq.version>
+
+        <maven.compiler.target>15</maven.compiler.target>
+        <maven.compiler.source>15</maven.compiler.source>
     </properties>
 
     <dependencies>
@@ -30,51 +34,57 @@
         <dependency>
             <groupId>org.springframework.data</groupId>
             <artifactId>spring-data-jpa</artifactId>
-            <version>2.4.3</version>
+            <version>${org.springframework.data.version}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.data</groupId>
             <artifactId>spring-data-commons</artifactId>
-            <version>2.4.3</version>
+            <version>${org.springframework.data.version}</version>
         </dependency>
 
         <dependency>
             <groupId>org.jooq</groupId>
             <artifactId>jooq</artifactId>
-            <version>3.14.7</version>
+            <version>${org.jooq.version}</version>
         </dependency>
         <dependency>
             <groupId>org.jooq</groupId>
             <artifactId>jooq-meta</artifactId>
-            <version>3.14.7</version>
+            <version>${org.jooq.version}</version>
         </dependency>
         <dependency>
             <groupId>org.jooq</groupId>
             <artifactId>jooq-codegen</artifactId>
-            <version>3.14.7</version>
+            <version>${org.jooq.version}</version>
         </dependency>
+
         <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
             <version>42.2.18</version>
         </dependency>
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <version>${com.h2database.version}</version>
+        </dependency>
 
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-api</artifactId>
-            <version>5.7.0</version>
+            <version>${org.junit.jupiter.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-engine</artifactId>
-            <version>5.7.0</version>
+            <version>${org.junit.jupiter.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-params</artifactId>
-            <version>5.7.0</version>
+            <version>${org.junit.jupiter.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -105,8 +115,47 @@
                         </goals>
                         <configuration>
                             <files>
-                                <file>src/main/resources/application.properties</file>
+                                <file>src/main/resources/schema-db.properties</file>
                             </files>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>sql-maven-plugin</artifactId>
+                <version>1.5</version>
+                <dependencies>
+                    <dependency>
+                        <groupId>com.h2database</groupId>
+                        <artifactId>h2</artifactId>
+                        <version>${com.h2database.version}</version>
+                    </dependency>
+                </dependencies>
+                <configuration>
+                    <driver>org.h2.Driver</driver>
+                    <!--suppress UnresolvedMavenProperty -->
+                    <url>${jdbc.url}</url>
+                    <!--suppress UnresolvedMavenProperty -->
+                    <username>${jdbc.user}</username>
+                    <!--suppress UnresolvedMavenProperty -->
+                    <password>${jdbc.password}</password>
+                    <settingsKey>sensibleKey</settingsKey>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>create-schema</id>
+                        <phase>initialize</phase>
+                        <goals>
+                            <goal>execute</goal>
+                        </goals>
+                        <configuration>
+                            <autocommit>true</autocommit>
+                            <srcFiles>
+                                <srcFile>src/main/resources/sql/item.sql</srcFile>
+                                <srcFile>src/main/resources/sql/storedItem.sql</srcFile>
+                            </srcFiles>
                         </configuration>
                     </execution>
                 </executions>
@@ -125,7 +174,7 @@
                         </goals>
                         <configuration>
                             <jdbc>
-                                <driver>org.postgresql.Driver</driver>
+                                <driver>org.h2.Driver</driver>
                                 <!--suppress UnresolvedMavenProperty -->
                                 <url>${jdbc.url}</url>
                                 <!--suppress UnresolvedMavenProperty -->
@@ -136,8 +185,8 @@
                             <generator>
                                 <name>org.jooq.codegen.JavaGenerator</name>
                                 <database>
-                                    <name>org.jooq.meta.postgres.PostgresDatabase</name>
-                                    <inputSchema>public</inputSchema>
+                                    <name>org.jooq.meta.h2.H2Database</name>
+                                    <inputSchema>PUBLIC</inputSchema>
                                     <includes>.*</includes>
                                 </database>
                                 <target>
