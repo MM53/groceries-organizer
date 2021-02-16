@@ -1,6 +1,6 @@
 package org.example.persistence.jooq.dao;
 
-import org.example.aggregates.StoredItem;
+import org.example.entities.aggregateRoots.StoredItem;
 import org.example.entities.Item;
 import org.example.entities.ItemLocation;
 import org.example.entities.MinimumAmount;

@@ -1,4 +1,4 @@
-package org.example.aggregates;
+package org.example.entities.aggregateRoots;
 
 import org.example.entities.ItemLocation;
 import org.example.entities.MinimumAmount;
