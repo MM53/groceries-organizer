@@ -13,15 +13,15 @@ public class ItemLocation {
     private Location location;
     private Amount amount;
 
-    public ItemLocation(UUID storedItemReference, Location location, Amount amount) {
-        this(UUID.randomUUID(), storedItemReference, location, amount);
-    }
-
     public ItemLocation(UUID id, UUID storedItemReference, Location location, Amount amount) {
         this.id = id;
         this.storedItemReference = storedItemReference;
         this.location = location;
         this.amount = amount;
+    }
+
+    public ItemLocation(UUID storedItemReference, Location location, Amount amount) {
+        this(UUID.randomUUID(), storedItemReference, location, amount);
     }
 
     public UUID getId() {
@@ -61,11 +61,11 @@ public class ItemLocation {
         if (this == o) return true;
         if (!(o instanceof ItemLocation)) return false;
         ItemLocation that = (ItemLocation) o;
-        return Objects.equals(id, that.id) && Objects.equals(storedItemReference, that.storedItemReference) && Objects.equals(location, that.location) && Objects.equals(amount, that.amount);
+        return id.equals(that.id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, storedItemReference, location, amount);
+        return Objects.hash(id);
     }
 }

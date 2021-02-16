@@ -39,11 +39,11 @@ public class MinimumAmount {
         if (this == o) return true;
         if (!(o instanceof MinimumAmount)) return false;
         MinimumAmount that = (MinimumAmount) o;
-        return Objects.equals(id, that.id) && Objects.equals(amount, that.amount);
+        return id.equals(that.id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, amount);
+        return Objects.hash(id);
     }
 }
