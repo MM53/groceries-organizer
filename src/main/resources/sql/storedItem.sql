@@ -17,7 +17,7 @@ CREATE TABLE stored_item
     item_reference           VARCHAR NOT NULL,
     minimum_amount_reference VARCHAR,
 
-    FOREIGN KEY (item_reference) REFERENCES item (primary_name),
+    FOREIGN KEY (item_reference) REFERENCES item (id),
     FOREIGN KEY (minimum_amount_reference) REFERENCES minimum_amount (id)
 );
 

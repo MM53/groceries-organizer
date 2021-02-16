@@ -1,6 +1,15 @@
--- USE groceries-organizer;
+DROP TABLE IF EXISTS item_name;
+DROP TABLE IF EXISTS item;
 
 CREATE TABLE item (
-    primary_name VARCHAR PRIMARY KEY,
-    unit_type VARCHAR NOT NULL
+                      id VARCHAR PRIMARY KEY,
+                      unit_type VARCHAR NOT NULL
+);
+
+CREATE TABLE item_name
+(
+    name           VARCHAR PRIMARY KEY,
+    item_reference VARCHAR NOT NULL,
+
+    foreign key (item_reference) references item (id)
 );

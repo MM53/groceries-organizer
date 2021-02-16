@@ -1,7 +1,7 @@
 package org.example.persistence.jooq.dao;
 
 import org.example.entities.aggregateRoots.StoredItem;
-import org.example.entities.Item;
+import org.example.entities.aggregateRoots.Item;
 import org.example.entities.ItemLocation;
 import org.example.entities.MinimumAmount;
 import org.example.persistence.jooq.configuration.JooqConnection;
@@ -66,7 +66,7 @@ public class JooqStoredItemRepository implements StoredItemRepository {
 
     @Override
     public Optional<StoredItem> findByReferencedItem(Item item) {
-        return context.fetch(JOINED_TABLE, STORED_ITEM.ITEM_REFERENCE.eq(item.getPrimaryName()))
+        return context.fetch(JOINED_TABLE, STORED_ITEM.ITEM_REFERENCE.eq(item.getId()))
                       .stream()
                       .collect(Collectors.groupingBy(record -> record.get(STORED_ITEM.ID)))
                       .values()
