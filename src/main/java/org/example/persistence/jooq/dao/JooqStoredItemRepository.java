@@ -89,11 +89,9 @@ public class JooqStoredItemRepository implements StoredItemRepository {
     private static StoredItem mapFromJoinedRecord(List<Record> records) {
         final Record firstRecord = records.get(0);
 
-        MinimumAmount minimumAmount = MinimumAmountMapper.extractRecord(firstRecord)
-                                                         .into(MinimumAmount.class);
+        MinimumAmount minimumAmount = firstRecord.into(MINIMUM_AMOUNT).into(MinimumAmount.class);
         Set<ItemLocation> itemLocations = records.stream()
-                                                 .map(record -> ItemLocationMapper.extractRecord(record)
-                                                                                  .into(ItemLocation.class))
+                                                 .map(record -> record.into(ITEM_LOCATION).into(ItemLocation.class))
                                                  .collect(Collectors.toSet());
 
         return new StoredItem(UUID.fromString(firstRecord.get(STORED_ITEM.ID)),

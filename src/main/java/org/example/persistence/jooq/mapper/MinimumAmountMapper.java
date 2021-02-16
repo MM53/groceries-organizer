@@ -7,22 +7,11 @@ import org.example.units.UnitTypes;
 import org.example.units.Volume;
 import org.example.units.Weight;
 import org.example.valueObjects.Amount;
-import org.jooq.Record;
 import org.jooq.RecordMapper;
 
 import java.util.UUID;
 
-import static org.example.persistence.jooq.generated.Tables.MINIMUM_AMOUNT;
-
 public class MinimumAmountMapper {
-    public static MinimumAmountRecord extractRecord(Record record) {
-        return record.into(MINIMUM_AMOUNT.ID,
-                           MINIMUM_AMOUNT.AMOUNT_VALUE,
-                           MINIMUM_AMOUNT.AMOUNT_UNIT,
-                           MINIMUM_AMOUNT.AMOUNT_UNIT_TYPE)
-                .into(MinimumAmountRecord.class);
-    }
-
     public static RecordMapper<MinimumAmountRecord, MinimumAmount> createRecordMapper() {
         return record -> {
             Amount amount = switch (UnitTypes.valueOf(record.getAmountUnitType())) {
