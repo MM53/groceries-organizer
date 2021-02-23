@@ -1,6 +1,8 @@
 package org.example.persistence.jooq.configuration;
 
-import org.jooq.*;
+import org.jooq.Configuration;
+import org.jooq.DSLContext;
+import org.jooq.SQLDialect;
 import org.jooq.impl.DSL;
 import org.jooq.impl.DefaultConfiguration;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +15,7 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 @Component
-@PropertySource("classpath:application.properties")
+@PropertySource("classpath:postgres-db.properties")
 public class PostgresConnection implements JooqConnection {
 
     private DSLContext context;

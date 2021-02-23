@@ -1,5 +1,7 @@
 .idea
 *.iml
 
+**/postgres-db.properties
+
 out
 target
