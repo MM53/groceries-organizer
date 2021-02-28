@@ -9,10 +9,12 @@ import org.example.units.UnitType;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
+import org.springframework.stereotype.Service;
 
+@Service
 public class ItemUtilService implements ApplicationContextAware {
 
-    private ItemRepository itemRepository;
+    private static ItemRepository itemRepository;
 
     public ItemUtilService() {
     }
