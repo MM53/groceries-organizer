@@ -22,26 +22,26 @@ public class ItemManager {
         itemRepository.save(item);
     }
 
-    public Item viewItem(String itemName) throws ItemNotFoundException {
+    public Item viewItem(String itemName) {
         return itemRepository.findItemByName(itemName)
                              .orElseThrow(() -> new ItemNotFoundException(itemName));
     }
 
-    public void addName(String itemName, String name) throws ItemNotFoundException {
+    public void addName(String itemName, String name) {
         Item item = itemRepository.findItemByName(itemName)
                                   .orElseThrow(() -> new ItemNotFoundException(itemName));
         item.addAlternativeName(name);
         itemRepository.save(item);
     }
 
-    public void removeName(String itemName, String name) throws ItemNotFoundException {
+    public void removeName(String itemName, String name) {
         Item item = itemRepository.findItemByName(itemName)
                                   .orElseThrow(() -> new ItemNotFoundException(itemName));
         item.removeAlternativeName(name);
         itemRepository.save(item);
     }
 
-    public void deleteItem(String itemName) throws ItemNotFoundException {
+    public void deleteItem(String itemName) {
         Item item = itemRepository.findItemByName(itemName)
                                   .orElseThrow(() -> new ItemNotFoundException(itemName));
         itemRepository.delete(item);
