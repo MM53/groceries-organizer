@@ -24,7 +24,7 @@ public class StoredItem {
     private final AmountService amountService = new AmountService();
 
     public StoredItem(String itemReference, Amount minimumAmount) {
-        this(UUID.randomUUID(), itemReference, new HashSet<>(), new MinimumAmount(minimumAmount));
+        this(UUID.randomUUID(), itemReference, new HashSet<>(), minimumAmount != null ? new MinimumAmount(minimumAmount) : null);
     }
 
     public StoredItem(UUID id, String itemReference, Set<ItemLocation> itemLocations, MinimumAmount minimumAmount) {

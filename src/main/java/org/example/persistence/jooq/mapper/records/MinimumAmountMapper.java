@@ -14,6 +14,9 @@ import java.util.UUID;
 public class MinimumAmountMapper {
     public static RecordMapper<MinimumAmountRecord, MinimumAmount> createRecordMapper() {
         return record -> {
+            if (record.getId() == null) {
+                return null;
+            }
             Amount amount = switch (UnitType.valueOf(record.getAmountUnitType())) {
                 case PIECES -> new Amount(record.getAmountValue(), Pieces.PIECES);
                 case VOLUME -> new Amount(record.getAmountValue(), Volume.valueOf(record.getAmountUnit()));

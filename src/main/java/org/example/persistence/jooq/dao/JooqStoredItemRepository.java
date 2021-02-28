@@ -7,6 +7,7 @@ import org.example.entities.aggregateRoots.StoredItem;
 import org.example.exceptions.ItemNotFoundException;
 import org.example.exceptions.UnitMismatchException;
 import org.example.persistence.jooq.configuration.JooqConnection;
+import org.example.persistence.jooq.generated.tables.records.StoredItemRecord;
 import org.example.persistence.jooq.mapper.collectors.ListRecordCollector;
 import org.example.persistence.jooq.mapper.collectors.OptionalRecordCollector;
 import org.example.persistence.jooq.mapper.records.ItemLocationMapper;
@@ -30,7 +31,7 @@ public class JooqStoredItemRepository implements StoredItemRepository {
 
     private final DSLContext context;
 
-    private static final Table<Record> JOINED_TABLE = STORED_ITEM.join(MINIMUM_AMOUNT)
+    private static final Table<Record> JOINED_TABLE = STORED_ITEM.leftJoin(MINIMUM_AMOUNT)
                                                                  .on(STORED_ITEM.MINIMUM_AMOUNT_REFERENCE.eq(MINIMUM_AMOUNT.ID))
                                                                  .join(ITEM_LOCATION)
                                                                  .on(ITEM_LOCATION.STORED_ITEM_REFERENCE.eq(STORED_ITEM.ID));
@@ -47,15 +48,16 @@ public class JooqStoredItemRepository implements StoredItemRepository {
 
     @Override
     public void save(StoredItem storedItem) {
+        StoredItemRecord storedItemRecord = context.newRecord(STORED_ITEM);
+        storedItemRecord.setId(storedItem.getId().toString());
+        storedItemRecord.setItemReference(storedItem.getItemReference());
+
         if (storedItem.getMinimumAmount() != null) {
             context.newRecord(MINIMUM_AMOUNT, MinimumAmountMapper.unmap(storedItem.getMinimumAmount())).merge();
+            storedItemRecord.setMinimumAmountReference(storedItem.getMinimumAmount().getId().toString());
         }
 
-        context.newRecord(STORED_ITEM)
-               .values(storedItem.getId().toString(),
-                       storedItem.getItemReference(),
-                       storedItem.getMinimumAmount().getId().toString())
-               .merge();
+        storedItemRecord.merge();
 
         storedItem.getItemLocations()
                   .forEach(itemLocation -> context.newRecord(ITEM_LOCATION, ItemLocationMapper.unmap(itemLocation))
