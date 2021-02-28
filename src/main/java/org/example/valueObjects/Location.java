@@ -2,25 +2,13 @@ package org.example.valueObjects;
 
 public class Location {
 
-    private final String room;
-    private final String place;
-    private final String shelf;
+    private final String location;
 
-    public Location(String room, String place, String shelf) {
-        this.room = room;
-        this.place = place;
-        this.shelf = shelf;
+    public Location(String location) {
+        this.location = location;
     }
 
-    public String getRoom() {
-        return room;
-    }
-
-    public String getPlace() {
-        return place;
-    }
-
-    public String getShelf() {
-        return shelf;
+    public String getLocation() {
+        return location;
     }
 }

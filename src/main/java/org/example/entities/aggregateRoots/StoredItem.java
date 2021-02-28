@@ -49,7 +49,11 @@ public class StoredItem {
 
     public void addItemLocation(ItemLocation itemLocation) {
         itemUtilService.validate(itemReference, itemLocation.getAmount().getUnit().getType());
-        itemLocations.add(itemLocation);
+        itemLocations.stream()
+                     .filter(location -> location.getLocation().equals(itemLocation.getLocation()))
+                     .findAny()
+                     .ifPresentOrElse(location -> location.setAmount(location.getAmount().add(itemLocation.getAmount())),
+                                      () -> itemLocations.add(itemLocation));
     }
 
     public void addItemLocation(Location location, Amount amount) {

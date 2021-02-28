@@ -22,7 +22,7 @@ public class ItemLocationMapper {
             };
 
             return new ItemLocation(UUID.fromString(record.getId()),
-                                    new Location(record.getLocationRoom(), record.getLocationPlace(), record.getLocationShelf()),
+                                    new Location(record.getLocation()),
                                     amount);
         };
     }
@@ -30,9 +30,7 @@ public class ItemLocationMapper {
     public static ItemLocationRecord unmap(ItemLocation itemLocation) {
         return new ItemLocationRecord(itemLocation.getId().toString(),
                                       itemLocation.getStoredItemReference().toString(),
-                                      itemLocation.getLocation().getRoom(),
-                                      itemLocation.getLocation().getPlace(),
-                                      itemLocation.getLocation().getShelf(),
+                                      itemLocation.getLocation().getLocation(),
                                       itemLocation.getAmount().getValue(),
                                       itemLocation.getAmount().getUnit().name(),
                                       itemLocation.getAmount().getUnit().getType().toString());

@@ -26,9 +26,7 @@ CREATE TABLE item_location
     id                    VARCHAR NOT NULL PRIMARY KEY,
     stored_item_reference VARCHAR NOT NULL,
 
-    location_room         VARCHAR,
-    location_place        VARCHAR,
-    location_shelf        VARCHAR,
+    location              VARCHAR,
 
     amount_value          FLOAT   NOT NULL,
     amount_unit           VARCHAR NOT NULL,
