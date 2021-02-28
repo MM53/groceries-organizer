@@ -2,14 +2,12 @@ package org.example.entities.aggregateRoots;
 
 import org.example.entities.ItemLocation;
 import org.example.entities.MinimumAmount;
-import org.example.exceptions.UnitMismatchException;
 import org.example.services.AmountService;
-import org.example.units.Weight;
+import org.example.services.ItemUnitService;
 import org.example.valueObjects.Amount;
 import org.example.valueObjects.Location;
 
-import java.util.Iterator;
-import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
 
@@ -18,7 +16,9 @@ public class StoredItem {
     private final UUID id;
     private final String itemReference;
     private final Set<ItemLocation> itemLocations;
-    private final MinimumAmount minimumAmount;
+    private MinimumAmount minimumAmount;
+
+    private final ItemUnitService itemUnitService = new ItemUnitService();
 
     private final AmountService amountService = new AmountService();
 
@@ -33,22 +33,6 @@ public class StoredItem {
         this.minimumAmount = minimumAmount;
     }
 
-    public void addItemLocation(ItemLocation itemLocation) throws UnitMismatchException {
-//        if (item.getUnitType().equals(itemLocation.getAmount().getUnit().getType())) {
-            itemLocations.add(itemLocation);
-//        } else {
-//            throw new UnitMismatchException(item.getUnitType(), itemLocation.getAmount().getUnit().getType());
-//        }
-    }
-
-    public void addItemLocation(Location location, Amount amount) throws UnitMismatchException {
-        addItemLocation(new ItemLocation(this.id, location, amount));
-    }
-
-    public void removeLocation(ItemLocation itemLocation) {
-        itemLocations.remove(itemLocation);
-    }
-
     public UUID getId() {
         return id;
     }
@@ -61,38 +45,60 @@ public class StoredItem {
         return itemLocations;
     }
 
+    public void addItemLocation(ItemLocation itemLocation) {
+        itemUnitService.validate(itemReference, itemLocation.getAmount().getUnit().getType());
+        itemLocations.add(itemLocation);
+    }
+
+    public void addItemLocation(Location location, Amount amount) {
+        addItemLocation(new ItemLocation(this.id, location, amount));
+    }
+
+    public void removeLocation(ItemLocation itemLocation) {
+        itemLocations.remove(itemLocation);
+    }
+
     public MinimumAmount getMinimumAmount() {
         return minimumAmount;
+    }
+
+    public void setMinimumAmount(MinimumAmount minimumAmount) {
+        itemUnitService.validate(itemReference, minimumAmount.getAmount().getUnit().getType());
+        this.minimumAmount = minimumAmount;
     }
 
     public Amount getTotalAmount() throws RuntimeException {
         return itemLocations.stream()
                             .map(ItemLocation::getAmount)
-                            .reduce(amountService::addAmounts)
-                            .orElse(new Amount(0, Weight.GRAM));
+                            .reduce(Amount::add)
+                            .orElse(new Amount(0, itemUnitService.getUnit(itemReference)));
     }
 
     public boolean hasEnough(Amount requestedAmount) {
         return getTotalAmount().isMoreThan(requestedAmount);
     }
 
-    public void take(Amount requestedAmount, List<ItemLocation> locations) {
-        Iterator<ItemLocation> locationIterator = locations.iterator();
-        ItemLocation location;
-        Amount requestedAmountLeft = requestedAmount;
-        do {
-            location = locationIterator.next();
-            if (requestedAmountLeft.isMoreThan(location.getAmount())) {
-                requestedAmountLeft = amountService.subAmounts(requestedAmount, location.getAmount());
-                removeLocation(location);
-            } else {
-                location.setAmount(amountService.subAmounts(location.getAmount(), requestedAmountLeft));
-                break;
-            }
-        } while (locationIterator.hasNext());
-
-        if (requestedAmountLeft.getValue() > 0) {
-            System.out.println("not enough");
+    public Amount take(Amount requestedAmount, ItemLocation itemLocation) {
+        itemUnitService.validate(itemReference, requestedAmount.getUnit().getType());
+        if (requestedAmount.isMoreThan(itemLocation.getAmount())) {
+            removeLocation(itemLocation);
+            return requestedAmount.sub(itemLocation.getAmount());
+        } else {
+            itemLocation.setAmount(itemLocation.getAmount().sub(requestedAmount));
+            return new Amount(0, requestedAmount.getUnit());
         }
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof StoredItem)) return false;
+        StoredItem that = (StoredItem) o;
+        return id.equals(that.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }

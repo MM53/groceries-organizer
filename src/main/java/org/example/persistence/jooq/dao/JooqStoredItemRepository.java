@@ -4,6 +4,7 @@ import org.example.entities.ItemLocation;
 import org.example.entities.MinimumAmount;
 import org.example.entities.aggregateRoots.Item;
 import org.example.entities.aggregateRoots.StoredItem;
+import org.example.exceptions.ItemNotFoundException;
 import org.example.exceptions.UnitMismatchException;
 import org.example.persistence.jooq.configuration.JooqConnection;
 import org.example.persistence.jooq.mapper.collectors.ListRecordCollector;
@@ -91,8 +92,8 @@ public class JooqStoredItemRepository implements StoredItemRepository {
     private static StoredItem updateStoredItemFromRecord(Record record, StoredItem storedItem) {
         try {
             storedItem.addItemLocation(record.into(ITEM_LOCATION).into(ItemLocation.class));
-        } catch (UnitMismatchException e) {
-            e.printStackTrace();
+        } catch (UnitMismatchException | ItemNotFoundException e) {
+            System.out.println("Error while loading item locations: " + e.getMessage());
         }
         return storedItem;
     }
