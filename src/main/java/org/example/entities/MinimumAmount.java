@@ -13,6 +13,10 @@ public class MinimumAmount {
     public MinimumAmount() {
     }
 
+    public MinimumAmount(Amount amount) {
+        this(UUID.randomUUID(), amount);
+    }
+
     public MinimumAmount(UUID id, Amount amount) {
         this.id = id;
         this.amount = amount;

@@ -47,7 +47,9 @@ public class JooqStoredItemRepository implements StoredItemRepository {
 
     @Override
     public void save(StoredItem storedItem) {
-        context.newRecord(MINIMUM_AMOUNT, MinimumAmountMapper.unmap(storedItem.getMinimumAmount())).merge();
+        if (storedItem.getMinimumAmount() != null) {
+            context.newRecord(MINIMUM_AMOUNT, MinimumAmountMapper.unmap(storedItem.getMinimumAmount())).merge();
+        }
 
         context.newRecord(STORED_ITEM)
                .values(storedItem.getId().toString(),
@@ -80,6 +82,11 @@ public class JooqStoredItemRepository implements StoredItemRepository {
         return context.fetch(JOINED_TABLE)
                       .stream()
                       .collect(LIST_RECORD_COLLECTOR);
+    }
+
+    @Override
+    public void delete(StoredItem storedItem) {
+        context.newRecord(STORED_ITEM, storedItem).delete();
     }
 
     private static StoredItem storedItemFromRecord(Record record) {

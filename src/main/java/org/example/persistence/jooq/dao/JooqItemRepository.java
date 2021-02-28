@@ -3,7 +3,6 @@ package org.example.persistence.jooq.dao;
 import org.example.entities.ItemName;
 import org.example.entities.aggregateRoots.Item;
 import org.example.persistence.jooq.configuration.JooqConnection;
-import org.example.persistence.jooq.generated.tables.records.ItemRecord;
 import org.example.persistence.jooq.mapper.collectors.ListRecordCollector;
 import org.example.persistence.jooq.mapper.collectors.OptionalRecordCollector;
 import org.example.repositories.ItemRepository;
@@ -74,9 +73,7 @@ public class JooqItemRepository implements ItemRepository {
 
     @Override
     public void delete(Item item) {
-        ItemRecord record = context.newRecord(ITEM, item);
-//        record.refresh();
-        record.delete();
+        context.newRecord(ITEM, item).delete();
     }
 
     private static Item itemFromRecord(Record record) {

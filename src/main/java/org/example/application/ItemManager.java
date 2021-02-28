@@ -7,6 +7,9 @@ import org.example.units.UnitType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 public class ItemManager {
 
@@ -20,6 +23,13 @@ public class ItemManager {
     public void createItem(String name, UnitType unitType) {
         Item item = new Item(name, unitType);
         itemRepository.save(item);
+    }
+
+    public List<String> listItems() {
+        return itemRepository.getAll()
+                             .stream()
+                             .map(Item::getId)
+                             .collect(Collectors.toList());
     }
 
     public Item viewItem(String itemName) {

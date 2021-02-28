@@ -1,0 +1,68 @@
+package org.example.application;
+
+import org.example.entities.ItemLocation;
+import org.example.entities.aggregateRoots.Item;
+import org.example.entities.aggregateRoots.StoredItem;
+import org.example.exceptions.StoredItemNotFoundException;
+import org.example.repositories.StoredItemRepository;
+import org.example.valueObjects.Amount;
+import org.example.valueObjects.Location;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+@Service
+public class ItemStorage {
+
+    private final StoredItemRepository storedItemRepository;
+    private final ItemManager itemManager;
+
+    @Autowired
+    public ItemStorage(StoredItemRepository storedItemRepository, ItemManager itemManager) {
+        this.storedItemRepository = storedItemRepository;
+        this.itemManager = itemManager;
+    }
+
+    public void createAndStoreItem(String itemName, Location location, Amount amount) {
+        itemManager.createItem(itemName, amount.getUnit().getType());
+        storeItem(itemName, location, amount);
+    }
+
+    public void storeItem(String itemName, Location location, Amount amount) {
+        StoredItem storedItem = storedItemRepository.findByReferencedItem(new Item(itemName, null))
+                                                    .orElse(new StoredItem(itemName, null));
+        storedItem.addItemLocation(location, amount);
+        storedItemRepository.save(storedItem);
+    }
+
+    public void setMinimumAmount(String itemName, Amount amount) {
+        StoredItem storedItem = storedItemRepository.findByReferencedItem(new Item(itemName, null))
+                                                    .map(item -> {
+                                                        item.setMinimumAmount(amount);
+                                                        return item;
+                                                    })
+                                                    .orElse(new StoredItem(itemName, amount));
+        storedItemRepository.save(storedItem);
+    }
+
+    public List<ItemLocation> listItemLocations(String itemName) {
+        return new ArrayList<>(storedItemRepository.findByReferencedItem(new Item(itemName, null))
+                                                   .map(StoredItem::getItemLocations)
+                                                   .orElse(Collections.emptySet()));
+    }
+
+    public Amount takeAmount(String itemName, ItemLocation itemLocation, Amount amount) {
+        return storedItemRepository.findByReferencedItem(new Item(itemName, null))
+                                   .map(storedItem -> storedItem.take(amount, itemLocation))
+                                   .orElse(amount);
+    }
+
+    public void deleteStoredItem(String itemName) {
+        StoredItem storedItem = storedItemRepository.findByReferencedItem(new Item(itemName, null))
+                                                    .orElseThrow(() -> new StoredItemNotFoundException(itemName));
+        storedItemRepository.delete(storedItem);
+    }
+}

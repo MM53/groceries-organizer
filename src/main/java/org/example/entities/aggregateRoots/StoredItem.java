@@ -3,10 +3,11 @@ package org.example.entities.aggregateRoots;
 import org.example.entities.ItemLocation;
 import org.example.entities.MinimumAmount;
 import org.example.services.AmountService;
-import org.example.services.ItemUnitService;
+import org.example.services.ItemUtilService;
 import org.example.valueObjects.Amount;
 import org.example.valueObjects.Location;
 
+import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
@@ -18,15 +19,16 @@ public class StoredItem {
     private final Set<ItemLocation> itemLocations;
     private MinimumAmount minimumAmount;
 
-    private final ItemUnitService itemUnitService = new ItemUnitService();
+    private final ItemUtilService itemUtilService = new ItemUtilService();
 
     private final AmountService amountService = new AmountService();
 
-    public StoredItem(String itemReference, Set<ItemLocation> itemLocations, MinimumAmount minimumAmount) {
-        this(UUID.randomUUID(), itemReference, itemLocations, minimumAmount);
+    public StoredItem(String itemReference, Amount minimumAmount) {
+        this(UUID.randomUUID(), itemReference, new HashSet<>(), new MinimumAmount(minimumAmount));
     }
 
     public StoredItem(UUID id, String itemReference, Set<ItemLocation> itemLocations, MinimumAmount minimumAmount) {
+        itemUtilService.validateExistence(itemReference);
         this.id = id;
         this.itemReference = itemReference;
         this.itemLocations = itemLocations;
@@ -46,7 +48,7 @@ public class StoredItem {
     }
 
     public void addItemLocation(ItemLocation itemLocation) {
-        itemUnitService.validate(itemReference, itemLocation.getAmount().getUnit().getType());
+        itemUtilService.validate(itemReference, itemLocation.getAmount().getUnit().getType());
         itemLocations.add(itemLocation);
     }
 
@@ -63,15 +65,19 @@ public class StoredItem {
     }
 
     public void setMinimumAmount(MinimumAmount minimumAmount) {
-        itemUnitService.validate(itemReference, minimumAmount.getAmount().getUnit().getType());
+        itemUtilService.validate(itemReference, minimumAmount.getAmount().getUnit().getType());
         this.minimumAmount = minimumAmount;
+    }
+
+    public void setMinimumAmount(Amount amount) {
+        setMinimumAmount(new MinimumAmount(amount));
     }
 
     public Amount getTotalAmount() throws RuntimeException {
         return itemLocations.stream()
                             .map(ItemLocation::getAmount)
                             .reduce(Amount::add)
-                            .orElse(new Amount(0, itemUnitService.getUnit(itemReference)));
+                            .orElse(new Amount(0, itemUtilService.getUnit(itemReference)));
     }
 
     public boolean hasEnough(Amount requestedAmount) {
@@ -79,7 +85,7 @@ public class StoredItem {
     }
 
     public Amount take(Amount requestedAmount, ItemLocation itemLocation) {
-        itemUnitService.validate(itemReference, requestedAmount.getUnit().getType());
+        itemUtilService.validate(itemReference, requestedAmount.getUnit().getType());
         if (requestedAmount.isMoreThan(itemLocation.getAmount())) {
             removeLocation(itemLocation);
             return requestedAmount.sub(itemLocation.getAmount());

@@ -10,11 +10,11 @@ import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 
-public class ItemUnitService implements ApplicationContextAware {
+public class ItemUtilService implements ApplicationContextAware {
 
     private ItemRepository itemRepository;
 
-    public ItemUnitService() {
+    public ItemUtilService() {
     }
 
     @Override
@@ -29,6 +29,11 @@ public class ItemUnitService implements ApplicationContextAware {
         if (!actual.equals(expected)) {
             throw new UnitMismatchException(expected, actual);
         }
+    }
+
+    public void validateExistence(String itemReference) {
+        itemRepository.findItemById(itemReference)
+                      .orElseThrow(() -> new ItemNotFoundException(itemReference));
     }
 
     public Unit getUnit(String itemReference) {
