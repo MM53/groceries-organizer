@@ -186,7 +186,7 @@
                                 <name>org.jooq.codegen.JavaGenerator</name>
                                 <database>
                                     <name>org.jooq.meta.h2.H2Database</name>
-                                    <inputSchema>PUBLIC</inputSchema>
+                                    <inputSchema>public</inputSchema>
                                     <includes>.*</includes>
                                 </database>
                                 <target>
