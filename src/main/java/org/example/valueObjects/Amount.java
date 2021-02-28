@@ -29,6 +29,20 @@ public final class Amount {
         return value > amount.getValueInUnit(unit);
     }
 
+    public Amount add(Amount addend) {
+        if (!unit.getType().equals(addend.getUnit().getType())) {
+            throw new RuntimeException("");
+        }
+        return new Amount(value + addend.getValueInUnit(unit), unit);
+    }
+
+    public Amount sub(Amount subtrahend) {
+        if (!unit.getType().equals(subtrahend.getUnit().getType())) {
+            throw new RuntimeException("");
+        }
+        return new Amount(value - subtrahend.getValueInUnit(unit), unit);
+    }
+
     @Override
     public String toString() {
         DecimalFormat decimalFormat = new DecimalFormat("#.##");

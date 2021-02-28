@@ -13,4 +13,6 @@ public interface ItemRepository {
     public Optional<Item> findItemByName(String name);
 
     public List<Item> getAll();
+
+    public void delete(Item item);
 }

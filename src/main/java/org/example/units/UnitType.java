@@ -1,13 +1,13 @@
 package org.example.units;
 
-public enum UnitTypes {
+public enum UnitType {
     WEIGHT(Weight.GRAM),
     VOLUME(Volume.LITER),
     PIECES(Pieces.PIECES);
 
     private final Unit base;
 
-    UnitTypes(Unit base) {
+    UnitType(Unit base) {
         this.base = base;
     }
 

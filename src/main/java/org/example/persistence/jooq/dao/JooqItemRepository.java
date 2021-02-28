@@ -3,6 +3,7 @@ package org.example.persistence.jooq.dao;
 import org.example.entities.ItemName;
 import org.example.entities.aggregateRoots.Item;
 import org.example.persistence.jooq.configuration.JooqConnection;
+import org.example.persistence.jooq.generated.tables.records.ItemRecord;
 import org.example.persistence.jooq.mapper.collectors.ListRecordCollector;
 import org.example.persistence.jooq.mapper.collectors.OptionalRecordCollector;
 import org.example.repositories.ItemRepository;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static org.example.persistence.jooq.generated.Tables.ITEM;
 import static org.example.persistence.jooq.generated.Tables.ITEM_NAME;
@@ -40,7 +42,14 @@ public class JooqItemRepository implements ItemRepository {
     @Override
     public void save(Item item) {
         context.newRecord(ITEM, item).merge();
+
         item.getNames().forEach(itemName -> context.newRecord(ITEM_NAME, itemName).merge());
+        context.delete(ITEM_NAME)
+               .where(ITEM_NAME.ITEM_REFERENCE.eq(item.getId())
+                                              .and(ITEM_NAME.NAME.notIn(item.getNames()
+                                                                            .stream()
+                                                                            .map(ItemName::getName)
+                                                                            .collect(Collectors.toList()))));
     }
 
     @Override
@@ -61,6 +70,13 @@ public class JooqItemRepository implements ItemRepository {
         return context.fetch(JOINED_TABLE)
                       .stream()
                       .collect(LIST_RECORD_COLLECTOR);
+    }
+
+    @Override
+    public void delete(Item item) {
+        ItemRecord record = context.newRecord(ITEM, item);
+//        record.refresh();
+        record.delete();
     }
 
     private static Item itemFromRecord(Record record) {

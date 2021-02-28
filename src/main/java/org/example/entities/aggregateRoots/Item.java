@@ -1,7 +1,7 @@
 package org.example.entities.aggregateRoots;
 
 import org.example.entities.ItemName;
-import org.example.units.UnitTypes;
+import org.example.units.UnitType;
 
 import java.util.HashSet;
 import java.util.List;
@@ -12,9 +12,9 @@ public class Item {
 
     private String id;
     private Set<ItemName> names;
-    private UnitTypes unitType;
+    private UnitType unitType;
 
-    public Item(String id, Set<ItemName> names, UnitTypes unitType) {
+    public Item(String id, Set<ItemName> names, UnitType unitType) {
         this.id = id;
         this.names = new HashSet<>(names);
         if (names.stream().noneMatch(itemName -> itemName.getName().equals(id))) {
@@ -23,7 +23,7 @@ public class Item {
         this.unitType = unitType;
     }
 
-    public Item(String id, UnitTypes unitType) {
+    public Item(String id, UnitType unitType) {
         this(id, new HashSet<>(List.of(new ItemName(id, id))), unitType);
     }
 
@@ -37,6 +37,10 @@ public class Item {
         names.add(new ItemName(name, this.id));
     }
 
+    public void removeAlternativeName(String name) {
+        names.removeIf(itemName -> itemName.getName().equals(name));
+    }
+
     public String getId() {
         return id;
     }
@@ -45,11 +49,11 @@ public class Item {
         this.id = id;
     }
 
-    public UnitTypes getUnitType() {
+    public UnitType getUnitType() {
         return unitType;
     }
 
-    public void setUnitType(UnitTypes unitType) {
+    public void setUnitType(UnitType unitType) {
         this.unitType = unitType;
     }
 
