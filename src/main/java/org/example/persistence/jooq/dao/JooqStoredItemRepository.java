@@ -23,6 +23,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import static org.example.persistence.jooq.generated.Tables.*;
 
@@ -60,8 +61,14 @@ public class JooqStoredItemRepository implements StoredItemRepository {
         storedItemRecord.merge();
 
         storedItem.getItemLocations()
-                  .forEach(itemLocation -> context.newRecord(ITEM_LOCATION, ItemLocationMapper.unmap(itemLocation))
-                                                  .merge());
+                  .forEach(itemLocation -> context.newRecord(ITEM_LOCATION, ItemLocationMapper.unmap(itemLocation)).merge());
+        context.delete(ITEM_LOCATION)
+               .where(ITEM_LOCATION.STORED_ITEM_REFERENCE.eq(storedItem.getId().toString())
+                                                         .and(ITEM_LOCATION.ID.notIn(storedItem.getItemLocations()
+                                                                                               .stream()
+                                                                                               .map(ItemLocation::getId)
+                                                                                               .collect(Collectors.toList()))))
+               .execute();
     }
 
     @Override

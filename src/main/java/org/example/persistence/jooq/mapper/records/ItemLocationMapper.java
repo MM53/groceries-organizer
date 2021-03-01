@@ -22,6 +22,7 @@ public class ItemLocationMapper {
             };
 
             return new ItemLocation(UUID.fromString(record.getId()),
+                                    UUID.fromString(record.getStoredItemReference()),
                                     new Location(record.getLocation()),
                                     amount);
         };
