@@ -55,9 +55,13 @@ public class ItemStorage {
     }
 
     public Amount takeAmount(String itemName, ItemLocation itemLocation, Amount amount) {
-        return storedItemRepository.findByReferencedItem(new Item(itemName, null))
-                                   .map(storedItem -> storedItem.take(amount, itemLocation))
-                                   .orElse(amount);
+        StoredItem storedItem = storedItemRepository.findByReferencedItem(new Item(itemName, null))
+                                                    .orElseThrow(() -> new StoredItemNotFoundException(itemName));
+
+        Amount requiredAmountLeft = storedItem.take(amount, itemLocation);
+        storedItemRepository.save(storedItem);
+
+        return requiredAmountLeft;
     }
 
     public void deleteStoredItem(String itemName) {
