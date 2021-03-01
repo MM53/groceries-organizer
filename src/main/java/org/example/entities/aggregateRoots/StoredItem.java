@@ -90,11 +90,13 @@ public class StoredItem {
 
     public Amount take(Amount requestedAmount, ItemLocation itemLocation) {
         itemUtilService.validate(itemReference, requestedAmount.getUnit().getType());
-        if (requestedAmount.isMoreThan(itemLocation.getAmount())) {
+        if (requestedAmount.isMoreThan(itemLocation.getAmount()) || requestedAmount.equals(itemLocation.getAmount())) {
             removeLocation(itemLocation);
             return requestedAmount.sub(itemLocation.getAmount());
         } else {
-            itemLocation.setAmount(itemLocation.getAmount().sub(requestedAmount));
+            itemLocations.stream()
+                         .filter(i -> i.equals(itemLocation))
+                         .forEach(i -> i.setAmount(itemLocation.getAmount().sub(requestedAmount)));
             return new Amount(0, requestedAmount.getUnit());
         }
     }
