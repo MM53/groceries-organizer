@@ -6,12 +6,9 @@ import org.springframework.stereotype.Component;
 @Component
 public class Application {
 
-
     public static void main(String[] args) {
 
-        var context = new AnnotationConfigApplicationContext();
-        context.scan("org.example");
-        context.refresh();
+        var context = new AnnotationConfigApplicationContext(AppConfig.class);
 
         var bean = context.getBean(Application.class);
         bean.run();
