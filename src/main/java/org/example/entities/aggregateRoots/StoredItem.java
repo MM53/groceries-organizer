@@ -47,13 +47,13 @@ public class StoredItem {
         return itemLocations;
     }
 
-    public void addItemLocation(ItemLocation itemLocation) {
-        itemUtilService.validate(itemReference, itemLocation.getAmount().getUnit().getType());
+    public void addItemLocation(ItemLocation newLocation) {
+        itemUtilService.validate(itemReference, newLocation.getAmount().getUnit().getType());
         itemLocations.stream()
-                     .filter(location -> location.getLocation().equals(itemLocation.getLocation()))
+                     .filter(itemLocation -> itemLocation.getLocation().equals(newLocation.getLocation()))
                      .findAny()
-                     .ifPresentOrElse(location -> location.setAmount(location.getAmount().add(itemLocation.getAmount())),
-                                      () -> itemLocations.add(itemLocation));
+                     .ifPresentOrElse(itemLocation -> itemLocation.setAmount(itemLocation.getAmount().add(newLocation.getAmount())),
+                                      () -> itemLocations.add(newLocation));
     }
 
     public void addItemLocation(Location location, Amount amount) {
