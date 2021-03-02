@@ -12,7 +12,7 @@ import org.example.units.UnitType;
 import org.example.units.Weight;
 import org.example.valueObjects.Amount;
 import org.example.valueObjects.Location;
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ActiveProfiles;
@@ -41,7 +41,7 @@ public class ItemStorageTest {
     @Autowired
     private ItemStorage itemStorage;
 
-    @BeforeEach
+    @AfterEach
     public void init() {
         jooqConnection.getContext().delete(STORED_ITEM).execute();
         jooqConnection.getContext().delete(MINIMUM_AMOUNT).execute();

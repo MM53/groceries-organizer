@@ -7,7 +7,7 @@ import org.example.exceptions.ItemNotFoundException;
 import org.example.persistence.jooq.configuration.JooqConnection;
 import org.example.repositories.ItemRepository;
 import org.example.units.UnitType;
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ActiveProfiles;
@@ -33,7 +33,7 @@ public class ItemManagerTest {
     @Autowired
     private ItemManager itemManager;
 
-    @BeforeEach
+    @AfterEach
     public void init() {
         jooqConnection.getContext().delete(ITEM).execute();
     }
