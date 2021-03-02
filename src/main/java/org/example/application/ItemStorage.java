@@ -11,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -48,10 +47,15 @@ public class ItemStorage {
         storedItemRepository.save(storedItem);
     }
 
+    public StoredItem viewStoredItem(String itemName) {
+        return storedItemRepository.findByReferencedItem(new Item(itemName, null))
+                                   .orElseThrow(() -> new StoredItemNotFoundException(itemName));
+    }
+
     public List<ItemLocation> listItemLocations(String itemName) {
         return new ArrayList<>(storedItemRepository.findByReferencedItem(new Item(itemName, null))
                                                    .map(StoredItem::getItemLocations)
-                                                   .orElse(Collections.emptySet()));
+                                                   .orElseThrow(() -> new StoredItemNotFoundException(itemName)));
     }
 
     public Amount takeAmount(String itemName, ItemLocation itemLocation, Amount amount) {
