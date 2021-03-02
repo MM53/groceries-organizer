@@ -1,5 +1,7 @@
-package org.example.persistence.jooq.configuration;
+package org.example.configuration;
 
+import org.example.persistence.jooq.configuration.CustomRecordMapperProvider;
+import org.example.persistence.jooq.configuration.JooqConnection;
 import org.jooq.Configuration;
 import org.jooq.DSLContext;
 import org.jooq.SQLDialect;
@@ -16,14 +18,14 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 @Component
-@PropertySource("classpath:postgres-db.properties")
-@Profile("production")
-public class PostgresConnection implements JooqConnection {
+@PropertySource("classpath:test-db.properties")
+@Profile("testing")
+public class H2Connection implements JooqConnection {
 
     private DSLContext context;
 
     @Autowired
-    public PostgresConnection(Environment env) {
+    public H2Connection(Environment env) {
         String userName = env.getProperty("jdbc.user");
         String password = env.getProperty("jdbc.password");
         String url = env.getProperty("jdbc.url");
@@ -31,7 +33,7 @@ public class PostgresConnection implements JooqConnection {
         try {
             final Connection connection = DriverManager.getConnection(url, userName, password);
             final Configuration configuration = new DefaultConfiguration().set(connection)
-                                                                          .set(SQLDialect.POSTGRES)
+                                                                          .set(SQLDialect.H2)
                                                                           .set(new CustomRecordMapperProvider());
             context = DSL.using(configuration);
         } catch (SQLException exception) {

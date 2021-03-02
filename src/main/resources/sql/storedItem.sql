@@ -32,5 +32,5 @@ CREATE TABLE item_location
     amount_unit           VARCHAR NOT NULL,
     amount_unit_type      VARCHAR NOT NULL,
 
-    FOREIGN KEY (stored_item_reference) REFERENCES stored_item (id)
+    FOREIGN KEY (stored_item_reference) REFERENCES stored_item (id) on delete cascade on update cascade
 );

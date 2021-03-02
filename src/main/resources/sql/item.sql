@@ -11,5 +11,5 @@ CREATE TABLE item_name
     name           VARCHAR PRIMARY KEY,
     item_reference VARCHAR NOT NULL,
 
-    foreign key (item_reference) references item (id)
+    foreign key (item_reference) references item (id) on delete cascade on update cascade
 );
