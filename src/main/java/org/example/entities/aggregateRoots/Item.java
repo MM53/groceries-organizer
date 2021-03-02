@@ -1,6 +1,7 @@
 package org.example.entities.aggregateRoots;
 
 import org.example.entities.ItemName;
+import org.example.exceptions.RemoveDefaultNameException;
 import org.example.units.UnitType;
 
 import java.util.HashSet;
@@ -38,6 +39,9 @@ public class Item {
     }
 
     public void removeAlternativeName(String name) {
+        if (name.equals(this.id)) {
+            throw new RemoveDefaultNameException(this.id);
+        }
         names.removeIf(itemName -> itemName.getName().equals(name));
     }
 
