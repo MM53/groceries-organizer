@@ -13,6 +13,7 @@ import org.example.persistence.jooq.mapper.collectors.OptionalRecordCollector;
 import org.example.persistence.jooq.mapper.records.ItemLocationMapper;
 import org.example.persistence.jooq.mapper.records.MinimumAmountMapper;
 import org.example.repositories.StoredItemRepository;
+import org.jooq.Condition;
 import org.jooq.DSLContext;
 import org.jooq.Record;
 import org.jooq.Table;
@@ -34,7 +35,7 @@ public class JooqStoredItemRepository implements StoredItemRepository {
 
     private static final Table<Record> JOINED_TABLE = STORED_ITEM.leftJoin(MINIMUM_AMOUNT)
                                                                  .on(STORED_ITEM.MINIMUM_AMOUNT_REFERENCE.eq(MINIMUM_AMOUNT.ID))
-                                                                 .join(ITEM_LOCATION)
+                                                                 .leftJoin(ITEM_LOCATION)
                                                                  .on(ITEM_LOCATION.STORED_ITEM_REFERENCE.eq(STORED_ITEM.ID));
     private static final ListRecordCollector<StoredItem> LIST_RECORD_COLLECTOR = new ListRecordCollector<>(STORED_ITEM.ID,
                                                                                                            JooqStoredItemRepository::storedItemFromRecord,
@@ -62,13 +63,15 @@ public class JooqStoredItemRepository implements StoredItemRepository {
 
         storedItem.getItemLocations()
                   .forEach(itemLocation -> context.newRecord(ITEM_LOCATION, ItemLocationMapper.unmap(itemLocation)).merge());
-        context.delete(ITEM_LOCATION)
-               .where(ITEM_LOCATION.STORED_ITEM_REFERENCE.eq(storedItem.getId().toString())
-                                                         .and(ITEM_LOCATION.ID.notIn(storedItem.getItemLocations()
-                                                                                               .stream()
-                                                                                               .map(ItemLocation::getId)
-                                                                                               .collect(Collectors.toList()))))
-               .execute();
+
+        Condition itemLocationsRemoved = ITEM_LOCATION.STORED_ITEM_REFERENCE.eq(storedItem.getId().toString());
+        if (storedItem.getItemLocations().size() > 0) {
+            itemLocationsRemoved = itemLocationsRemoved.and(ITEM_LOCATION.ID.notIn(storedItem.getItemLocations()
+                                                                                             .stream()
+                                                                                             .map(ItemLocation::getId)
+                                                                                             .collect(Collectors.toList())));
+        }
+        context.delete(ITEM_LOCATION).where(itemLocationsRemoved).execute();
     }
 
     @Override
@@ -106,10 +109,12 @@ public class JooqStoredItemRepository implements StoredItemRepository {
     }
 
     private static StoredItem updateStoredItemFromRecord(Record record, StoredItem storedItem) {
-        try {
-            storedItem.addItemLocation(record.into(ITEM_LOCATION).into(ItemLocation.class));
-        } catch (UnitMismatchException | ItemNotFoundException e) {
-            System.out.println("Error while loading item locations: " + e.getMessage());
+        if (record.get(ITEM_LOCATION.ID) != null) {
+            try {
+                storedItem.addItemLocation(record.into(ITEM_LOCATION).into(ItemLocation.class));
+            } catch (UnitMismatchException | ItemNotFoundException e) {
+                System.out.println("Error while loading item locations: " + e.getMessage());
+            }
         }
         return storedItem;
     }
