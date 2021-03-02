@@ -1,5 +1,6 @@
 package org.example.application;
 
+import org.example.application.exceptions.ItemAlreadyExistsException;
 import org.example.entities.aggregateRoots.Item;
 import org.example.exceptions.ItemNotFoundException;
 import org.example.repositories.ItemRepository;
@@ -21,6 +22,9 @@ public class ItemManager {
     }
 
     public void createItem(String name, UnitType unitType) {
+        if (itemRepository.findItemByName(name).isPresent()) {
+            throw new ItemAlreadyExistsException(name);
+        }
         Item item = new Item(name, unitType);
         itemRepository.save(item);
     }
