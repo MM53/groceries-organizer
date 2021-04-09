@@ -29,6 +29,7 @@ public class PostgresConnection implements JooqConnection {
         String url = env.getProperty("jdbc.url");
 
         try {
+            Class.forName("org.postgresql.Driver");
             final Connection connection = DriverManager.getConnection(url, userName, password);
             final Configuration configuration = new DefaultConfiguration().set(connection)
                                                                           .set(SQLDialect.POSTGRES)
@@ -36,6 +37,8 @@ public class PostgresConnection implements JooqConnection {
             context = DSL.using(configuration);
         } catch (SQLException exception) {
             exception.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
         }
     }
 

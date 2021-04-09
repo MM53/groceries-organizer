@@ -1,5 +1,8 @@
 package org.example.ui.configuration;
 
+import org.example.AppConfig;
+import org.springframework.core.env.ConfigurableEnvironment;
+import org.springframework.core.env.StandardEnvironment;
 import org.springframework.web.WebApplicationInitializer;
 import org.springframework.web.context.ContextLoaderListener;
 import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;
@@ -16,7 +19,12 @@ public class MainWebAppInitializer implements WebApplicationInitializer {
 
         AnnotationConfigWebApplicationContext root = new AnnotationConfigWebApplicationContext();
 
-        root.scan("org.example.ui");
+        ConfigurableEnvironment environment = new StandardEnvironment();
+        environment.setActiveProfiles("production");
+        root.setEnvironment(environment);
+
+        root.scan("org.example");
+
         sc.addListener(new ContextLoaderListener(root));
 
         ServletRegistration.Dynamic appServlet =
