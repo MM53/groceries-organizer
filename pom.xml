@@ -16,6 +16,12 @@
     </modules>
 
     <properties>
+        <org.springframework.version>5.3.3</org.springframework.version>
+        <org.springframework.data.version>2.4.3</org.springframework.data.version>
+        <com.h2database.version>1.4.200</com.h2database.version>
+        <org.junit.jupiter.version>5.7.0</org.junit.jupiter.version>
+        <org.jooq.version>3.14.7</org.jooq.version>
+
         <maven.compiler.target>15</maven.compiler.target>
         <maven.compiler.source>15</maven.compiler.source>
     </properties>
