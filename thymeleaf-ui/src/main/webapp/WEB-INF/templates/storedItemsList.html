@@ -1,0 +1,125 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<div class="card border m-3" th:fragment="content">
+  <h3 class="card-header bg-secondary">Storage</h3>
+  <div class="card-body p-0">
+    <table class="table table-hover mb-0">
+      <thead>
+      <tr>
+        <th scope="col" class="col-8 col-sm-6">Item</th>
+        <th scope="col" class="col-2">Amount</th>
+        <th scope="col" class="col-2 d-none d-md-table-cell">Locations</th>
+        <th scope="col" class="col-2"></th>
+      </tr>
+      <tbody>
+      <tr th:each="storedItem: ${storedItems}" th:data-item-id="${storedItem}">
+        <th class="align-middle" scope="row" th:text="${storedItem}"></th>
+        <td class="align-middle">500g</td>
+        <td class="align-middle d-none d-md-table-cell">7</td>
+        <td>
+          <div class="d-flex justify-content-end">
+            <!--            <a class="btn btn-warning mr-2" th:href="${'/item/' + storedItem}">Take</a>-->
+            <!--            <a class="btn btn-success" th:href="${'/item/' + storedItem}">Store</a>-->
+            <button type="button" class="btn btn-warning mr-2" data-toggle="modal" data-target="#takeItemModal">
+              Take
+            </button>
+            <button type="button" class="btn btn-success" data-toggle="modal" data-target="#storeItemModal">
+              Store
+            </button>
+          </div>
+          <!--          <a class="btn btn-primary" th:href="${'/item/' + item}">Edit</a>-->
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+
+
+  <form>
+    <div class="modal fade" id="storeItemModal" tabindex="-1" role="dialog" aria-labelledby="storeItemModalTitle"
+         aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="storeItemModalTitle">Store</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+
+            <div class="form-group">
+              <label for="exampleInputEmail1">Amount</label>
+              <input type="text" class="form-control" id="exampleInputEmail1">
+            </div>
+            <!--            <button  class="btn btn-primary">Submit</button>-->
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-primary">Save changes</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+
+  <script>
+  $('#storeItemModal').on('show.bs.modal', function (event) {
+    const button = $(event.relatedTarget)
+    const modal = $(this)
+    const item = button.closest('tr').data('item-id')
+    modal.find('.modal-title').text('Store ' + item)
+  })
+  </script>
+
+  <!--  <form>-->
+  <div class="modal fade" id="takeItemModal" tabindex="-1" role="dialog" aria-labelledby="takeItemModalTitle"
+       aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="takeItemModalTitle">Take</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+
+          <table class="table table-hover mb-0">
+            <tbody>
+            <tr>
+              <th class="align-middle" scope="row">Test <small class="text-danger">-100g</small></th>
+              <td class="d-flex justify-content-end">
+                <div class="input-group">
+                  <input type="text" class="form-control" value="100g" aria-label="take-button">
+                  <div class="input-group-append">
+                    <button class="btn btn-danger" type="button" id="take-button">-</button>
+                  </div>
+                </div>
+              </td>
+              <script>
+
+              </script>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!--  </form>-->
+
+  <script>
+  $('#takeItemModal').on('show.bs.modal', function (event) {
+    const button = $(event.relatedTarget)
+    const modal = $(this)
+    const item = button.closest('tr').data('item-id')
+    modal.find('.modal-title').text('Take ' + item)
+  })
+  </script>
+</div>
+
+</body>
+</html>

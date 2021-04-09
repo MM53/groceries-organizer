@@ -1,0 +1,35 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<div class="card border m-3" th:fragment="content">
+  <h3 class="card-header bg-secondary" th:text="'Item:' + ${item.id}"></h3>
+  <div class="card-body">
+    <h4 class="ml-2">Unit:</h4>
+    <p class="ml-4" th:text="${item.unitType.name}"></p>
+    <h4 class="ml-2">Alternative Names:</h4>
+    <table class="table table-hover mb-0 border-bottom">
+      <tbody>
+      <tr>
+        <th class="align-middle" scope="row">
+          <form style="display: table-row" th:action="${'/items/'+ item.id + '/names'}" method="post" id="addItemName">
+                <input type="text" class="form-control" placeholder="Name" name="name">
+          </form>
+        </th>
+        <td class="d-flex justify-content-end">
+          <a class="btn btn-success" href="javascript:document.getElementById('addItemName').submit();">Add</a>
+        </td>
+      </tr>
+      <tr th:each="name: ${item.names}">
+        <th class="align-middle" scope="row" th:text="${name.name}"></th>
+        <td class="d-flex justify-content-end">
+          <button class="btn btn-danger">Delete</button>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+</body>
+</html>

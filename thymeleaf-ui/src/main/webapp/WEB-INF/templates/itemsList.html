@@ -1,0 +1,46 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<div class="card border m-3" th:fragment="content">
+  <h3 class="card-header bg-secondary">Items</h3>
+  <div class="card-body p-0">
+    <table class="table table-hover mb-0">
+      <tbody>
+      <tr>
+        <th class="align-middle" scope="row">
+          <form style="display: table-row" action="/items" method="post" id="createNewItem">
+            <div class="form-row">
+              <div class="form-group col-md-6 mb-0">
+                <input type="text" class="form-control" placeholder="Item Name" name="itemName">
+              </div>
+              <div class="form-group col-md-6 mb-0">
+                <select id="inputState" class="form-control" name="unitType">
+                  <option selected value="WEIGHT">Weight</option>
+                  <option value="VOLUME">Volume</option>
+                  <option value="PIECES">Pieces</option>
+                </select>
+              </div>
+            </div>
+          </form>
+        </th>
+        <td class="d-flex justify-content-end">
+          <a class="btn btn-success" href="javascript:document.getElementById('createNewItem').submit();">Create</a>
+          <!--            <a class="btn btn-success" th:href="${'/item/' + item}">Create</a>-->
+        </td>
+
+      </tr>
+      <tr th:each="item: ${items}">
+        <th class="align-middle" scope="row" th:text="${item}"></th>
+        <td class="d-flex justify-content-end">
+          <a class="btn btn-primary mr-2" th:href="${'/items/' + item}">Edit</a>
+          <a class="btn btn-danger" th:href="${'/items/' + item}">Delete</a>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+</body>
+</html>
