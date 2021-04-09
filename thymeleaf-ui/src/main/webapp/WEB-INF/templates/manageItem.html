@@ -13,7 +13,7 @@
       <tr>
         <th class="align-middle" scope="row">
           <form style="display: table-row" th:action="${'/items/'+ item.id + '/names'}" method="post" id="addItemName">
-                <input type="text" class="form-control" placeholder="Name" name="name">
+                <input type="text" class="form-control" placeholder="Name" name="alternativeName">
           </form>
         </th>
         <td class="d-flex justify-content-end">
@@ -23,7 +23,10 @@
       <tr th:each="name: ${item.names}">
         <th class="align-middle" scope="row" th:text="${name.name}"></th>
         <td class="d-flex justify-content-end">
-          <button class="btn btn-danger">Delete</button>
+          <form th:action="${'/items/'+ item.id + '/removeName'}" method="post" class="mb-0">
+            <input type="hidden" name="alternativeName" th:value="${name.name}">
+            <button class="btn btn-danger" type="submit">Delete</button>
+          </form>
         </td>
       </tr>
       </tbody>

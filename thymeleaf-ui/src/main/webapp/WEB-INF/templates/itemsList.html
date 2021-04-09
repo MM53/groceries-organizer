@@ -12,7 +12,7 @@
           <form style="display: table-row" action="/items" method="post" id="createNewItem">
             <div class="form-row">
               <div class="form-group col-md-6 mb-0">
-                <input type="text" class="form-control" placeholder="Item Name" name="itemName">
+                <input type="text" class="form-control" placeholder="Item Name" name="name">
               </div>
               <div class="form-group col-md-6 mb-0">
                 <select id="inputState" class="form-control" name="unitType">
@@ -34,7 +34,10 @@
         <th class="align-middle" scope="row" th:text="${item}"></th>
         <td class="d-flex justify-content-end">
           <a class="btn btn-primary mr-2" th:href="${'/items/' + item}">Edit</a>
-          <a class="btn btn-danger" th:href="${'/items/' + item}">Delete</a>
+          <form action="/items/delete" method="post" class="mb-0">
+            <input type="hidden" name="name" th:value="${item}">
+            <button class="btn btn-danger" type="submit">Delete</button>
+          </form>
         </td>
       </tr>
       </tbody>
