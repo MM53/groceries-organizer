@@ -24,20 +24,21 @@
             </div>
           </form>
         </th>
-        <td class="d-flex justify-content-end">
-          <a class="btn btn-success" href="javascript:document.getElementById('createNewItem').submit();">Create</a>
-          <!--            <a class="btn btn-success" th:href="${'/item/' + item}">Create</a>-->
+        <td>
+          <a class="btn btn-success float-right" href="javascript:document.getElementById('createNewItem').submit();">Create</a>
         </td>
 
       </tr>
       <tr th:each="item: ${items}">
         <th class="align-middle" scope="row" th:text="${item}"></th>
-        <td class="d-flex justify-content-end">
-          <a class="btn btn-primary mr-2" th:href="${'/items/' + item}">Edit</a>
-          <form action="/items/delete" method="post" class="mb-0">
-            <input type="hidden" name="name" th:value="${item}">
-            <button class="btn btn-danger" type="submit">Delete</button>
-          </form>
+        <td>
+          <div class="float-right form-row">
+            <a class="btn btn-primary mr-2 float-right" th:href="${'/items/' + item}">Edit</a>
+            <form action="/items/delete" method="post" class="mb-0">
+              <input type="hidden" name="name" th:value="${item}">
+              <button class="btn btn-danger float-right" type="submit">Delete</button>
+            </form>
+          </div>
         </td>
       </tr>
       </tbody>

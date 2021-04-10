@@ -16,16 +16,16 @@
                 <input type="text" class="form-control" placeholder="Name" name="alternativeName">
           </form>
         </th>
-        <td class="d-flex justify-content-end">
-          <a class="btn btn-success" href="javascript:document.getElementById('addItemName').submit();">Add</a>
+        <td>
+          <a class="btn btn-success float-right" href="javascript:document.getElementById('addItemName').submit();">Add</a>
         </td>
       </tr>
       <tr th:each="name: ${item.names}">
         <th class="align-middle" scope="row" th:text="${name.name}"></th>
-        <td class="d-flex justify-content-end">
+        <td>
           <form th:action="${'/items/'+ item.id + '/removeName'}" method="post" class="mb-0">
             <input type="hidden" name="alternativeName" th:value="${name.name}">
-            <button class="btn btn-danger" type="submit">Delete</button>
+            <button class="btn btn-danger float-right" type="submit">Delete</button>
           </form>
         </td>
       </tr>
