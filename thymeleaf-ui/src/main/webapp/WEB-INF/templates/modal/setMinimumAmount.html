@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      lang="en">
+<body>
+<div th:fragment="content">
+  <div class="modal fade" id="updateMinimumAmountModal" tabindex="-1" role="dialog"
+       aria-labelledby="updateMinimumAmountModalTitle"
+       aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="updateMinimumAmountModalTitle"></h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form method="post" id="updateMinimumAmountForm">
+            <label id="amount-label">Amount</label>
+            <input type="text" class="form-control" name="amount" value="100g" aria-label="amount-label">
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary" onclick="$('#updateMinimumAmountForm').submit()">Save changes
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+  $('#updateMinimumAmountModal').on('show.bs.modal', function (event) {
+    const button = $(event.relatedTarget)
+    const modal = $(this)
+
+    const item = button.closest('tr').data('item-id')
+
+    $('#updateMinimumAmountForm').attr('action', '/storage/' + item + '/minimumAmount')
+    modal.find('.modal-title').text('Set minimum amount for ' + item)
+  })
+  </script>
+</div>
+</body>
+</html>
