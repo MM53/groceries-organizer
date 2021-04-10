@@ -4,7 +4,6 @@ import org.example.application.ItemManager;
 import org.example.application.ItemStorage;
 import org.example.entities.ItemLocation;
 import org.example.repositories.StoredItemRepository;
-import org.example.units.UnitType;
 import org.example.units.Weight;
 import org.example.valueObjects.Amount;
 import org.example.valueObjects.Location;
@@ -42,14 +41,16 @@ public class Application {
     }
 
     public void run() {
-        itemManager.createItem("Brot", UnitType.WEIGHT);
-        itemManager.createItem("Butter", UnitType.WEIGHT);
+//        itemManager.createItem("Brot", UnitType.WEIGHT);
+//        itemManager.createItem("Butter", UnitType.WEIGHT);
 
         itemManager.addName("Butter", "irische Butter");
         storedItemRepository.getAll();
 
 //        itemStorage.storeItem("Butter", new Location("Kühlschrank"), new Amount(500, Weight.GRAM));
 //        itemStorage.storeItem("Butter", new Location("Keller"), new Amount(500, Weight.GRAM));
+        itemStorage.storeItem("Butter", new Location("Kühlschrank"), new Amount(250, Weight.GRAM));
+
         itemStorage.storeItem("Butter", new Location("Kühlschrank"), new Amount(250, Weight.GRAM));
 
         ItemLocation itemLocation = itemStorage.listItemLocations("Butter")
@@ -59,7 +60,7 @@ public class Application {
                                                                            .equals("Kühlschrank"))
                                                .findAny()
                                                .get();
-        itemStorage.takeAmount("Butter", itemLocation, new Amount(250, Weight.GRAM));
+        itemStorage.takeAmount("Butter",itemLocation, new Amount(150, Weight.GRAM));
 
         System.out.println(itemStorage.listItemLocations("Butter"));
         System.out.println(itemManager.listItems());

@@ -90,6 +90,10 @@ public class StoredItem {
 
     public Amount take(Amount requestedAmount, ItemLocation itemLocation) {
         itemUtilService.validate(itemReference, requestedAmount.getUnit().getType());
+        if (!itemLocations.contains(itemLocation)) {
+//            TODO
+            throw new RuntimeException();
+        }
         if (requestedAmount.isMoreThan(itemLocation.getAmount()) || requestedAmount.equals(itemLocation.getAmount())) {
             removeLocation(itemLocation);
             return requestedAmount.sub(itemLocation.getAmount());

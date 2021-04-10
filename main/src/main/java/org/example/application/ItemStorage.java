@@ -3,6 +3,7 @@ package org.example.application;
 import org.example.entities.ItemLocation;
 import org.example.entities.aggregateRoots.Item;
 import org.example.entities.aggregateRoots.StoredItem;
+import org.example.exceptions.ItemLocationNotFoundException;
 import org.example.exceptions.StoredItemNotFoundException;
 import org.example.repositories.StoredItemRepository;
 import org.example.valueObjects.Amount;
@@ -47,6 +48,10 @@ public class ItemStorage {
         storedItemRepository.save(storedItem);
     }
 
+    public List<StoredItem> listStoredItems() {
+        return storedItemRepository.getAll();
+    }
+
     public StoredItem viewStoredItem(String itemName) {
         return storedItemRepository.findByReferencedItem(new Item(itemName, null))
                                    .orElseThrow(() -> new StoredItemNotFoundException(itemName));
@@ -56,6 +61,16 @@ public class ItemStorage {
         return new ArrayList<>(storedItemRepository.findByReferencedItem(new Item(itemName, null))
                                                    .map(StoredItem::getItemLocations)
                                                    .orElseThrow(() -> new StoredItemNotFoundException(itemName)));
+    }
+
+    public ItemLocation getItemLocation(String itemName, Location location) {
+        return storedItemRepository.findByReferencedItem(new Item(itemName, null))
+                                   .map(StoredItem::getItemLocations)
+                                   .orElseThrow(() -> new StoredItemNotFoundException(itemName))
+                                   .stream()
+                                   .filter(itemLocation -> itemLocation.getLocation().equals(location))
+                                   .findAny()
+                                   .orElseThrow(() -> new ItemLocationNotFoundException(location.getLocation(), itemName));
     }
 
     public Amount takeAmount(String itemName, ItemLocation itemLocation, Amount amount) {
