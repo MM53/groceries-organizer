@@ -2,7 +2,11 @@ package org.example.application;
 
 import org.example.AppConfig;
 import org.example.entities.ItemLocation;
+import org.example.entities.aggregateRoots.ShoppingList;
+import org.example.persistence.jooq.generated.tables.records.ShoppingListItemRecord;
+import org.example.repositories.ShoppingListRepository;
 import org.example.repositories.StoredItemRepository;
+import org.example.units.UnitType;
 import org.example.units.Weight;
 import org.example.valueObjects.Amount;
 import org.example.valueObjects.Location;
@@ -11,6 +15,8 @@ import org.springframework.context.annotation.AnnotationConfigApplicationContext
 import org.springframework.core.env.ConfigurableEnvironment;
 import org.springframework.core.env.StandardEnvironment;
 import org.springframework.stereotype.Component;
+
+import java.util.HashSet;
 
 @Component
 public class Application {
@@ -23,6 +29,9 @@ public class Application {
 
     @Autowired
     private ItemStorage itemStorage;
+
+    @Autowired
+    private ShoppingListRepository shoppingListRepository;
 
     public static void main(String[] args) {
         ConfigurableEnvironment environment = new StandardEnvironment();
@@ -60,6 +69,12 @@ public class Application {
                                                .findAny()
                                                .get();
         itemStorage.takeAmount("Butter",itemLocation, new Amount(150, Weight.GRAM));
+
+        ShoppingList shoppingList = new ShoppingList("Lebensmittel");
+        shoppingList.addShoppingListItem("Brot", new Amount(500, Weight.GRAM));
+        shoppingListRepository.save(shoppingList);
+
+        System.out.println(shoppingListRepository.getAll().get(0).getName());
 
         System.out.println(itemStorage.listItemLocations("Butter"));
         System.out.println(itemManager.listItems());

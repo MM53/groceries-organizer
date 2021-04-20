@@ -1,6 +1,7 @@
 package org.example.entities.aggregateRoots;
 
 import org.example.entities.ShoppingListItem;
+import org.example.exceptions.ShoppingListItemNotFoundException;
 import org.example.services.ItemUtilService;
 import org.example.valueObjects.Amount;
 
@@ -44,13 +45,13 @@ public class ShoppingList {
     }
 
     public void removeShoppingListItem(String itemReference) {
-        shoppingListItems = shoppingListItems.stream()
-                                             .filter(shoppingListItem -> !shoppingListItem.getItemReference().equals(itemReference))
-                                             .collect(Collectors.toSet());
+        removeShoppingListItem(findShoppingListItem(itemReference));
     }
 
     public void removeShoppingListItem(ShoppingListItem shoppingListItem) {
-        shoppingListItems.remove(shoppingListItem);
+        if (!shoppingListItems.remove(shoppingListItem)) {
+            throw new ShoppingListItemNotFoundException(shoppingListItem.getItemReference());
+        };
     }
 
     public void removeShoppingListItems(Set<ShoppingListItem> itemsToRemove) {
@@ -58,20 +59,25 @@ public class ShoppingList {
     }
 
     public void updateBoughtStateOfShoppingListItem(String itemReference, boolean bought) {
-        shoppingListItems.stream()
-                         .filter(shoppingListItem -> shoppingListItem.getItemReference().equals(itemReference))
-                         .forEach(shoppingListItem -> shoppingListItem.setBought(bought));
+        ShoppingListItem entry = findShoppingListItem(itemReference);
+        entry.setBought(bought);
     }
 
     public void updateAmountOfShoppingListItem(String itemReference, Amount amount) {
         itemUtilService.validate(itemReference, amount.getUnit().getType());
 
-        shoppingListItems.stream()
-                         .filter(shoppingListItem -> shoppingListItem.getItemReference().equals(itemReference))
-                         .forEach(shoppingListItem -> shoppingListItem.setAmount(amount));
+        ShoppingListItem entry = findShoppingListItem(itemReference);
+        entry.setAmount(amount);
     }
 
     public Set<ShoppingListItem> getShoppingListItems() {
         return shoppingListItems;
+    }
+
+    private ShoppingListItem findShoppingListItem(String itemReference) {
+        return shoppingListItems.stream()
+                                .filter(shoppingListItem -> shoppingListItem.getItemReference().equals(itemReference))
+                                .findAny()
+                                .orElseThrow(() -> new ShoppingListItemNotFoundException(itemReference));
     }
 }

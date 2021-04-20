@@ -9,6 +9,7 @@ import org.example.valueObjects.Amount;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -27,7 +28,7 @@ public class ShoppingListManager {
                                      .orElseThrow(() -> new ShoppingListNotFoundException(listName));
     }
 
-    private void createShoppingList(String name) {
+    public void createShoppingList(String name) {
         shoppingListRepository.findByListName(name)
                               .ifPresent(shoppingList -> {
                                   throw new ShoppingListAlreadyExistsException(name);
@@ -36,31 +37,41 @@ public class ShoppingListManager {
         shoppingListRepository.save(shoppingList);
     }
 
-    private void addEntry(String listName, String itemName, Amount amount) {
+    public ShoppingList viewShoppingList(String listName) {
+        return getShoppingList(listName);
+    }
+
+    public List<ShoppingListItem> listEntries(String listName) {
+        return getShoppingList(listName).getShoppingListItems()
+                                        .stream()
+                                        .toList();
+    }
+
+    public void addEntry(String listName, String itemName, Amount amount) {
         ShoppingList shoppingList = getShoppingList(listName);
         shoppingList.addShoppingListItem(itemName, amount);
         shoppingListRepository.save(shoppingList);
     }
 
-    private void removeEntry(String listName, String itemName) {
+    public void removeEntry(String listName, String itemName) {
         ShoppingList shoppingList = getShoppingList(listName);
         shoppingList.removeShoppingListItem(itemName);
         shoppingListRepository.save(shoppingList);
     }
 
-    private void buyEntry(String listName, String itemName) {
+    public void buyEntry(String listName, String itemName) {
         ShoppingList shoppingList = getShoppingList(listName);
         shoppingList.updateBoughtStateOfShoppingListItem(itemName, true);
         shoppingListRepository.save(shoppingList);
     }
 
-    private void unbuyEntry(String listName, String itemName) {
+    public void unbuyEntry(String listName, String itemName) {
         ShoppingList shoppingList = getShoppingList(listName);
         shoppingList.updateBoughtStateOfShoppingListItem(itemName, false);
         shoppingListRepository.save(shoppingList);
     }
 
-    private void updateAmount(String listName, String itemName, Amount amount) {
+    public void updateAmount(String listName, String itemName, Amount amount) {
         ShoppingList shoppingList = getShoppingList(listName);
         shoppingList.updateAmountOfShoppingListItem(itemName, amount);
         shoppingListRepository.save(shoppingList);
@@ -76,7 +87,7 @@ public class ShoppingListManager {
         shoppingListRepository.save(shoppingList);
     }
 
-    private void deleteShoppingList(String name) {
+    public void deleteShoppingList(String name) {
         shoppingListRepository.findByListName(name)
                               .ifPresentOrElse(shoppingListRepository::delete,
                                                () -> {

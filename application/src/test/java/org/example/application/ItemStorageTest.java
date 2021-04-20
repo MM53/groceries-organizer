@@ -6,7 +6,7 @@ import org.example.entities.ItemLocation;
 import org.example.entities.aggregateRoots.Item;
 import org.example.entities.aggregateRoots.StoredItem;
 import org.example.exceptions.ItemNotFoundException;
-import org.example.exceptions.StoredItemNotFoundException;
+import org.example.application.exceptions.StoredItemNotFoundException;
 import org.example.repositories.StoredItemRepository;
 import org.example.units.UnitType;
 import org.example.units.Weight;
@@ -42,7 +42,7 @@ public class ItemStorageTest {
     private ItemStorage itemStorage;
 
     @AfterEach
-    public void init() {
+    public void cleanup() {
         jooqConnection.getContext().delete(STORED_ITEM).execute();
         jooqConnection.getContext().delete(MINIMUM_AMOUNT).execute();
         jooqConnection.getContext().delete(ITEM).execute();

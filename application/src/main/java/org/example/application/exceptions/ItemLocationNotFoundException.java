@@ -1,4 +1,4 @@
-package org.example.exceptions;
+package org.example.application.exceptions;
 
 public class ItemLocationNotFoundException extends RuntimeException {
 

@@ -34,7 +34,7 @@ public class ItemManagerTest {
     private ItemManager itemManager;
 
     @AfterEach
-    public void init() {
+    public void cleanup() {
         jooqConnection.getContext().delete(ITEM).execute();
     }
 
