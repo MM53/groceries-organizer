@@ -29,29 +29,46 @@ public class ShoppingList {
     }
 
     public void addShoppingListItem(ShoppingListItem shoppingListItem) {
+        itemUtilService.validateExistence(shoppingListItem.getItemReference());
+        itemUtilService.validate(shoppingListItem.getItemReference(), shoppingListItem.getAmount().getUnit().getType());
+
         shoppingListItems.stream()
                          .filter(existingShoppingListItem -> shoppingListItem.getItemReference().equals(existingShoppingListItem.getItemReference()))
                          .findAny()
-                         .ifPresentOrElse(
-                                 existingShoppingListItem -> existingShoppingListItem.addAmount(shoppingListItem.getAmount()),
-                                 () -> shoppingListItems.add(shoppingListItem)
-                                         );
+                         .ifPresentOrElse(existingItem -> existingItem.addAmount(shoppingListItem.getAmount()),
+                                          () -> shoppingListItems.add(shoppingListItem));
     }
 
     public void addShoppingListItem(String itemReference, Amount amount) {
         addShoppingListItem(new ShoppingListItem(this.name, itemReference, amount));
     }
 
-    public void buyShoppingListItem(String itemReference) {
-        shoppingListItems.stream()
-                         .filter(shoppingListItem -> shoppingListItem.getItemReference().equals(itemReference))
-                         .forEach(shoppingListItem -> shoppingListItem.setBought(true));
+    public void removeShoppingListItem(String itemReference) {
+        shoppingListItems = shoppingListItems.stream()
+                                             .filter(shoppingListItem -> !shoppingListItem.getItemReference().equals(itemReference))
+                                             .collect(Collectors.toSet());
     }
 
-    public void clearBoughtShoppingListItems() {
-        shoppingListItems = shoppingListItems.stream()
-                                             .filter(ShoppingListItem::isBought)
-                                             .collect(Collectors.toSet());
+    public void removeShoppingListItem(ShoppingListItem shoppingListItem) {
+        shoppingListItems.remove(shoppingListItem);
+    }
+
+    public void removeShoppingListItems(Set<ShoppingListItem> itemsToRemove) {
+        itemsToRemove.forEach(this::removeShoppingListItem);
+    }
+
+    public void updateBoughtStateOfShoppingListItem(String itemReference, boolean bought) {
+        shoppingListItems.stream()
+                         .filter(shoppingListItem -> shoppingListItem.getItemReference().equals(itemReference))
+                         .forEach(shoppingListItem -> shoppingListItem.setBought(bought));
+    }
+
+    public void updateAmountOfShoppingListItem(String itemReference, Amount amount) {
+        itemUtilService.validate(itemReference, amount.getUnit().getType());
+
+        shoppingListItems.stream()
+                         .filter(shoppingListItem -> shoppingListItem.getItemReference().equals(itemReference))
+                         .forEach(shoppingListItem -> shoppingListItem.setAmount(amount));
     }
 
     public Set<ShoppingListItem> getShoppingListItems() {

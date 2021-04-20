@@ -56,6 +56,10 @@ public class ShoppingListItem {
     }
 
     public void addAmount(Amount amount) {
-        this.amount = this.amount.add(amount);
+        if (this.amount == null) {
+            this.amount = amount;
+        } else {
+            this.amount = this.amount.add(amount);
+        }
     }
 }
