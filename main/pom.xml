@@ -158,6 +158,7 @@
                             <srcFiles>
                                 <srcFile>src/main/resources/sql/item.sql</srcFile>
                                 <srcFile>src/main/resources/sql/storedItem.sql</srcFile>
+                                <srcFile>src/main/resources/sql/shoppingList.sql</srcFile>
                             </srcFiles>
                         </configuration>
                     </execution>
