@@ -6,6 +6,7 @@ import org.example.services.ItemUtilService;
 import org.example.valueObjects.Amount;
 
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -79,5 +80,18 @@ public class ShoppingList {
                                 .filter(shoppingListItem -> shoppingListItem.getItemReference().equals(itemReference))
                                 .findAny()
                                 .orElseThrow(() -> new ShoppingListItemNotFoundException(itemReference));
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ShoppingList that = (ShoppingList) o;
+        return name.equals(that.name);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name);
     }
 }
