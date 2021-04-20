@@ -3,8 +3,7 @@ package org.example.persistence.jooq.dao;
 import org.example.entities.ItemName;
 import org.example.entities.aggregateRoots.Item;
 import org.example.persistence.jooq.configuration.JooqConnection;
-import org.example.persistence.jooq.mapper.collectors.ListRecordCollector;
-import org.example.persistence.jooq.mapper.collectors.OptionalRecordCollector;
+import org.example.persistence.jooq.mapper.collectors.ItemCollector;
 import org.example.repositories.ItemRepository;
 import org.jooq.DSLContext;
 import org.jooq.Record;
@@ -23,14 +22,10 @@ import static org.example.persistence.jooq.generated.Tables.ITEM_NAME;
 public class JooqItemRepository implements ItemRepository {
 
     private final DSLContext context;
+    private final ItemCollector collector = new ItemCollector();
 
     private static final Table<Record> JOINED_TABLE = ITEM.leftJoin(ITEM_NAME)
                                                           .on(ITEM_NAME.ITEM_REFERENCE.eq(ITEM.ID));
-    private static final ListRecordCollector<Item> LIST_RECORD_COLLECTOR = new ListRecordCollector<>(ITEM.ID,
-                                                                                                     JooqItemRepository::itemFromRecord,
-                                                                                                     JooqItemRepository::updateItemFromRecord);
-    private static final OptionalRecordCollector<Item> OPTIONAL_RECORD_COLLECTOR = new OptionalRecordCollector<>(JooqItemRepository::itemFromRecord,
-                                                                                                                 JooqItemRepository::updateItemFromRecord);
 
 
     @Autowired
@@ -56,7 +51,7 @@ public class JooqItemRepository implements ItemRepository {
     public Optional<Item> findItemById(String id) {
         return context.fetch(JOINED_TABLE, ITEM.ID.eq(id))
                       .stream()
-                      .collect(OPTIONAL_RECORD_COLLECTOR);
+                      .collect(collector.toOptional());
     }
 
     @Override
@@ -69,20 +64,11 @@ public class JooqItemRepository implements ItemRepository {
     public List<Item> getAll() {
         return context.fetch(JOINED_TABLE)
                       .stream()
-                      .collect(LIST_RECORD_COLLECTOR);
+                      .collect(collector.toList(ITEM.ID));
     }
 
     @Override
     public void delete(Item item) {
         context.newRecord(ITEM, item).delete();
-    }
-
-    private static Item itemFromRecord(Record record) {
-        return record.into(ITEM).into(Item.class);
-    }
-
-    private static Item updateItemFromRecord(Record record, Item item) {
-        item.addAlternativeName(record.into(ITEM_NAME).into(ItemName.class));
-        return item;
     }
 }

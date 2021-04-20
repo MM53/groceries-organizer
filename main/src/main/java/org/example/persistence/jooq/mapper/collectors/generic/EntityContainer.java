@@ -1,4 +1,4 @@
-package org.example.persistence.jooq.mapper.collectors;
+package org.example.persistence.jooq.mapper.collectors.generic;
 
 import java.util.function.Function;
 

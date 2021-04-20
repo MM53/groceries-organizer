@@ -3,8 +3,7 @@ package org.example.persistence.jooq.dao;
 import org.example.entities.ShoppingListItem;
 import org.example.entities.aggregateRoots.ShoppingList;
 import org.example.persistence.jooq.configuration.JooqConnection;
-import org.example.persistence.jooq.mapper.collectors.ListRecordCollector;
-import org.example.persistence.jooq.mapper.collectors.OptionalRecordCollector;
+import org.example.persistence.jooq.mapper.collectors.ShoppingListCollector;
 import org.example.persistence.jooq.mapper.records.ShoppingListItemMapper;
 import org.example.repositories.ShoppingListRepository;
 import org.jooq.Condition;
@@ -25,14 +24,10 @@ import static org.example.persistence.jooq.generated.Tables.SHOPPING_LIST_ITEM;
 public class JooqShoppingListRepository implements ShoppingListRepository {
 
     private final DSLContext context;
+    private final ShoppingListCollector collector = new ShoppingListCollector();
 
     private static final Table<Record> JOINED_TABLE = SHOPPING_LIST.leftJoin(SHOPPING_LIST_ITEM)
                                                                    .on(SHOPPING_LIST_ITEM.SHOPPING_LIST_REFERENCE.eq(SHOPPING_LIST.NAME));
-    private static final ListRecordCollector<ShoppingList> LIST_RECORD_COLLECTOR = new ListRecordCollector<>(SHOPPING_LIST.NAME,
-                                                                                                             JooqShoppingListRepository::shoppingListFromRecord,
-                                                                                                             JooqShoppingListRepository::updateShoppingListFromRecord);
-    private static final OptionalRecordCollector<ShoppingList> OPTIONAL_RECORD_COLLECTOR = new OptionalRecordCollector<>(JooqShoppingListRepository::shoppingListFromRecord,
-                                                                                                                         JooqShoppingListRepository::updateShoppingListFromRecord);
 
 
     @Autowired
@@ -62,29 +57,18 @@ public class JooqShoppingListRepository implements ShoppingListRepository {
     public Optional<ShoppingList> findByListName(String listName) {
         return context.fetch(JOINED_TABLE, SHOPPING_LIST.NAME.eq(listName))
                       .stream()
-                      .collect(OPTIONAL_RECORD_COLLECTOR);
+                      .collect(collector.toOptional());
     }
 
     @Override
     public List<ShoppingList> getAll() {
         return context.fetch(JOINED_TABLE)
                       .stream()
-                      .collect(LIST_RECORD_COLLECTOR);
+                      .collect(collector.toList(SHOPPING_LIST.NAME));
     }
 
     @Override
     public void delete(ShoppingList shoppingList) {
         context.newRecord(SHOPPING_LIST, shoppingList).delete();
-    }
-
-    private static ShoppingList shoppingListFromRecord(Record record) {
-        return new ShoppingList(record.get(SHOPPING_LIST.NAME));
-    }
-
-    private static ShoppingList updateShoppingListFromRecord(Record record, ShoppingList shoppingList) {
-        if (record.get(SHOPPING_LIST_ITEM.ID) != null) {
-            shoppingList.addShoppingListItem(record.into(SHOPPING_LIST_ITEM).into(ShoppingListItem.class));
-        }
-        return shoppingList;
     }
 }
