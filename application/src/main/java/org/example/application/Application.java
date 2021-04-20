@@ -1,7 +1,6 @@
-package org.example;
+package org.example.application;
 
-import org.example.application.ItemManager;
-import org.example.application.ItemStorage;
+import org.example.AppConfig;
 import org.example.entities.ItemLocation;
 import org.example.repositories.StoredItemRepository;
 import org.example.units.Weight;
