@@ -22,8 +22,17 @@
         <org.junit.jupiter.version>5.7.0</org.junit.jupiter.version>
         <org.jooq.version>3.14.7</org.jooq.version>
 
-        <maven.compiler.target>15</maven.compiler.target>
-        <maven.compiler.source>15</maven.compiler.source>
+        <java.version>16</java.version>
+        <maven.compiler.target>16</maven.compiler.target>
+        <maven.compiler.source>16</maven.compiler.source>
     </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-war-plugin</artifactId>
+            <version>3.3.1</version>
+        </dependency>
+    </dependencies>
 
 </project>
