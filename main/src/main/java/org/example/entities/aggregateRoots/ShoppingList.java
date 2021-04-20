@@ -10,7 +10,7 @@ import java.util.stream.Collectors;
 
 public class ShoppingList {
 
-    private final String listName;
+    private final String name;
     private Set<ShoppingListItem> shoppingListItems;
 
     private final ItemUtilService itemUtilService = new ItemUtilService();
@@ -20,12 +20,12 @@ public class ShoppingList {
     }
 
     public ShoppingList(String listName, Set<ShoppingListItem> shoppingListItems) {
-        this.listName = listName;
+        this.name = listName;
         this.shoppingListItems = shoppingListItems;
     }
 
-    public String getListName() {
-        return listName;
+    public String getName() {
+        return name;
     }
 
     public void addShoppingListItem(ShoppingListItem shoppingListItem) {
@@ -39,7 +39,7 @@ public class ShoppingList {
     }
 
     public void addShoppingListItem(String itemReference, Amount amount) {
-        addShoppingListItem(new ShoppingListItem(itemReference, amount));
+        addShoppingListItem(new ShoppingListItem(this.name, itemReference, amount));
     }
 
     public void buyShoppingListItem(String itemReference) {
