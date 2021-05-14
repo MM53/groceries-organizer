@@ -8,7 +8,6 @@ import org.example.valueObjects.Amount;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 public class ShoppingList {
 

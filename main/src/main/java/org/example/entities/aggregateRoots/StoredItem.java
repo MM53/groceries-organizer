@@ -49,19 +49,26 @@ public class StoredItem {
 
     public void addItemLocation(ItemLocation newLocation) {
         itemUtilService.validate(itemReference, newLocation.getAmount().getUnit().getType());
-        itemLocations.stream()
-                     .filter(itemLocation -> itemLocation.getLocation().equals(newLocation.getLocation()))
-                     .findAny()
-                     .ifPresentOrElse(itemLocation -> itemLocation.setAmount(itemLocation.getAmount().add(newLocation.getAmount())),
-                                      () -> itemLocations.add(newLocation));
+
+        if (!itemLocations.add(newLocation)) {
+            throw new RuntimeException();
+        }
     }
 
     public void addItemLocation(Location location, Amount amount) {
         addItemLocation(new ItemLocation(this.id, location, amount));
     }
 
-    public void removeLocation(ItemLocation itemLocation) {
-        itemLocations.remove(itemLocation);
+    public void updateItemLocationAmount(UUID itemLocationId, Amount amount) {
+        ItemLocation itemLocation = itemLocations.stream()
+                                                 .filter(i -> i.getId().equals(itemLocationId))
+                                                 .findAny()
+                                                 .orElseThrow();
+        itemLocation.setAmount(itemLocation.getAmount().add(amount));
+    }
+
+    public void removeLocation(UUID itemLocationId) {
+        itemLocations.removeIf(itemLocation -> itemLocation.getId().equals(itemLocationId));
     }
 
     public MinimumAmount getMinimumAmount() {
@@ -95,7 +102,7 @@ public class StoredItem {
             throw new RuntimeException();
         }
         if (requestedAmount.isMoreThan(itemLocation.getAmount()) || requestedAmount.equals(itemLocation.getAmount())) {
-            removeLocation(itemLocation);
+            removeLocation(itemLocation.getId());
             return requestedAmount.sub(itemLocation.getAmount());
         } else {
             itemLocations.stream()
