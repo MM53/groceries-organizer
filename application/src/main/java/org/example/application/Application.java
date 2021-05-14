@@ -3,10 +3,8 @@ package org.example.application;
 import org.example.AppConfig;
 import org.example.entities.ItemLocation;
 import org.example.entities.aggregateRoots.ShoppingList;
-import org.example.persistence.jooq.generated.tables.records.ShoppingListItemRecord;
 import org.example.repositories.ShoppingListRepository;
 import org.example.repositories.StoredItemRepository;
-import org.example.units.UnitType;
 import org.example.units.Weight;
 import org.example.valueObjects.Amount;
 import org.example.valueObjects.Location;
@@ -15,8 +13,6 @@ import org.springframework.context.annotation.AnnotationConfigApplicationContext
 import org.springframework.core.env.ConfigurableEnvironment;
 import org.springframework.core.env.StandardEnvironment;
 import org.springframework.stereotype.Component;
-
-import java.util.HashSet;
 
 @Component
 public class Application {
