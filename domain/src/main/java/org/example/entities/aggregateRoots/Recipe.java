@@ -2,6 +2,7 @@ package org.example.entities.aggregateRoots;
 
 import org.example.entities.Ingredient;
 import org.example.entities.Tag;
+import org.example.exceptions.IngredientNotFoundException;
 import org.example.services.ItemUtilService;
 import org.example.valueObjects.Amount;
 
@@ -77,7 +78,7 @@ public class Recipe {
         itemUtilService.validate(ingredient.getItemReference(), ingredient.getAmount().getUnit().getType());
 
         if (!ingredients.add(ingredient)) {
-            throw new RuntimeException();
+            updateIngredientAmount(ingredient.getId(), ingredient.getAmount());
         }
     }
 
@@ -88,18 +89,18 @@ public class Recipe {
     }
 
     public void removeIngredient(UUID id) {
-        removeIngredient(getIngredient(id));
+        ingredients.remove(getIngredient(id));
     }
 
     public void updateIngredientAmount(UUID id, Amount amount) {
         getIngredient(id).setAmount(amount);
     }
-//TODO
+
     public Ingredient getIngredient(UUID id) {
         return ingredients.stream()
                           .filter(ingredient -> ingredient.getId().equals(id))
                           .findAny()
-                          .orElseThrow();
+                          .orElseThrow(() -> new IngredientNotFoundException(id, name));
     }
 
     public String getDescription() {

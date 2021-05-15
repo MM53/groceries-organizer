@@ -2,7 +2,7 @@ package org.example.entities.aggregateRoots;
 
 import org.example.entities.ItemLocation;
 import org.example.entities.MinimumAmount;
-import org.example.services.AmountService;
+import org.example.exceptions.ItemLocationNotFoundException;
 import org.example.services.ItemUtilService;
 import org.example.valueObjects.Amount;
 import org.example.valueObjects.Location;
@@ -20,8 +20,6 @@ public class StoredItem {
     private MinimumAmount minimumAmount;
 
     private final ItemUtilService itemUtilService = new ItemUtilService();
-
-    private final AmountService amountService = new AmountService();
 
     public StoredItem(String itemReference, Amount minimumAmount) {
         this(UUID.randomUUID(), itemReference, new HashSet<>(), minimumAmount != null ? new MinimumAmount(minimumAmount) : null);
@@ -47,12 +45,11 @@ public class StoredItem {
         return itemLocations;
     }
 
-    //TODO
     public ItemLocation getItemLocation(UUID itemLocationId) {
         return itemLocations.stream()
                             .filter(i -> i.getId().equals(itemLocationId))
                             .findAny()
-                            .orElseThrow();
+                            .orElseThrow(() -> new ItemLocationNotFoundException(itemLocationId, id));
     }
 
     public void addItemLocation(ItemLocation newLocation) {
@@ -75,7 +72,7 @@ public class StoredItem {
     }
 
     public void removeLocation(UUID itemLocationId) {
-        itemLocations.removeIf(itemLocation -> itemLocation.getId().equals(itemLocationId));
+        itemLocations.remove(getItemLocation(itemLocationId));
     }
 
     public Amount getTotalAmount() {
