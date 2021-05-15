@@ -48,14 +48,14 @@ public class ShoppingList {
         removeShoppingListItem(findShoppingListItem(itemReference));
     }
 
-    public void removeShoppingListItem(ShoppingListItem shoppingListItem) {
-        if (!shoppingListItems.remove(shoppingListItem)) {
-            throw new ShoppingListItemNotFoundException(shoppingListItem.getItemReference());
-        };
-    }
-
     public void removeShoppingListItems(Set<ShoppingListItem> itemsToRemove) {
         itemsToRemove.forEach(this::removeShoppingListItem);
+    }
+
+    private void removeShoppingListItem(ShoppingListItem shoppingListItem) {
+        if (!shoppingListItems.remove(shoppingListItem)) {
+            throw new ShoppingListItemNotFoundException(shoppingListItem.getItemReference());
+        }
     }
 
     public void updateBoughtStateOfShoppingListItem(String itemReference, boolean bought) {
