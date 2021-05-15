@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class ItemStorage {
@@ -73,19 +74,24 @@ public class ItemStorage {
                                    .orElseThrow(() -> new ItemLocationNotFoundException(location.getLocation(), itemName));
     }
 
-    public Amount takeAmount(String itemName, ItemLocation itemLocation, Amount amount) {
-        StoredItem storedItem = storedItemRepository.findByReferencedItem(new Item(itemName, null))
-                                                    .orElseThrow(() -> new StoredItemNotFoundException(itemName));
-
-        Amount requiredAmountLeft = storedItem.take(amount, itemLocation);
-        storedItemRepository.save(storedItem);
-
-        return requiredAmountLeft;
-    }
-
     public void deleteStoredItem(String itemName) {
         StoredItem storedItem = storedItemRepository.findByReferencedItem(new Item(itemName, null))
                                                     .orElseThrow(() -> new StoredItemNotFoundException(itemName));
         storedItemRepository.delete(storedItem);
+    }
+
+    public Amount takeAmount(String itemName, Amount requestedAmount, UUID itemLocationId) {
+        StoredItem storedItem = storedItemRepository.findByReferencedItem(new Item(itemName, null))
+                                                    .orElseThrow(() -> new StoredItemNotFoundException(itemName));
+
+        Amount availableAmount = storedItem.getItemLocation(itemLocationId).getAmount();
+
+        if (requestedAmount.isMoreThan(availableAmount) || requestedAmount.equals(availableAmount)) {
+            storedItem.removeLocation(itemLocationId);
+            return requestedAmount.sub(availableAmount);
+        } else {
+            storedItem.updateItemLocationAmount(itemLocationId, availableAmount.sub(requestedAmount));
+            return new Amount(0, requestedAmount.getUnit());
+        }
     }
 }

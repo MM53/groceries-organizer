@@ -94,8 +94,8 @@ public class Recipe {
     public void updateIngredientAmount(UUID id, Amount amount) {
         getIngredient(id).setAmount(amount);
     }
-
-    private Ingredient getIngredient(UUID id) {
+//TODO
+    public Ingredient getIngredient(UUID id) {
         return ingredients.stream()
                           .filter(ingredient -> ingredient.getId().equals(id))
                           .findAny()

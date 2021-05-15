@@ -174,7 +174,7 @@ public class ItemStorageTest {
     public void takeFromStoredItem_success() {
         itemStorage.createAndStoreItem("Brot", new Location("Regal"), new Amount(1, Weight.KILOGRAM));
 
-        Amount requiredLeft = itemStorage.takeAmount("Brot", itemStorage.listItemLocations("Brot").get(0), new Amount(200, Weight.GRAM));
+        Amount requiredLeft = itemStorage.takeAmount("Brot", new Amount(200, Weight.GRAM), itemStorage.listItemLocations("Brot").get(0).getId());
 
         StoredItem storedItem = itemStorage.viewStoredItem("Brot");
         List<ItemLocation> itemLocations = itemStorage.listItemLocations("Brot");
@@ -188,7 +188,7 @@ public class ItemStorageTest {
     public void takeFromStoredItem_notEnough() {
         itemStorage.createAndStoreItem("Brot", new Location("Regal"), new Amount(1, Weight.KILOGRAM));
 
-        Amount requiredLeft = itemStorage.takeAmount("Brot", itemStorage.listItemLocations("Brot").get(0), new Amount(2, Weight.KILOGRAM));
+        Amount requiredLeft = itemStorage.takeAmount("Brot", new Amount(2, Weight.KILOGRAM), itemStorage.listItemLocations("Brot").get(0).getId());
 
         StoredItem storedItem = itemStorage.viewStoredItem("Brot");
         List<ItemLocation> itemLocations = itemStorage.listItemLocations("Brot");
@@ -204,8 +204,8 @@ public class ItemStorageTest {
         ItemLocation firstItemLocation = itemStorage.listItemLocations("Brot").get(0);
         ItemLocation secondItemLocation = itemStorage.listItemLocations("Brot").get(1);
 
-        Amount requiredLeft = itemStorage.takeAmount("Brot", firstItemLocation, new Amount(1.2, Weight.KILOGRAM));
-        requiredLeft = itemStorage.takeAmount("Brot", secondItemLocation, requiredLeft);
+        Amount requiredLeft = itemStorage.takeAmount("Brot", new Amount(1.2, Weight.KILOGRAM), firstItemLocation.getId());
+        requiredLeft = itemStorage.takeAmount("Brot", requiredLeft, secondItemLocation.getId());
 
         StoredItem storedItem = itemStorage.viewStoredItem("Brot");
         List<ItemLocation> itemLocations = itemStorage.listItemLocations("Brot");
@@ -219,7 +219,7 @@ public class ItemStorageTest {
     @Test
     public void takeFromStoredItem_storedItemMissing() {
         assertThrows(StoredItemNotFoundException.class, () -> {
-            itemStorage.takeAmount("Brot", itemStorage.listItemLocations("Brot").get(0), new Amount(200, Weight.GRAM));
+            itemStorage.takeAmount("Brot", new Amount(200, Weight.GRAM), itemStorage.listItemLocations("Brot").get(0).getId());
         });
     }
 

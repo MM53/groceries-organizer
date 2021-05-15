@@ -47,6 +47,14 @@ public class StoredItem {
         return itemLocations;
     }
 
+    //TODO
+    public ItemLocation getItemLocation(UUID itemLocationId) {
+        return itemLocations.stream()
+                            .filter(i -> i.getId().equals(itemLocationId))
+                            .findAny()
+                            .orElseThrow();
+    }
+
     public void addItemLocation(ItemLocation newLocation) {
         itemUtilService.validate(itemReference, newLocation.getAmount().getUnit().getType());
 
@@ -60,15 +68,21 @@ public class StoredItem {
     }
 
     public void updateItemLocationAmount(UUID itemLocationId, Amount amount) {
-        ItemLocation itemLocation = itemLocations.stream()
-                                                 .filter(i -> i.getId().equals(itemLocationId))
-                                                 .findAny()
-                                                 .orElseThrow();
+        itemUtilService.validate(itemReference, amount.getUnit().getType());
+
+        ItemLocation itemLocation = getItemLocation(itemLocationId);
         itemLocation.setAmount(itemLocation.getAmount().add(amount));
     }
 
     public void removeLocation(UUID itemLocationId) {
         itemLocations.removeIf(itemLocation -> itemLocation.getId().equals(itemLocationId));
+    }
+
+    public Amount getTotalAmount() {
+        return itemLocations.stream()
+                            .map(ItemLocation::getAmount)
+                            .reduce(Amount::add)
+                            .orElse(new Amount(0, itemUtilService.getUnit(itemReference)));
     }
 
     public MinimumAmount getMinimumAmount() {
@@ -82,34 +96,6 @@ public class StoredItem {
 
     public void setMinimumAmount(Amount amount) {
         setMinimumAmount(new MinimumAmount(amount));
-    }
-
-    public Amount getTotalAmount() throws RuntimeException {
-        return itemLocations.stream()
-                            .map(ItemLocation::getAmount)
-                            .reduce(Amount::add)
-                            .orElse(new Amount(0, itemUtilService.getUnit(itemReference)));
-    }
-
-    public boolean hasEnough(Amount requestedAmount) {
-        return getTotalAmount().isMoreThan(requestedAmount);
-    }
-
-    public Amount take(Amount requestedAmount, ItemLocation itemLocation) {
-        itemUtilService.validate(itemReference, requestedAmount.getUnit().getType());
-        if (!itemLocations.contains(itemLocation)) {
-//            TODO
-            throw new RuntimeException();
-        }
-        if (requestedAmount.isMoreThan(itemLocation.getAmount()) || requestedAmount.equals(itemLocation.getAmount())) {
-            removeLocation(itemLocation.getId());
-            return requestedAmount.sub(itemLocation.getAmount());
-        } else {
-            itemLocations.stream()
-                         .filter(i -> i.equals(itemLocation))
-                         .forEach(i -> i.setAmount(itemLocation.getAmount().sub(requestedAmount)));
-            return new Amount(0, requestedAmount.getUnit());
-        }
     }
 
     @Override

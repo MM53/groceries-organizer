@@ -64,7 +64,7 @@ public class Application {
                                                                            .equals("Kühlschrank"))
                                                .findAny()
                                                .get();
-        itemStorage.takeAmount("Butter",itemLocation, new Amount(150, Weight.GRAM));
+        itemStorage.takeAmount("Butter",new Amount(150, Weight.GRAM), itemLocation.getId());
 
         ShoppingList shoppingList = new ShoppingList("Lebensmittel");
         shoppingList.addShoppingListItem("Brot", new Amount(500, Weight.GRAM));

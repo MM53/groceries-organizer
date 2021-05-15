@@ -52,7 +52,7 @@ public class ItemStorageController {
     @PostMapping("/storage/{itemReference}/take")
     public RedirectView takeAmounts(@PathVariable("itemReference") String itemReference, @RequestParam String location, @RequestParam String amount) {
         ItemLocation itemLocation = itemStorage.getItemLocation(itemReference, new Location(location));
-        itemStorage.takeAmount(itemReference, itemLocation, AmountAdapter.ExtractFromString(amount));
+        itemStorage.takeAmount(itemReference, AmountAdapter.ExtractFromString(amount), itemLocation.getId());
         return new RedirectView("/storage");
     }
 
