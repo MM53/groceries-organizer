@@ -49,13 +49,18 @@
     'store': {'class': 'btn-success', 'symbol': '+'}
   }
 
-  function selectAndSubmit(location) {
-    $('#selectedLocation').val(location)
+  const fields = {
+    'take': 'locationId',
+    'store': 'location'
+  }
+
+  function selectAndSubmit(location, action) {
+    $('#selectedLocation').attr('name', fields[action]).val(location)
     $('#updateLocationForm').submit()
   }
 
   function createAndSubmit() {
-    $('#selectedLocation').val($("#newLocationName").val())
+    $('#selectedLocation').attr('name', 'location').val($("#newLocationName").val())
     $('#updateLocationForm').submit()
   }
 
@@ -70,11 +75,11 @@
     $('#updateLocationForm').attr('action', '/storage/' + item + '/' + action)
     modal.find('.modal-title').text(titles[action] + item)
     let locationsList = Object.keys(locations)
-                              .reduce((result, name) => result +=
+                              .reduce((result, id) => result +=
                                 '         <tr>\n' +
-                                '            <th class="align-middle" scope="row">' + name + ' <small>' + locations[name] + '</small></th>\n' +
+                                '            <th class="align-middle" scope="row">' + locations[id].name + ' <small>' + locations[id].amount + '</small></th>\n' +
                                 '            <td>\n' +
-                                '              <a class="btn ' + buttons[action].class + ' float-right" type="button" id="" href="javascript:selectAndSubmit(\'' + name + '\')">' + buttons[action].symbol + '</a>\n' +
+                                '              <a class="btn ' + buttons[action].class + ' float-right" type="button" id="" href="javascript:selectAndSubmit(\'' + id + ', ' + action + '\')">' + buttons[action].symbol + '</a>\n' +
                                 '            </td>\n' +
                                 '          </tr>', '')
     if (action === 'store') {

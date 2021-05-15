@@ -2,15 +2,13 @@ package org.example.entities.aggregateRoots;
 
 import org.example.entities.ItemLocation;
 import org.example.entities.MinimumAmount;
+import org.example.exceptions.ItemLocationAlreadyExistsException;
 import org.example.exceptions.ItemLocationNotFoundException;
 import org.example.services.ItemUtilService;
 import org.example.valueObjects.Amount;
 import org.example.valueObjects.Location;
 
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 public class StoredItem {
 
@@ -45,19 +43,25 @@ public class StoredItem {
         return itemLocations;
     }
 
-    public ItemLocation getItemLocation(UUID itemLocationId) {
+    public Optional<ItemLocation> findItemLocation(UUID itemLocationId) {
         return itemLocations.stream()
                             .filter(i -> i.getId().equals(itemLocationId))
-                            .findAny()
-                            .orElseThrow(() -> new ItemLocationNotFoundException(itemLocationId, id));
+                            .findAny();
     }
 
-    public void addItemLocation(ItemLocation newLocation) {
-        itemUtilService.validate(itemReference, newLocation.getAmount().getUnit().getType());
+    public Optional<ItemLocation> findItemLocation(Location location) {
+        return itemLocations.stream()
+                            .filter(i -> i.getLocation().equals(location))
+                            .findAny();
+    }
 
-        if (!itemLocations.add(newLocation)) {
-            throw new RuntimeException();
+    public void addItemLocation(ItemLocation itemLocation) {
+        itemUtilService.validate(itemReference, itemLocation.getAmount().getUnit().getType());
+        if (findItemLocation(itemLocation.getId()).or(() -> findItemLocation(itemLocation.getLocation())).isPresent()) {
+            throw new ItemLocationAlreadyExistsException(itemLocation.getId(), id);
         }
+
+        itemLocations.add(itemLocation);
     }
 
     public void addItemLocation(Location location, Amount amount) {
@@ -67,12 +71,12 @@ public class StoredItem {
     public void updateItemLocationAmount(UUID itemLocationId, Amount amount) {
         itemUtilService.validate(itemReference, amount.getUnit().getType());
 
-        ItemLocation itemLocation = getItemLocation(itemLocationId);
+        ItemLocation itemLocation = findItemLocation(itemLocationId).orElseThrow(() -> new ItemLocationNotFoundException(itemLocationId, id));
         itemLocation.setAmount(itemLocation.getAmount().add(amount));
     }
 
     public void removeLocation(UUID itemLocationId) {
-        itemLocations.remove(getItemLocation(itemLocationId));
+        findItemLocation(itemLocationId).ifPresent(itemLocations::remove);
     }
 
     public Amount getTotalAmount() {

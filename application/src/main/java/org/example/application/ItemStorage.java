@@ -3,8 +3,8 @@ package org.example.application;
 import org.example.entities.ItemLocation;
 import org.example.entities.aggregateRoots.Item;
 import org.example.entities.aggregateRoots.StoredItem;
-import org.example.application.exceptions.ItemLocationNotFoundException;
 import org.example.application.exceptions.StoredItemNotFoundException;
+import org.example.exceptions.ItemLocationNotFoundException;
 import org.example.repositories.StoredItemRepository;
 import org.example.valueObjects.Amount;
 import org.example.valueObjects.Location;
@@ -35,7 +35,9 @@ public class ItemStorage {
     public void storeItem(String itemName, Location location, Amount amount) {
         StoredItem storedItem = storedItemRepository.findByReferencedItem(new Item(itemName, null))
                                                     .orElse(new StoredItem(itemName, null));
-        storedItem.addItemLocation(location, amount);
+        storedItem.findItemLocation(location)
+                  .ifPresentOrElse(itemLocation -> storedItem.updateItemLocationAmount(itemLocation.getId(), amount),
+                                   () -> storedItem.addItemLocation(location, amount));
         storedItemRepository.save(storedItem);
     }
 
@@ -65,13 +67,14 @@ public class ItemStorage {
     }
 
     public ItemLocation getItemLocation(String itemName, Location location) {
+//        TODO
         return storedItemRepository.findByReferencedItem(new Item(itemName, null))
                                    .map(StoredItem::getItemLocations)
                                    .orElseThrow(() -> new StoredItemNotFoundException(itemName))
                                    .stream()
                                    .filter(itemLocation -> itemLocation.getLocation().equals(location))
                                    .findAny()
-                                   .orElseThrow(() -> new ItemLocationNotFoundException(location.getLocation(), itemName));
+                                   .get();
     }
 
     public void deleteStoredItem(String itemName) {
@@ -84,7 +87,9 @@ public class ItemStorage {
         StoredItem storedItem = storedItemRepository.findByReferencedItem(new Item(itemName, null))
                                                     .orElseThrow(() -> new StoredItemNotFoundException(itemName));
 
-        Amount availableAmount = storedItem.getItemLocation(itemLocationId).getAmount();
+        Amount availableAmount = storedItem.findItemLocation(itemLocationId)
+                                           .orElseThrow(() -> new ItemLocationNotFoundException(itemLocationId, storedItem.getId()))
+                                           .getAmount();
 
         if (requestedAmount.isMoreThan(availableAmount) || requestedAmount.equals(availableAmount)) {
             storedItem.removeLocation(itemLocationId);

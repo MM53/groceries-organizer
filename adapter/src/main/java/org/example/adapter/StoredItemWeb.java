@@ -18,7 +18,8 @@ public class StoredItemWeb {
         this.locationCount = storedItem.getItemLocations().size();
         JSONObject locationsJson = new JSONObject();
         storedItem.getItemLocations().forEach(itemLocation -> {
-            locationsJson.put(itemLocation.getLocation().getLocation(), itemLocation.getAmount().toString());
+            locationsJson.put(itemLocation.getId().toString(), new JSONObject().put("amount", itemLocation.getAmount().toString())
+                                                                               .put("name", itemLocation.getLocation().getLocation()));
         });
         this.locationsJson = locationsJson.toString();
     }

@@ -2,14 +2,12 @@ package org.example.entities.aggregateRoots;
 
 import org.example.entities.Ingredient;
 import org.example.entities.Tag;
+import org.example.exceptions.IngredientAlreadyExistsException;
 import org.example.exceptions.IngredientNotFoundException;
 import org.example.services.ItemUtilService;
 import org.example.valueObjects.Amount;
 
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 public class Recipe {
 
@@ -76,29 +74,36 @@ public class Recipe {
     public void addIngredient(Ingredient ingredient) {
         itemUtilService.validateExistence(ingredient.getItemReference());
         itemUtilService.validate(ingredient.getItemReference(), ingredient.getAmount().getUnit().getType());
-
-        if (!ingredients.add(ingredient)) {
-            updateIngredientAmount(ingredient.getId(), ingredient.getAmount());
+        if (findIngredient(ingredient.getId()).or(() -> findIngredient(ingredient.getItemReference())).isPresent()) {
+            throw new IngredientAlreadyExistsException(ingredient.getId(), name);
         }
+
+        ingredients.add(ingredient);
     }
 
     public void addIngredient(String itemReference, Amount amount) {
         addIngredient(new Ingredient(id, itemReference, amount));
     }
 
-    public void removeIngredient(UUID id) {
-        ingredients.remove(getIngredient(id));
+    public void removeIngredient(UUID ingredientId) {
+        findIngredient(ingredientId).ifPresent(ingredients::remove);
     }
 
-    public void updateIngredientAmount(UUID id, Amount amount) {
-        getIngredient(id).setAmount(amount);
+    public void updateIngredientAmount(UUID ingredientId, Amount amount) {
+        findIngredient(ingredientId).orElseThrow(() -> new IngredientNotFoundException(ingredientId, name))
+                                    .setAmount(amount);
     }
 
-    public Ingredient getIngredient(UUID id) {
+    public Optional<Ingredient> findIngredient(UUID ingredientId) {
         return ingredients.stream()
-                          .filter(ingredient -> ingredient.getId().equals(id))
-                          .findAny()
-                          .orElseThrow(() -> new IngredientNotFoundException(id, name));
+                          .filter(ingredient -> ingredient.getId().equals(ingredientId))
+                          .findAny();
+    }
+
+    public Optional<Ingredient> findIngredient(String itemReference) {
+        return ingredients.stream()
+                          .filter(ingredient -> ingredient.getItemReference().equals(itemReference))
+                          .findAny();
     }
 
     public String getDescription() {

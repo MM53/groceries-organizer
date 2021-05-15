@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.view.RedirectView;
 
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Controller
@@ -50,9 +51,8 @@ public class ItemStorageController {
     }
 
     @PostMapping("/storage/{itemReference}/take")
-    public RedirectView takeAmounts(@PathVariable("itemReference") String itemReference, @RequestParam String location, @RequestParam String amount) {
-        ItemLocation itemLocation = itemStorage.getItemLocation(itemReference, new Location(location));
-        itemStorage.takeAmount(itemReference, AmountAdapter.ExtractFromString(amount), itemLocation.getId());
+    public RedirectView takeAmounts(@PathVariable("itemReference") String itemReference, @RequestParam String locationId, @RequestParam String amount) {
+        itemStorage.takeAmount(itemReference, AmountAdapter.ExtractFromString(amount), UUID.fromString(locationId));
         return new RedirectView("/storage");
     }
 
