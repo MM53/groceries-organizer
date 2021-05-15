@@ -82,10 +82,8 @@ public class Recipe {
         }
     }
 
-    public void removeIngredient(Ingredient ingredient) {
-        if (!ingredients.remove(ingredient)) {
-            throw new RuntimeException();
-        }
+    public void addIngredient(String itemReference, Amount amount) {
+        addIngredient(new Ingredient(id, itemReference, amount));
     }
 
     public void removeIngredient(UUID id) {

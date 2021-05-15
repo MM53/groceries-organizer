@@ -8,18 +8,15 @@ import java.util.UUID;
 public class Ingredient {
 
     private final UUID id;
-    private final String recipeReference;
+    private final UUID recipeReference;
     private final String itemReference;
     private Amount amount;
 
-    public Ingredient(String recipeReference, String itemReference, Amount amount) {
-        this(UUID.randomUUID(), recipeReference, itemReference, false, amount);
-    }
-    public Ingredient(String recipeReference, String itemReference, boolean bought, Amount amount) {
-        this(UUID.randomUUID(), recipeReference, itemReference, bought, amount);
+    public Ingredient(UUID recipeReference, String itemReference, Amount amount) {
+        this(UUID.randomUUID(), recipeReference, itemReference, amount);
     }
 
-    public Ingredient(UUID id, String recipeReference, String itemReference, boolean bought, Amount amount) {
+    public Ingredient(UUID id, UUID recipeReference, String itemReference, Amount amount) {
         this.id = id;
         this.recipeReference = recipeReference;
         this.itemReference = itemReference;
@@ -30,7 +27,7 @@ public class Ingredient {
         return id;
     }
 
-    public String getRecipeReference() {
+    public UUID getRecipeReference() {
         return recipeReference;
     }
 
