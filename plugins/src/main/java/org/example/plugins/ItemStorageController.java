@@ -37,7 +37,7 @@ public class ItemStorageController {
         final List<StoredItemWeb> storedItems = readStorageService.listStoredItems()
                                                                   .stream()
                                                                   .map(StoredItemWeb::new)
-                                                                  .collect(Collectors.toList());
+                                                                  .toList();
         model.addAttribute("storedItems", storedItems);
         return "layout/main";
     }

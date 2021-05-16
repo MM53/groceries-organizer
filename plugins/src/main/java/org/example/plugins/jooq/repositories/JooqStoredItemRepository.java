@@ -60,7 +60,7 @@ public class JooqStoredItemRepository implements StoredItemRepository {
             itemLocationsRemoved = itemLocationsRemoved.and(ITEM_LOCATION.ID.notIn(storedItem.getItemLocations()
                                                                                              .stream()
                                                                                              .map(ItemLocation::getId)
-                                                                                             .collect(Collectors.toList())));
+                                                                                             .toList()));
         }
         context.delete(ITEM_LOCATION).where(itemLocationsRemoved).execute();
     }

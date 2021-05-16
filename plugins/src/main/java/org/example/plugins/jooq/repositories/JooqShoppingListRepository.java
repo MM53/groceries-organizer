@@ -47,7 +47,7 @@ public class JooqShoppingListRepository implements ShoppingListRepository {
             shoppingListItemsRemoved = shoppingListItemsRemoved.and(SHOPPING_LIST_ITEM.ID.notIn(shoppingList.getShoppingListItems()
                                                                                                             .stream()
                                                                                                             .map(ShoppingListItem::getId)
-                                                                                                            .collect(Collectors.toList())));
+                                                                                                            .toList()));
         }
         context.delete(SHOPPING_LIST_ITEM).where(shoppingListItemsRemoved).execute();
     }

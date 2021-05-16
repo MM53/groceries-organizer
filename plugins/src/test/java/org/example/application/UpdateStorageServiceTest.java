@@ -166,7 +166,7 @@ public class UpdateStorageServiceTest {
         updateStorageService.storeItem("Brot", new Location("Ort"), new Amount(500, Weight.GRAM));
 
         List<ItemLocation> itemLocations = readStorageService.listItemLocations("Brot");
-        List<Location> locations = itemLocations.stream().map(ItemLocation::getLocation).collect(Collectors.toList());
+        List<Location> locations = itemLocations.stream().map(ItemLocation::getLocation).toList();
 
         assertEquals(2, itemLocations.size());
         assertTrue(locations.contains(new Location("Regal")));

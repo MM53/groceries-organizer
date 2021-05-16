@@ -23,7 +23,7 @@ public class ReadItemsService {
         return itemRepository.getAll()
                              .stream()
                              .map(Item::getId)
-                             .collect(Collectors.toList());
+                             .toList();
     }
 
     public Item getItem(String itemName) {

@@ -43,7 +43,7 @@ public class JooqItemRepository implements ItemRepository {
                                               .and(ITEM_NAME.NAME.notIn(item.getNames()
                                                                             .stream()
                                                                             .map(ItemName::getName)
-                                                                            .collect(Collectors.toList()))))
+                                                                            .toList())))
                .execute();
     }
 
