@@ -1,6 +1,10 @@
 package org.example.application;
 
 import org.example.AppConfig;
+import org.example.application.items.ManageItemsService;
+import org.example.application.items.ReadItemsService;
+import org.example.application.storage.ReadStorageService;
+import org.example.application.storage.UpdateStorageService;
 import org.example.entities.ItemLocation;
 import org.example.entities.aggregateRoots.ShoppingList;
 import org.example.repositories.ShoppingListRepository;
@@ -18,13 +22,19 @@ import org.springframework.stereotype.Component;
 public class Application {
 
     @Autowired
-    private ItemManager itemManager;
+    private ManageItemsService manageItemsService;
+
+    @Autowired
+    private ReadItemsService readItemsService;
 
     @Autowired
     private StoredItemRepository storedItemRepository;
 
     @Autowired
-    private ItemStorage itemStorage;
+    private UpdateStorageService updateStorageService;
+
+    @Autowired
+    private ReadStorageService readStorageService;
 
     @Autowired
     private ShoppingListRepository shoppingListRepository;
@@ -48,23 +58,23 @@ public class Application {
 //        itemManager.createItem("Brot", UnitType.WEIGHT);
 //        itemManager.createItem("Butter", UnitType.WEIGHT);
 
-        itemManager.addName("Butter", "irische Butter");
+        manageItemsService.addName("Butter", "irische Butter");
         storedItemRepository.getAll();
 
 //        itemStorage.storeItem("Butter", new Location("Kühlschrank"), new Amount(500, Weight.GRAM));
 //        itemStorage.storeItem("Butter", new Location("Keller"), new Amount(500, Weight.GRAM));
-        itemStorage.storeItem("Butter", new Location("Kühlschrank"), new Amount(250, Weight.GRAM));
+        updateStorageService.storeItem("Butter", new Location("Kühlschrank"), new Amount(250, Weight.GRAM));
 
-        itemStorage.storeItem("Butter", new Location("Kühlschrank"), new Amount(250, Weight.GRAM));
+        updateStorageService.storeItem("Butter", new Location("Kühlschrank"), new Amount(250, Weight.GRAM));
 
-        ItemLocation itemLocation = itemStorage.listItemLocations("Butter")
-                                               .stream()
-                                               .filter(location -> location.getLocation()
+        ItemLocation itemLocation = readStorageService.listItemLocations("Butter")
+                                                        .stream()
+                                                        .filter(location -> location.getLocation()
                                                                            .getLocation()
                                                                            .equals("Kühlschrank"))
-                                               .findAny()
-                                               .get();
-        itemStorage.takeAmount("Butter",new Amount(150, Weight.GRAM), itemLocation.getId());
+                                                        .findAny()
+                                                        .get();
+        updateStorageService.takeAmount("Butter", new Amount(150, Weight.GRAM), itemLocation.getId());
 
         ShoppingList shoppingList = new ShoppingList("Lebensmittel");
         shoppingList.addShoppingListItem("Brot", new Amount(500, Weight.GRAM));
@@ -72,8 +82,8 @@ public class Application {
 
         System.out.println(shoppingListRepository.getAll().get(0).getName());
 
-        System.out.println(itemStorage.listItemLocations("Butter"));
-        System.out.println(itemManager.listItems());
-        System.out.println(itemManager.getItem("Butter"));
+        System.out.println(readStorageService.listItemLocations("Butter"));
+        System.out.println(readItemsService.listItems());
+        System.out.println(readItemsService.getItem("Butter"));
     }
 }

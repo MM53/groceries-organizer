@@ -2,8 +2,8 @@ package org.example.plugins;
 
 import org.example.adapter.AmountAdapter;
 import org.example.adapter.StoredItemWeb;
-import org.example.application.ItemStorage;
-import org.example.entities.ItemLocation;
+import org.example.application.storage.ReadStorageService;
+import org.example.application.storage.UpdateStorageService;
 import org.example.exceptions.ItemNotFoundException;
 import org.example.valueObjects.Location;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,20 +22,22 @@ import java.util.stream.Collectors;
 @Controller
 public class ItemStorageController {
 
-    private ItemStorage itemStorage;
+    private UpdateStorageService updateStorageService;
+    private ReadStorageService readStorageService;
 
     @Autowired
-    public ItemStorageController(ItemStorage itemStorage) {
-        this.itemStorage = itemStorage;
+    public ItemStorageController(UpdateStorageService updateStorageService, ReadStorageService readStorageService) {
+        this.updateStorageService = updateStorageService;
+        this.readStorageService = readStorageService;
     }
 
     @GetMapping("/storage")
     public String listStoredItems(Model model) {
         model.addAttribute("template", "storedItemsList");
-        final List<StoredItemWeb> storedItems = itemStorage.listStoredItems()
-                                                           .stream()
-                                                           .map(StoredItemWeb::new)
-                                                           .collect(Collectors.toList());
+        final List<StoredItemWeb> storedItems = readStorageService.listStoredItems()
+                                                                  .stream()
+                                                                  .map(StoredItemWeb::new)
+                                                                  .collect(Collectors.toList());
         model.addAttribute("storedItems", storedItems);
         return "layout/main";
     }
@@ -43,22 +45,22 @@ public class ItemStorageController {
     @PostMapping("/storage/{itemReference}/store")
     public RedirectView storeAmount(@PathVariable("itemReference") String itemReference, @RequestParam String location, @RequestParam String amount) {
         try {
-            itemStorage.storeItem(itemReference, new Location(location), AmountAdapter.ExtractFromString(amount));
+            updateStorageService.storeItem(itemReference, new Location(location), AmountAdapter.ExtractFromString(amount));
         } catch (ItemNotFoundException e) {
-            itemStorage.createAndStoreItem(itemReference, new Location(location), AmountAdapter.ExtractFromString(amount));
+            updateStorageService.createAndStoreItem(itemReference, new Location(location), AmountAdapter.ExtractFromString(amount));
         }
         return new RedirectView("/storage");
     }
 
     @PostMapping("/storage/{itemReference}/take")
     public RedirectView takeAmounts(@PathVariable("itemReference") String itemReference, @RequestParam String locationId, @RequestParam String amount) {
-        itemStorage.takeAmount(itemReference, AmountAdapter.ExtractFromString(amount), UUID.fromString(locationId));
+        updateStorageService.takeAmount(itemReference, AmountAdapter.ExtractFromString(amount), UUID.fromString(locationId));
         return new RedirectView("/storage");
     }
 
     @PostMapping("/storage/{itemReference}/minimumAmount")
     public RedirectView setMinimumAmount(@PathVariable("itemReference") String itemReference, @RequestParam String amount) {
-        itemStorage.setMinimumAmount(itemReference, AmountAdapter.ExtractFromString(amount));
+        updateStorageService.setMinimumAmount(itemReference, AmountAdapter.ExtractFromString(amount));
         return new RedirectView("/storage");
     }
 }

@@ -1,5 +1,7 @@
 package org.example.application;
 
+import org.example.application.items.ManageItemsService;
+import org.example.application.items.ReadItemsService;
 import org.example.configuration.TestConfig;
 import org.example.application.exceptions.ItemAlreadyExistsException;
 import org.example.entities.aggregateRoots.Item;
@@ -22,7 +24,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @SpringJUnitConfig(classes = TestConfig.class)
 @ActiveProfiles("testing")
-public class ItemManagerTest {
+public class ManageItemsServiceTest {
 
     @Autowired
     private JooqConnection jooqConnection;
@@ -31,7 +33,10 @@ public class ItemManagerTest {
     private ItemRepository itemRepository;
 
     @Autowired
-    private ItemManager itemManager;
+    private ManageItemsService manageItemsService;
+
+    @Autowired
+    private ReadItemsService readItemsService;
 
     @AfterEach
     public void cleanup() {
@@ -40,7 +45,7 @@ public class ItemManagerTest {
 
     @Test
     public void createNewItem_success() {
-        itemManager.createItem("Brot", UnitType.WEIGHT);
+        manageItemsService.createItem("Brot", UnitType.WEIGHT);
 
         List<Item> items = itemRepository.getAll();
 
@@ -51,22 +56,22 @@ public class ItemManagerTest {
 
     @Test
     public void createNewItem_duplicate() {
-        itemManager.createItem("Brot", UnitType.WEIGHT);
+        manageItemsService.createItem("Brot", UnitType.WEIGHT);
 
-        Item item = itemManager.getItem("Brot");
+        Item item = readItemsService.getItem("Brot");
 
         assertEquals("Brot", item.getId());
         assertEquals(UnitType.WEIGHT, item.getUnitType());
 
         assertThrows(ItemAlreadyExistsException.class, () -> {
-            itemManager.createItem("Brot", UnitType.WEIGHT);
+            manageItemsService.createItem("Brot", UnitType.WEIGHT);
         });
     }
 
     @Test
     public void addAlternativeName_success() {
-        itemManager.createItem("Brot", UnitType.WEIGHT);
-        itemManager.addName("Brot", "Test");
+        manageItemsService.createItem("Brot", UnitType.WEIGHT);
+        manageItemsService.addName("Brot", "Test");
 
         Optional<Item> item = itemRepository.findItemByName("Test");
 
@@ -78,14 +83,14 @@ public class ItemManagerTest {
     @Test
     public void addAlternativeName_notFound() {
         assertThrows(ItemNotFoundException.class, () -> {
-            itemManager.addName("Brot", "Test");
+            manageItemsService.addName("Brot", "Test");
         });
     }
 
     @Test
     public void removeAlternativeName_success() {
-        itemManager.createItem("Brot", UnitType.WEIGHT);
-        itemManager.addName("Brot", "Test");
+        manageItemsService.createItem("Brot", UnitType.WEIGHT);
+        manageItemsService.addName("Brot", "Test");
 
         Optional<Item> item = itemRepository.findItemByName("Test");
 
@@ -93,7 +98,7 @@ public class ItemManagerTest {
         assertEquals("Brot", item.get().getId());
         assertEquals(UnitType.WEIGHT, item.get().getUnitType());
 
-        itemManager.removeName("Brot", "Test");
+        manageItemsService.removeName("Brot", "Test");
 
         item = itemRepository.findItemByName("Test");
 
@@ -103,15 +108,15 @@ public class ItemManagerTest {
     @Test
     public void removeAlternativeName_notFound() {
         assertThrows(ItemNotFoundException.class, () -> {
-            itemManager.removeName("Brot", "Test");
+            manageItemsService.removeName("Brot", "Test");
         });
     }
 
     @Test
     public void viewItem_success() {
-        itemManager.createItem("Brot", UnitType.WEIGHT);
+        manageItemsService.createItem("Brot", UnitType.WEIGHT);
 
-        Item item = itemManager.getItem("Brot");
+        Item item = readItemsService.getItem("Brot");
 
         assertEquals("Brot", item.getId());
         assertEquals(UnitType.WEIGHT, item.getUnitType());
@@ -120,16 +125,16 @@ public class ItemManagerTest {
     @Test
     public void viewItem_notFound() {
         assertThrows(ItemNotFoundException.class, () -> {
-            itemManager.getItem("Brot");
+            readItemsService.getItem("Brot");
         });
     }
 
     @Test
     public void viewListItems_success() {
-        itemManager.createItem("Brot", UnitType.WEIGHT);
-        itemManager.createItem("Butter", UnitType.WEIGHT);
+        manageItemsService.createItem("Brot", UnitType.WEIGHT);
+        manageItemsService.createItem("Butter", UnitType.WEIGHT);
 
-        List<String> items = itemManager.listItems();
+        List<String> items = readItemsService.listItems();
 
         assertEquals(2, items.size());
         assertTrue(items.contains("Brot"));
@@ -138,18 +143,18 @@ public class ItemManagerTest {
 
     @Test
     public void deleteItem_success() {
-        itemManager.createItem("Brot", UnitType.WEIGHT);
-        itemManager.createItem("Butter", UnitType.WEIGHT);
+        manageItemsService.createItem("Brot", UnitType.WEIGHT);
+        manageItemsService.createItem("Butter", UnitType.WEIGHT);
 
-        List<String> items = itemManager.listItems();
+        List<String> items = readItemsService.listItems();
 
         assertEquals(2, items.size());
         assertTrue(items.contains("Brot"));
         assertTrue(items.contains("Butter"));
 
-        itemManager.deleteItem("Butter");
+        manageItemsService.deleteItem("Butter");
 
-        items = itemManager.listItems();
+        items = readItemsService.listItems();
 
         assertEquals(1, items.size());
         assertTrue(items.contains("Brot"));
@@ -159,7 +164,7 @@ public class ItemManagerTest {
     @Test
     public void deleteItem_notFound() {
         assertThrows(ItemNotFoundException.class, () -> {
-            itemManager.deleteItem("Butter");
+            manageItemsService.deleteItem("Butter");
         });
     }
 }

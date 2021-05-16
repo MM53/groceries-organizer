@@ -1,5 +1,9 @@
 package org.example.application;
 
+import org.example.application.items.ManageItemsService;
+import org.example.application.items.ReadItemsService;
+import org.example.application.storage.ReadStorageService;
+import org.example.application.storage.UpdateStorageService;
 import org.example.configuration.H2Connection;
 import org.example.configuration.TestConfig;
 import org.example.entities.ItemLocation;
@@ -27,7 +31,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @SpringJUnitConfig(classes = TestConfig.class)
 @ActiveProfiles("testing")
-public class ItemStorageTest {
+public class UpdateStorageServiceTest {
 
     @Autowired
     private H2Connection jooqConnection;
@@ -36,10 +40,16 @@ public class ItemStorageTest {
     private StoredItemRepository storedItemRepository;
 
     @Autowired
-    private ItemManager itemManager;
+    private ManageItemsService manageItemsService;
 
     @Autowired
-    private ItemStorage itemStorage;
+    private ReadItemsService readItemsService;
+
+    @Autowired
+    private UpdateStorageService updateStorageService;
+
+    @Autowired
+    private ReadStorageService readStorageService;
 
     @AfterEach
     public void cleanup() {
@@ -50,8 +60,8 @@ public class ItemStorageTest {
 
     @Test
     public void storeNewItem_existingItem() {
-        itemManager.createItem("Brot", UnitType.WEIGHT);
-        itemStorage.storeItem("Brot", new Location("Regal"), new Amount(1, Weight.KILOGRAM));
+        manageItemsService.createItem("Brot", UnitType.WEIGHT);
+        updateStorageService.storeItem("Brot", new Location("Regal"), new Amount(1, Weight.KILOGRAM));
 
         List<StoredItem> storedItems = storedItemRepository.getAll();
         assertEquals(1, storedItems.size());
@@ -64,15 +74,15 @@ public class ItemStorageTest {
     @Test
     public void storeNewItem_itemMissing() {
         assertThrows(ItemNotFoundException.class, () -> {
-            itemStorage.storeItem("Brot", new Location("Regal"), new Amount(1, Weight.KILOGRAM));
+            updateStorageService.storeItem("Brot", new Location("Regal"), new Amount(1, Weight.KILOGRAM));
         });
     }
 
     @Test
     public void storeNewItem_createNewItem() {
-        itemStorage.createAndStoreItem("Brot", new Location("Regal"), new Amount(1, Weight.KILOGRAM));
+        updateStorageService.createAndStoreItem("Brot", new Location("Regal"), new Amount(1, Weight.KILOGRAM));
 
-        Item item = itemManager.getItem("Brot");
+        Item item = readItemsService.getItem("Brot");
         List<StoredItem> storedItems = storedItemRepository.getAll();
 
         assertEquals("Brot", item.getId());
@@ -87,8 +97,8 @@ public class ItemStorageTest {
 
     @Test
     public void storeItem_updateStoredItem() {
-        itemStorage.createAndStoreItem("Brot", new Location("Regal"), new Amount(1, Weight.KILOGRAM));
-        itemStorage.storeItem("Brot", new Location("Ort"), new Amount(500, Weight.GRAM));
+        updateStorageService.createAndStoreItem("Brot", new Location("Regal"), new Amount(1, Weight.KILOGRAM));
+        updateStorageService.storeItem("Brot", new Location("Ort"), new Amount(500, Weight.GRAM));
 
         List<StoredItem> storedItems = storedItemRepository.getAll();
         assertEquals(1, storedItems.size());
@@ -100,8 +110,8 @@ public class ItemStorageTest {
 
     @Test
     public void setMinimumAmount_existingItem() {
-        itemManager.createItem("Brot", UnitType.WEIGHT);
-        itemStorage.setMinimumAmount("Brot", new Amount(500, Weight.GRAM));
+        manageItemsService.createItem("Brot", UnitType.WEIGHT);
+        updateStorageService.setMinimumAmount("Brot", new Amount(500, Weight.GRAM));
 
         List<StoredItem> storedItems = storedItemRepository.getAll();
         assertEquals(1, storedItems.size());
@@ -113,8 +123,8 @@ public class ItemStorageTest {
 
     @Test
     public void setMinimumAmount_updateStoredItem() {
-        itemStorage.createAndStoreItem("Brot", new Location("Regal"), new Amount(1, Weight.KILOGRAM));
-        itemStorage.setMinimumAmount("Brot", new Amount(500, Weight.GRAM));
+        updateStorageService.createAndStoreItem("Brot", new Location("Regal"), new Amount(1, Weight.KILOGRAM));
+        updateStorageService.setMinimumAmount("Brot", new Amount(500, Weight.GRAM));
 
         List<StoredItem> storedItems = storedItemRepository.getAll();
         assertEquals(1, storedItems.size());
@@ -127,15 +137,15 @@ public class ItemStorageTest {
     @Test
     public void setMinimumAmount_itemMissing() {
         assertThrows(ItemNotFoundException.class, () -> {
-            itemStorage.setMinimumAmount("Brot", new Amount(500, Weight.GRAM));
+            updateStorageService.setMinimumAmount("Brot", new Amount(500, Weight.GRAM));
         });
     }
 
     @Test
     public void viewStoredItem_success() {
-        itemStorage.createAndStoreItem("Brot", new Location("Regal"), new Amount(1, Weight.KILOGRAM));
+        updateStorageService.createAndStoreItem("Brot", new Location("Regal"), new Amount(1, Weight.KILOGRAM));
 
-        StoredItem storedItem = itemStorage.getStoredItem("Brot");
+        StoredItem storedItem = readStorageService.getStoredItem("Brot");
 
         assertEquals("Brot", storedItem.getItemReference());
         assertNull(storedItem.getMinimumAmount());
@@ -146,16 +156,16 @@ public class ItemStorageTest {
     @Test
     public void viewStoredItem_notFound() {
         assertThrows(StoredItemNotFoundException.class, () -> {
-            itemStorage.getStoredItem("Brot");
+            readStorageService.getStoredItem("Brot");
         });
     }
 
     @Test
     public void viewItemLocationsList_success() {
-        itemStorage.createAndStoreItem("Brot", new Location("Regal"), new Amount(1, Weight.KILOGRAM));
-        itemStorage.storeItem("Brot", new Location("Ort"), new Amount(500, Weight.GRAM));
+        updateStorageService.createAndStoreItem("Brot", new Location("Regal"), new Amount(1, Weight.KILOGRAM));
+        updateStorageService.storeItem("Brot", new Location("Ort"), new Amount(500, Weight.GRAM));
 
-        List<ItemLocation> itemLocations = itemStorage.listItemLocations("Brot");
+        List<ItemLocation> itemLocations = readStorageService.listItemLocations("Brot");
         List<Location> locations = itemLocations.stream().map(ItemLocation::getLocation).collect(Collectors.toList());
 
         assertEquals(2, itemLocations.size());
@@ -166,18 +176,18 @@ public class ItemStorageTest {
     @Test
     public void viewItemLocationsList_storedItemMissing() {
         assertThrows(StoredItemNotFoundException.class, () -> {
-            itemStorage.listItemLocations("Brot");
+            readStorageService.listItemLocations("Brot");
         });
     }
 
     @Test
     public void takeFromStoredItem_success() {
-        itemStorage.createAndStoreItem("Brot", new Location("Regal"), new Amount(1, Weight.KILOGRAM));
+        updateStorageService.createAndStoreItem("Brot", new Location("Regal"), new Amount(1, Weight.KILOGRAM));
 
-        Amount requiredLeft = itemStorage.takeAmount("Brot", new Amount(200, Weight.GRAM), itemStorage.listItemLocations("Brot").get(0).getId());
+        Amount requiredLeft = updateStorageService.takeAmount("Brot", new Amount(200, Weight.GRAM), readStorageService.listItemLocations("Brot").get(0).getId());
 
-        StoredItem storedItem = itemStorage.getStoredItem("Brot");
-        List<ItemLocation> itemLocations = itemStorage.listItemLocations("Brot");
+        StoredItem storedItem = readStorageService.getStoredItem("Brot");
+        List<ItemLocation> itemLocations = readStorageService.listItemLocations("Brot");
 
         assertEquals(new Amount(0, Weight.GRAM), requiredLeft);
         assertEquals(new Amount(800, Weight.GRAM), storedItem.getTotalAmount());
@@ -186,12 +196,12 @@ public class ItemStorageTest {
 
     @Test
     public void takeFromStoredItem_notEnough() {
-        itemStorage.createAndStoreItem("Brot", new Location("Regal"), new Amount(1, Weight.KILOGRAM));
+        updateStorageService.createAndStoreItem("Brot", new Location("Regal"), new Amount(1, Weight.KILOGRAM));
 
-        Amount requiredLeft = itemStorage.takeAmount("Brot", new Amount(2, Weight.KILOGRAM), itemStorage.listItemLocations("Brot").get(0).getId());
+        Amount requiredLeft = updateStorageService.takeAmount("Brot", new Amount(2, Weight.KILOGRAM), readStorageService.listItemLocations("Brot").get(0).getId());
 
-        StoredItem storedItem = itemStorage.getStoredItem("Brot");
-        List<ItemLocation> itemLocations = itemStorage.listItemLocations("Brot");
+        StoredItem storedItem = readStorageService.getStoredItem("Brot");
+        List<ItemLocation> itemLocations = readStorageService.listItemLocations("Brot");
         assertEquals(new Amount(1, Weight.KILOGRAM), requiredLeft);
         assertEquals(new Amount(0, Weight.GRAM), storedItem.getTotalAmount());
         assertEquals(0, itemLocations.size());
@@ -199,16 +209,16 @@ public class ItemStorageTest {
 
     @Test
     public void takeFromStoredItem_multipleItemLocations() {
-        itemStorage.createAndStoreItem("Brot", new Location("Regal"), new Amount(1, Weight.KILOGRAM));
-        itemStorage.storeItem("Brot", new Location("Ort"), new Amount(1, Weight.KILOGRAM));
-        ItemLocation firstItemLocation = itemStorage.listItemLocations("Brot").get(0);
-        ItemLocation secondItemLocation = itemStorage.listItemLocations("Brot").get(1);
+        updateStorageService.createAndStoreItem("Brot", new Location("Regal"), new Amount(1, Weight.KILOGRAM));
+        updateStorageService.storeItem("Brot", new Location("Ort"), new Amount(1, Weight.KILOGRAM));
+        ItemLocation firstItemLocation = readStorageService.listItemLocations("Brot").get(0);
+        ItemLocation secondItemLocation = readStorageService.listItemLocations("Brot").get(1);
 
-        Amount requiredLeft = itemStorage.takeAmount("Brot", new Amount(1.2, Weight.KILOGRAM), firstItemLocation.getId());
-        requiredLeft = itemStorage.takeAmount("Brot", requiredLeft, secondItemLocation.getId());
+        Amount requiredLeft = updateStorageService.takeAmount("Brot", new Amount(1.2, Weight.KILOGRAM), firstItemLocation.getId());
+        requiredLeft = updateStorageService.takeAmount("Brot", requiredLeft, secondItemLocation.getId());
 
-        StoredItem storedItem = itemStorage.getStoredItem("Brot");
-        List<ItemLocation> itemLocations = itemStorage.listItemLocations("Brot");
+        StoredItem storedItem = readStorageService.getStoredItem("Brot");
+        List<ItemLocation> itemLocations = readStorageService.listItemLocations("Brot");
         assertEquals(new Amount(0, Weight.GRAM), requiredLeft);
         assertEquals(new Amount(800, Weight.GRAM), storedItem.getTotalAmount());
         assertEquals(1, itemLocations.size());
@@ -219,28 +229,28 @@ public class ItemStorageTest {
     @Test
     public void takeFromStoredItem_storedItemMissing() {
         assertThrows(StoredItemNotFoundException.class, () -> {
-            itemStorage.takeAmount("Brot", new Amount(200, Weight.GRAM), itemStorage.listItemLocations("Brot").get(0).getId());
+            updateStorageService.takeAmount("Brot", new Amount(200, Weight.GRAM), readStorageService.listItemLocations("Brot").get(0).getId());
         });
     }
 
     @Test
     public void deleteStoredItem_success() {
-        itemStorage.createAndStoreItem("Brot", new Location("Regal"), new Amount(1, Weight.KILOGRAM));
+        updateStorageService.createAndStoreItem("Brot", new Location("Regal"), new Amount(1, Weight.KILOGRAM));
 
-        StoredItem storedItem = itemStorage.getStoredItem("Brot");
+        StoredItem storedItem = readStorageService.getStoredItem("Brot");
         assertEquals("Brot", storedItem.getItemReference());
 
-        itemStorage.deleteStoredItem("Brot");
+        updateStorageService.deleteStoredItem("Brot");
 
         assertThrows(StoredItemNotFoundException.class, () -> {
-            itemStorage.getStoredItem("Brot");
+            readStorageService.getStoredItem("Brot");
         });
     }
 
     @Test
     public void deleteStoredItem_storedItemMissing() {
         assertThrows(StoredItemNotFoundException.class, () -> {
-            itemStorage.deleteStoredItem("Brot");
+            updateStorageService.deleteStoredItem("Brot");
         });
     }
 }

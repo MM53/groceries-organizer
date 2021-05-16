@@ -1,24 +1,22 @@
-package org.example.application;
+package org.example.application.items;
 
 import org.example.application.exceptions.ItemAlreadyExistsException;
 import org.example.entities.aggregateRoots.Item;
-import org.example.exceptions.ItemNotFoundException;
 import org.example.repositories.ItemRepository;
 import org.example.units.UnitType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
 @Service
-public class ItemManager {
+public class ManageItemsService {
 
     private final ItemRepository itemRepository;
+    private final ReadItemsService readItemsService;
 
     @Autowired
-    public ItemManager(ItemRepository itemRepository) {
+    public ManageItemsService(ItemRepository itemRepository, ReadItemsService readItemsService) {
         this.itemRepository = itemRepository;
+        this.readItemsService = readItemsService;
     }
 
     public void createItem(String name, UnitType unitType) {
@@ -29,31 +27,20 @@ public class ItemManager {
         itemRepository.save(item);
     }
 
-    public List<String> listItems() {
-        return itemRepository.getAll()
-                             .stream()
-                             .map(Item::getId)
-                             .collect(Collectors.toList());
-    }
-
-    public Item getItem(String itemName) {
-        return itemRepository.findItemByName(itemName)
-                             .orElseThrow(() -> new ItemNotFoundException(itemName));
-    }
-
     public void addName(String itemName, String name) {
-        Item item = getItem(itemName);
+        Item item = readItemsService.getItem(itemName);
         item.addAlternativeName(name);
         itemRepository.save(item);
     }
 
     public void removeName(String itemName, String name) {
-        Item item = getItem(itemName);
+        Item item = readItemsService.getItem(itemName);
         item.removeAlternativeName(name);
         itemRepository.save(item);
     }
 
     public void deleteItem(String itemName) {
-        itemRepository.delete(getItem(itemName));
+        Item item = readItemsService.getItem(itemName);
+        itemRepository.delete(item);
     }
 }
