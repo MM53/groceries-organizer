@@ -62,7 +62,6 @@ public final class Amount {
 
     @Override
     public int hashCode() {
-        Unit baseUnit = unit.getType().getBase();
-        return Objects.hash(getValueInUnit(baseUnit), baseUnit);
+        return Objects.hash(value, unit);
     }
 }
