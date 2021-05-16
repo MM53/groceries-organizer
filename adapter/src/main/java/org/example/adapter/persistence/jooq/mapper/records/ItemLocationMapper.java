@@ -2,6 +2,7 @@ package org.example.adapter.persistence.jooq.mapper.records;
 
 import org.example.entities.ItemLocation;
 import org.example.adapter.persistence.jooq.generated.tables.records.ItemLocationRecord;
+import org.example.entities.aggregateRoots.StoredItem;
 import org.example.units.Pieces;
 import org.example.units.UnitType;
 import org.example.units.Volume;
@@ -10,6 +11,7 @@ import org.example.valueObjects.Amount;
 import org.example.valueObjects.Location;
 import org.jooq.RecordMapper;
 
+import java.util.List;
 import java.util.UUID;
 
 public class ItemLocationMapper {
@@ -22,18 +24,20 @@ public class ItemLocationMapper {
             };
 
             return new ItemLocation(UUID.fromString(record.getId()),
-                                    UUID.fromString(record.getStoredItemReference()),
                                     new Location(record.getLocation()),
                                     amount);
         };
     }
 
-    public static ItemLocationRecord unmap(ItemLocation itemLocation) {
-        return new ItemLocationRecord(itemLocation.getId().toString(),
-                                      itemLocation.getStoredItemReference().toString(),
-                                      itemLocation.getLocation().getLocation(),
-                                      itemLocation.getAmount().getValue(),
-                                      itemLocation.getAmount().getUnit().name(),
-                                      itemLocation.getAmount().getUnit().getType().toString());
+    public static List<ItemLocationRecord> extractRecords(StoredItem storedItem) {
+        return storedItem.getItemLocations()
+                         .stream()
+                         .map(itemLocation -> new ItemLocationRecord(itemLocation.getId().toString(),
+                                                                     storedItem.getId().toString(),
+                                                                     itemLocation.getLocation().getLocation(),
+                                                                     itemLocation.getAmount().getValue(),
+                                                                     itemLocation.getAmount().getUnit().name(),
+                                                                     itemLocation.getAmount().getUnit().getType().toString()))
+                .toList();
     }
 }

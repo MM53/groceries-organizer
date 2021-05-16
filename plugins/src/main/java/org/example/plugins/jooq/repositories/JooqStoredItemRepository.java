@@ -46,14 +46,14 @@ public class JooqStoredItemRepository implements StoredItemRepository {
         storedItemRecord.setItemReference(storedItem.getItemReference());
 
         if (storedItem.getMinimumAmount() != null) {
-            context.newRecord(MINIMUM_AMOUNT, MinimumAmountMapper.unmap(storedItem.getMinimumAmount())).merge();
+            context.newRecord(MINIMUM_AMOUNT, MinimumAmountMapper.extractRecord(storedItem)).merge();
             storedItemRecord.setMinimumAmountReference(storedItem.getMinimumAmount().getId().toString());
         }
 
         storedItemRecord.merge();
 
-        storedItem.getItemLocations()
-                  .forEach(itemLocation -> context.newRecord(ITEM_LOCATION, ItemLocationMapper.unmap(itemLocation)).merge());
+        ItemLocationMapper.extractRecords(storedItem)
+                          .forEach(record -> context.newRecord(ITEM_LOCATION, record).merge());
 
         Condition itemLocationsRemoved = ITEM_LOCATION.STORED_ITEM_REFERENCE.eq(storedItem.getId().toString());
         if (storedItem.getItemLocations().size() > 0) {

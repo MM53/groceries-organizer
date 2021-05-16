@@ -42,7 +42,7 @@ public class ShoppingList {
     }
 
     public void addShoppingListItem(String itemReference, Amount amount) {
-        addShoppingListItem(new ShoppingListItem(this.name, itemReference, amount));
+        addShoppingListItem(new ShoppingListItem(this.name, amount));
     }
 
     public void removeShoppingListItem(String itemReference) {

@@ -13,15 +13,14 @@ public class ItemLocation {
     private Location location;
     private Amount amount;
 
-    public ItemLocation(UUID id, UUID storedItemReference, Location location, Amount amount) {
+    public ItemLocation(UUID id, Location location, Amount amount) {
         this.id = id;
-        this.storedItemReference = storedItemReference;
         this.location = location;
         this.amount = amount;
     }
 
-    public ItemLocation(UUID storedItemReference, Location location, Amount amount) {
-        this(UUID.randomUUID(), storedItemReference, location, amount);
+    public ItemLocation(Location location, Amount amount) {
+        this(UUID.randomUUID(), location, amount);
     }
 
     public UUID getId() {
@@ -46,14 +45,6 @@ public class ItemLocation {
 
     public void setAmount(Amount amount) {
         this.amount = amount;
-    }
-
-    public UUID getStoredItemReference() {
-        return storedItemReference;
-    }
-
-    public void setStoredItemReference(UUID storedItemReference) {
-        this.storedItemReference = storedItemReference;
     }
 
     @Override

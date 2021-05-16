@@ -1,6 +1,7 @@
 package org.example.adapter.persistence.jooq.mapper.records;
 
 import org.example.entities.MinimumAmount;
+import org.example.entities.aggregateRoots.StoredItem;
 import org.example.units.Pieces;
 import org.example.units.UnitType;
 import org.example.units.Volume;
@@ -27,7 +28,8 @@ public class MinimumAmountMapper {
         };
     }
 
-    public static MinimumAmountRecord unmap(MinimumAmount minimumAmount) {
+    public static MinimumAmountRecord extractRecord(StoredItem storedItem) {
+        MinimumAmount minimumAmount = storedItem.getMinimumAmount();
         return new MinimumAmountRecord(minimumAmount.getId().toString(),
                                        minimumAmount.getAmount().getValue(),
                                        minimumAmount.getAmount().getUnit().name(),

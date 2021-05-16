@@ -1,6 +1,7 @@
 package org.example.adapter.persistence.jooq.mapper.records;
 
 import org.example.entities.ShoppingListItem;
+import org.example.entities.aggregateRoots.ShoppingList;
 import org.example.units.Pieces;
 import org.example.units.UnitType;
 import org.example.units.Volume;
@@ -9,6 +10,7 @@ import org.example.valueObjects.Amount;
 import org.jooq.RecordMapper;
 import org.example.adapter.persistence.jooq.generated.tables.records.ShoppingListItemRecord;
 
+import java.util.List;
 import java.util.UUID;
 
 public class ShoppingListItemMapper {
@@ -21,20 +23,22 @@ public class ShoppingListItemMapper {
             };
 
             return new ShoppingListItem(UUID.fromString(record.getId()),
-                                        record.getShoppingListReference(),
                                         record.getItemReference(),
                                         record.getBought(),
                                         amount);
         };
     }
 
-    public static ShoppingListItemRecord unmap(ShoppingListItem shoppingListItem) {
-        return new ShoppingListItemRecord(shoppingListItem.getId().toString(),
-                                          shoppingListItem.getShoppingListReference(),
-                                          shoppingListItem.getItemReference(),
-                                          shoppingListItem.isBought(),
-                                          shoppingListItem.getAmount().getValue(),
-                                          shoppingListItem.getAmount().getUnit().name(),
-                                          shoppingListItem.getAmount().getUnit().getType().toString());
+    public static List<ShoppingListItemRecord> extractRecords(ShoppingList shoppingList) {
+        return shoppingList.getShoppingListItems()
+                           .stream()
+                           .map(shoppingListItem -> new ShoppingListItemRecord(shoppingListItem.getId().toString(),
+                                                                               shoppingList.getName(),
+                                                                               shoppingListItem.getItemReference(),
+                                                                               shoppingListItem.isBought(),
+                                                                               shoppingListItem.getAmount().getValue(),
+                                                                               shoppingListItem.getAmount().getUnit().name(),
+                                                                               shoppingListItem.getAmount().getUnit().getType().toString()))
+                           .toList();
     }
 }

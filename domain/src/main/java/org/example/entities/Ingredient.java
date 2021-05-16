@@ -8,27 +8,21 @@ import java.util.UUID;
 public class Ingredient {
 
     private final UUID id;
-    private final UUID recipeReference;
     private final String itemReference;
     private Amount amount;
 
-    public Ingredient(UUID recipeReference, String itemReference, Amount amount) {
-        this(UUID.randomUUID(), recipeReference, itemReference, amount);
+    public Ingredient(String itemReference, Amount amount) {
+        this(UUID.randomUUID(), itemReference, amount);
     }
 
-    public Ingredient(UUID id, UUID recipeReference, String itemReference, Amount amount) {
+    public Ingredient(UUID id, String itemReference, Amount amount) {
         this.id = id;
-        this.recipeReference = recipeReference;
         this.itemReference = itemReference;
         this.amount = amount;
     }
 
     public UUID getId() {
         return id;
-    }
-
-    public UUID getRecipeReference() {
-        return recipeReference;
     }
 
     public String getItemReference() {

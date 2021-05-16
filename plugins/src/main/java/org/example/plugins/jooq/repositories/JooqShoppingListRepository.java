@@ -39,9 +39,8 @@ public class JooqShoppingListRepository implements ShoppingListRepository {
     public void save(ShoppingList shoppingList) {
         context.newRecord(SHOPPING_LIST, shoppingList).merge();
 
-        shoppingList.getShoppingListItems()
-                    .forEach(shoppingListItem -> context.newRecord(SHOPPING_LIST_ITEM, ShoppingListItemMapper.unmap(shoppingListItem))
-                                                        .merge());
+        ShoppingListItemMapper.extractRecords(shoppingList)
+                              .forEach(record -> context.newRecord(SHOPPING_LIST_ITEM, record).merge());
 
         Condition shoppingListItemsRemoved = SHOPPING_LIST_ITEM.SHOPPING_LIST_REFERENCE.eq(shoppingList.getName());
         if (shoppingList.getShoppingListItems().size() > 0) {
