@@ -74,6 +74,6 @@ public class Application {
 
         System.out.println(itemStorage.listItemLocations("Butter"));
         System.out.println(itemManager.listItems());
-        System.out.println(itemManager.viewItem("Butter"));
+        System.out.println(itemManager.getItem("Butter"));
     }
 }

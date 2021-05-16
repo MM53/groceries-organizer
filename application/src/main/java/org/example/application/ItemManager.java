@@ -36,28 +36,24 @@ public class ItemManager {
                              .collect(Collectors.toList());
     }
 
-    public Item viewItem(String itemName) {
+    public Item getItem(String itemName) {
         return itemRepository.findItemByName(itemName)
                              .orElseThrow(() -> new ItemNotFoundException(itemName));
     }
 
     public void addName(String itemName, String name) {
-        Item item = itemRepository.findItemByName(itemName)
-                                  .orElseThrow(() -> new ItemNotFoundException(itemName));
+        Item item = getItem(itemName);
         item.addAlternativeName(name);
         itemRepository.save(item);
     }
 
     public void removeName(String itemName, String name) {
-        Item item = itemRepository.findItemByName(itemName)
-                                  .orElseThrow(() -> new ItemNotFoundException(itemName));
+        Item item = getItem(itemName);
         item.removeAlternativeName(name);
         itemRepository.save(item);
     }
 
     public void deleteItem(String itemName) {
-        Item item = itemRepository.findItemByName(itemName)
-                                  .orElseThrow(() -> new ItemNotFoundException(itemName));
-        itemRepository.delete(item);
+        itemRepository.delete(getItem(itemName));
     }
 }

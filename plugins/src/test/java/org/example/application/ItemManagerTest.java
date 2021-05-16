@@ -53,7 +53,7 @@ public class ItemManagerTest {
     public void createNewItem_duplicate() {
         itemManager.createItem("Brot", UnitType.WEIGHT);
 
-        Item item = itemManager.viewItem("Brot");
+        Item item = itemManager.getItem("Brot");
 
         assertEquals("Brot", item.getId());
         assertEquals(UnitType.WEIGHT, item.getUnitType());
@@ -111,7 +111,7 @@ public class ItemManagerTest {
     public void viewItem_success() {
         itemManager.createItem("Brot", UnitType.WEIGHT);
 
-        Item item = itemManager.viewItem("Brot");
+        Item item = itemManager.getItem("Brot");
 
         assertEquals("Brot", item.getId());
         assertEquals(UnitType.WEIGHT, item.getUnitType());
@@ -120,7 +120,7 @@ public class ItemManagerTest {
     @Test
     public void viewItem_notFound() {
         assertThrows(ItemNotFoundException.class, () -> {
-            itemManager.viewItem("Brot");
+            itemManager.getItem("Brot");
         });
     }
 

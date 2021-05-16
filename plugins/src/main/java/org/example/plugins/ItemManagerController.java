@@ -37,7 +37,7 @@ public class ItemManagerController {
     @GetMapping("/items/{name}")
     public String listItems(@PathVariable("name") String name, Model model) {
         model.addAttribute("template", "manageItem");
-        model.addAttribute("item", itemManager.viewItem(name));
+        model.addAttribute("item", itemManager.getItem(name));
         return "layout/main";
     }
 

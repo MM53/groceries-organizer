@@ -55,38 +55,21 @@ public class ItemStorage {
         return storedItemRepository.getAll();
     }
 
-    public StoredItem viewStoredItem(String itemName) {
+    public StoredItem getStoredItem(String itemName) {
         return storedItemRepository.findByReferencedItem(new Item(itemName, null))
                                    .orElseThrow(() -> new StoredItemNotFoundException(itemName));
     }
 
     public List<ItemLocation> listItemLocations(String itemName) {
-        return new ArrayList<>(storedItemRepository.findByReferencedItem(new Item(itemName, null))
-                                                   .map(StoredItem::getItemLocations)
-                                                   .orElseThrow(() -> new StoredItemNotFoundException(itemName)));
-    }
-
-    public ItemLocation getItemLocation(String itemName, Location location) {
-//        TODO
-        return storedItemRepository.findByReferencedItem(new Item(itemName, null))
-                                   .map(StoredItem::getItemLocations)
-                                   .orElseThrow(() -> new StoredItemNotFoundException(itemName))
-                                   .stream()
-                                   .filter(itemLocation -> itemLocation.getLocation().equals(location))
-                                   .findAny()
-                                   .get();
+        return new ArrayList<>(getStoredItem(itemName).getItemLocations());
     }
 
     public void deleteStoredItem(String itemName) {
-        StoredItem storedItem = storedItemRepository.findByReferencedItem(new Item(itemName, null))
-                                                    .orElseThrow(() -> new StoredItemNotFoundException(itemName));
-        storedItemRepository.delete(storedItem);
+        storedItemRepository.delete(getStoredItem(itemName));
     }
 
     public Amount takeAmount(String itemName, Amount requestedAmount, UUID itemLocationId) {
-        StoredItem storedItem = storedItemRepository.findByReferencedItem(new Item(itemName, null))
-                                                    .orElseThrow(() -> new StoredItemNotFoundException(itemName));
-
+        StoredItem storedItem = getStoredItem(itemName);
         Amount availableAmount = storedItem.findItemLocation(itemLocationId)
                                            .orElseThrow(() -> new ItemLocationNotFoundException(itemLocationId, storedItem.getId()))
                                            .getAmount();

@@ -72,7 +72,7 @@ public class ItemStorageTest {
     public void storeNewItem_createNewItem() {
         itemStorage.createAndStoreItem("Brot", new Location("Regal"), new Amount(1, Weight.KILOGRAM));
 
-        Item item = itemManager.viewItem("Brot");
+        Item item = itemManager.getItem("Brot");
         List<StoredItem> storedItems = storedItemRepository.getAll();
 
         assertEquals("Brot", item.getId());
@@ -135,7 +135,7 @@ public class ItemStorageTest {
     public void viewStoredItem_success() {
         itemStorage.createAndStoreItem("Brot", new Location("Regal"), new Amount(1, Weight.KILOGRAM));
 
-        StoredItem storedItem = itemStorage.viewStoredItem("Brot");
+        StoredItem storedItem = itemStorage.getStoredItem("Brot");
 
         assertEquals("Brot", storedItem.getItemReference());
         assertNull(storedItem.getMinimumAmount());
@@ -146,7 +146,7 @@ public class ItemStorageTest {
     @Test
     public void viewStoredItem_notFound() {
         assertThrows(StoredItemNotFoundException.class, () -> {
-            itemStorage.viewStoredItem("Brot");
+            itemStorage.getStoredItem("Brot");
         });
     }
 
@@ -176,7 +176,7 @@ public class ItemStorageTest {
 
         Amount requiredLeft = itemStorage.takeAmount("Brot", new Amount(200, Weight.GRAM), itemStorage.listItemLocations("Brot").get(0).getId());
 
-        StoredItem storedItem = itemStorage.viewStoredItem("Brot");
+        StoredItem storedItem = itemStorage.getStoredItem("Brot");
         List<ItemLocation> itemLocations = itemStorage.listItemLocations("Brot");
 
         assertEquals(new Amount(0, Weight.GRAM), requiredLeft);
@@ -190,7 +190,7 @@ public class ItemStorageTest {
 
         Amount requiredLeft = itemStorage.takeAmount("Brot", new Amount(2, Weight.KILOGRAM), itemStorage.listItemLocations("Brot").get(0).getId());
 
-        StoredItem storedItem = itemStorage.viewStoredItem("Brot");
+        StoredItem storedItem = itemStorage.getStoredItem("Brot");
         List<ItemLocation> itemLocations = itemStorage.listItemLocations("Brot");
         assertEquals(new Amount(1, Weight.KILOGRAM), requiredLeft);
         assertEquals(new Amount(0, Weight.GRAM), storedItem.getTotalAmount());
@@ -207,7 +207,7 @@ public class ItemStorageTest {
         Amount requiredLeft = itemStorage.takeAmount("Brot", new Amount(1.2, Weight.KILOGRAM), firstItemLocation.getId());
         requiredLeft = itemStorage.takeAmount("Brot", requiredLeft, secondItemLocation.getId());
 
-        StoredItem storedItem = itemStorage.viewStoredItem("Brot");
+        StoredItem storedItem = itemStorage.getStoredItem("Brot");
         List<ItemLocation> itemLocations = itemStorage.listItemLocations("Brot");
         assertEquals(new Amount(0, Weight.GRAM), requiredLeft);
         assertEquals(new Amount(800, Weight.GRAM), storedItem.getTotalAmount());
@@ -227,13 +227,13 @@ public class ItemStorageTest {
     public void deleteStoredItem_success() {
         itemStorage.createAndStoreItem("Brot", new Location("Regal"), new Amount(1, Weight.KILOGRAM));
 
-        StoredItem storedItem = itemStorage.viewStoredItem("Brot");
+        StoredItem storedItem = itemStorage.getStoredItem("Brot");
         assertEquals("Brot", storedItem.getItemReference());
 
         itemStorage.deleteStoredItem("Brot");
 
         assertThrows(StoredItemNotFoundException.class, () -> {
-            itemStorage.viewStoredItem("Brot");
+            itemStorage.getStoredItem("Brot");
         });
     }
 
