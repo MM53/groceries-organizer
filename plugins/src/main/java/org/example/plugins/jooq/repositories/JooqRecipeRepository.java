@@ -76,17 +76,17 @@ public class JooqRecipeRepository implements RecipeRepository {
     }
 
     @Override
-    public Optional<Recipe> findByListId(UUID id) {
+    public Optional<Recipe> findByRecipeId(UUID id) {
         return context.fetch(JOINED_TABLE, RECIPE.ID.eq(id.toString()))
                       .stream()
                       .collect(collector.toOptional());
     }
 
     @Override
-    public Optional<Recipe> findByListName(String name) {
-        return context.fetch(JOINED_TABLE, RECIPE.NAME.eq(name))
+    public List<Recipe> findByRecipeNameLike(String name) {
+        return context.fetch(JOINED_TABLE, RECIPE.NAME.containsIgnoreCase(name))
                       .stream()
-                      .collect(collector.toOptional());
+                      .collect(collector.toList(RECIPE.ID));
     }
 
     @Override

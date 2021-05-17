@@ -28,7 +28,7 @@ public class JooqTagRepository implements TagRepository {
     }
 
     @Override
-    public Optional<Tag> findItemByName(String name) {
+    public Optional<Tag> findTagByName(String name) {
         return context.fetchOptional(TAG, TAG.NAME.eq(name))
                       .map(tagRecord -> tagRecord.into(Tag.class));
     }

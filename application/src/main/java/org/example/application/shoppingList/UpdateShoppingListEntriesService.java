@@ -17,15 +17,15 @@ public class UpdateShoppingListEntriesService {
     private final ReadShoppingListService readShoppingListService;
 
     @Autowired
+    public UpdateShoppingListEntriesService(ShoppingListRepository shoppingListRepository, ReadShoppingListService readShoppingListService) {
+        this.shoppingListRepository = shoppingListRepository;
+        this.readShoppingListService = readShoppingListService;
+    }
+
     public void addEntry(String listName, String itemName, Amount amount) {
         ShoppingList shoppingList = readShoppingListService.getShoppingList(listName);
         shoppingList.addShoppingListItem(itemName, amount);
         shoppingListRepository.save(shoppingList);
-    }
-
-    public UpdateShoppingListEntriesService(ShoppingListRepository shoppingListRepository, ReadShoppingListService readShoppingListService) {
-        this.shoppingListRepository = shoppingListRepository;
-        this.readShoppingListService = readShoppingListService;
     }
 
     public void removeEntry(String listName, String itemName) {

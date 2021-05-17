@@ -62,14 +62,6 @@ public class Recipe {
         }
     }
 
-    public void removeTag(String name) {
-        Tag tagToRemove = tages.stream()
-                               .filter(tag -> tag.getName().equals(name))
-                               .findAny()
-                               .orElseThrow();
-        removeTag(tagToRemove);
-    }
-
     public void addIngredient(Ingredient ingredient) {
         itemUtilService.validateExistence(ingredient.getItemReference());
         itemUtilService.validate(ingredient.getItemReference(), ingredient.getAmount().getUnit().getType());

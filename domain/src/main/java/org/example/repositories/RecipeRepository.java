@@ -11,9 +11,9 @@ public interface RecipeRepository {
 
     public void save(Recipe recipe);
 
-    public Optional<Recipe> findByListId(UUID id);
+    public Optional<Recipe> findByRecipeId(UUID id);
 
-    public Optional<Recipe> findByListName(String name);
+    public List<Recipe> findByRecipeNameLike(String name);
 
     public List<Recipe> findByTag(Tag tag);
 

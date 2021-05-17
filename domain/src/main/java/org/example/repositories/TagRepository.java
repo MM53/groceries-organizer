@@ -9,7 +9,7 @@ public interface TagRepository {
 
     public void save(Tag tag);
 
-    public Optional<Tag> findItemByName(String name);
+    public Optional<Tag> findTagByName(String name);
 
     public List<Tag> getAll();
 
