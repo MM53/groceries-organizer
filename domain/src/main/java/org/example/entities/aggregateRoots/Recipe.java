@@ -1,7 +1,6 @@
 package org.example.entities.aggregateRoots;
 
 import org.example.entities.Ingredient;
-import org.example.entities.Tag;
 import org.example.exceptions.IngredientAlreadyExistsException;
 import org.example.exceptions.IngredientNotFoundException;
 import org.example.services.ItemUtilService;
@@ -104,6 +103,10 @@ public class Recipe {
         return ingredients.stream()
                           .filter(ingredient -> ingredient.getItemReference().equals(itemReference))
                           .findAny();
+    }
+
+    public Set<Ingredient> getIngredients() {
+        return ingredients;
     }
 
     public String getDescription() {

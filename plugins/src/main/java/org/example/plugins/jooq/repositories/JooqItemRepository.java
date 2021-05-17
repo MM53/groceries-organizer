@@ -1,9 +1,9 @@
 package org.example.plugins.jooq.repositories;
 
+import org.example.adapter.persistence.jooq.mapper.collectors.ItemCollector;
 import org.example.entities.ItemName;
 import org.example.entities.aggregateRoots.Item;
 import org.example.plugins.jooq.configuration.JooqConnection;
-import org.example.adapter.persistence.jooq.mapper.collectors.ItemCollector;
 import org.example.repositories.ItemRepository;
 import org.jooq.DSLContext;
 import org.jooq.Record;
@@ -13,7 +13,6 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import static org.example.adapter.persistence.jooq.generated.Tables.ITEM;
 import static org.example.adapter.persistence.jooq.generated.Tables.ITEM_NAME;

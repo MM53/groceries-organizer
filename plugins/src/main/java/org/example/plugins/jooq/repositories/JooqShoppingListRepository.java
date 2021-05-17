@@ -1,10 +1,10 @@
 package org.example.plugins.jooq.repositories;
 
+import org.example.adapter.persistence.jooq.mapper.collectors.ShoppingListCollector;
+import org.example.adapter.persistence.jooq.mapper.records.ShoppingListItemMapper;
 import org.example.entities.ShoppingListItem;
 import org.example.entities.aggregateRoots.ShoppingList;
 import org.example.plugins.jooq.configuration.JooqConnection;
-import org.example.adapter.persistence.jooq.mapper.collectors.ShoppingListCollector;
-import org.example.adapter.persistence.jooq.mapper.records.ShoppingListItemMapper;
 import org.example.repositories.ShoppingListRepository;
 import org.jooq.Condition;
 import org.jooq.DSLContext;
@@ -15,7 +15,6 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import static org.example.adapter.persistence.jooq.generated.Tables.SHOPPING_LIST;
 import static org.example.adapter.persistence.jooq.generated.Tables.SHOPPING_LIST_ITEM;

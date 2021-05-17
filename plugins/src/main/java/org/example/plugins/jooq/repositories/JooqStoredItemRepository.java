@@ -1,13 +1,13 @@
 package org.example.plugins.jooq.repositories;
 
-import org.example.entities.ItemLocation;
-import org.example.entities.aggregateRoots.Item;
-import org.example.entities.aggregateRoots.StoredItem;
-import org.example.plugins.jooq.configuration.JooqConnection;
 import org.example.adapter.persistence.jooq.generated.tables.records.StoredItemRecord;
 import org.example.adapter.persistence.jooq.mapper.collectors.StoredItemCollector;
 import org.example.adapter.persistence.jooq.mapper.records.ItemLocationMapper;
 import org.example.adapter.persistence.jooq.mapper.records.MinimumAmountMapper;
+import org.example.entities.ItemLocation;
+import org.example.entities.aggregateRoots.Item;
+import org.example.entities.aggregateRoots.StoredItem;
+import org.example.plugins.jooq.configuration.JooqConnection;
 import org.example.repositories.StoredItemRepository;
 import org.jooq.Condition;
 import org.jooq.DSLContext;
@@ -19,7 +19,6 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 import static org.example.adapter.persistence.jooq.generated.Tables.*;
 
