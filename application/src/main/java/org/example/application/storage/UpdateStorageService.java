@@ -2,6 +2,7 @@ package org.example.application.storage;
 
 import org.example.application.items.ManageItemsService;
 import org.example.entities.aggregateRoots.Item;
+import org.example.entities.aggregateRoots.ShoppingList;
 import org.example.entities.aggregateRoots.StoredItem;
 import org.example.exceptions.ItemLocationNotFoundException;
 import org.example.repositories.StoredItemRepository;
@@ -54,18 +55,15 @@ public class UpdateStorageService {
         storedItemRepository.delete(readStorageService.getStoredItem(itemName));
     }
 
-    public Amount takeAmount(String itemName, Amount requestedAmount, UUID itemLocationId) {
+    public void updateAmount(String itemName, UUID itemLocationId, Amount amount) {
         StoredItem storedItem = readStorageService.getStoredItem(itemName);
-        Amount availableAmount = storedItem.findItemLocation(itemLocationId)
-                                           .orElseThrow(() -> new ItemLocationNotFoundException(itemLocationId, storedItem.getId()))
-                                           .getAmount();
+        storedItem.updateItemLocationAmount(itemLocationId, amount);
+        storedItemRepository.save(storedItem);
+    }
 
-        if (requestedAmount.isMoreThan(availableAmount) || requestedAmount.equals(availableAmount)) {
-            storedItem.removeLocation(itemLocationId);
-            return requestedAmount.sub(availableAmount);
-        } else {
-            storedItem.updateItemLocationAmount(itemLocationId, availableAmount.sub(requestedAmount));
-            return new Amount(0, requestedAmount.getUnit());
-        }
+    public void removeItemLocation(String itemName, UUID itemLocationId) {
+        StoredItem storedItem = readStorageService.getStoredItem(itemName);
+        storedItem.removeLocation(itemLocationId);
+        storedItemRepository.save(storedItem);
     }
 }

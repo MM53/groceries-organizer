@@ -4,6 +4,7 @@ import org.example.AppConfig;
 import org.example.application.items.ManageItemsService;
 import org.example.application.items.ReadItemsService;
 import org.example.application.storage.ReadStorageService;
+import org.example.application.storage.TakeAmountService;
 import org.example.application.storage.UpdateStorageService;
 import org.example.entities.ItemLocation;
 import org.example.entities.aggregateRoots.ShoppingList;
@@ -35,6 +36,9 @@ public class Application {
 
     @Autowired
     private ReadStorageService readStorageService;
+
+    @Autowired
+    private TakeAmountService takeAmountService;
 
     @Autowired
     private ShoppingListRepository shoppingListRepository;
@@ -74,7 +78,7 @@ public class Application {
                                                                            .equals("Kühlschrank"))
                                                         .findAny()
                                                         .get();
-        updateStorageService.takeAmount("Butter", new Amount(150, Weight.GRAM), itemLocation.getId());
+        takeAmountService.takeAmount("Butter", new Amount(150, Weight.GRAM), itemLocation.getId());
 
         ShoppingList shoppingList = new ShoppingList("Lebensmittel");
         shoppingList.addShoppingListItem("Brot", new Amount(500, Weight.GRAM));

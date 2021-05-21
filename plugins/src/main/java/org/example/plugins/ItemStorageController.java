@@ -3,6 +3,7 @@ package org.example.plugins;
 import org.example.adapter.AmountAdapter;
 import org.example.adapter.StoredItemWeb;
 import org.example.application.storage.ReadStorageService;
+import org.example.application.storage.TakeAmountService;
 import org.example.application.storage.UpdateStorageService;
 import org.example.exceptions.ItemNotFoundException;
 import org.example.valueObjects.Location;
@@ -24,11 +25,13 @@ public class ItemStorageController {
 
     private UpdateStorageService updateStorageService;
     private ReadStorageService readStorageService;
+    private TakeAmountService takeAmountService;
 
     @Autowired
-    public ItemStorageController(UpdateStorageService updateStorageService, ReadStorageService readStorageService) {
+    public ItemStorageController(UpdateStorageService updateStorageService, ReadStorageService readStorageService, TakeAmountService takeAmountService) {
         this.updateStorageService = updateStorageService;
         this.readStorageService = readStorageService;
+        this.takeAmountService = takeAmountService;
     }
 
     @GetMapping("/storage")
@@ -54,7 +57,7 @@ public class ItemStorageController {
 
     @PostMapping("/storage/{itemReference}/take")
     public RedirectView takeAmounts(@PathVariable("itemReference") String itemReference, @RequestParam String locationId, @RequestParam String amount) {
-        updateStorageService.takeAmount(itemReference, AmountAdapter.ExtractFromString(amount), UUID.fromString(locationId));
+        takeAmountService.takeAmount(itemReference, AmountAdapter.ExtractFromString(amount), UUID.fromString(locationId));
         return new RedirectView("/storage");
     }
 

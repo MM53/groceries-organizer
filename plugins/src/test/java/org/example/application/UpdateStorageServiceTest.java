@@ -3,6 +3,7 @@ package org.example.application;
 import org.example.application.items.ManageItemsService;
 import org.example.application.items.ReadItemsService;
 import org.example.application.storage.ReadStorageService;
+import org.example.application.storage.TakeAmountService;
 import org.example.application.storage.UpdateStorageService;
 import org.example.configuration.H2Connection;
 import org.example.configuration.TestConfig;
@@ -50,6 +51,9 @@ public class UpdateStorageServiceTest {
 
     @Autowired
     private ReadStorageService readStorageService;
+
+    @Autowired
+    private TakeAmountService takeAmountService;
 
     @AfterEach
     public void cleanup() {
@@ -184,7 +188,7 @@ public class UpdateStorageServiceTest {
     public void takeFromStoredItem_success() {
         updateStorageService.createAndStoreItem("Brot", new Location("Regal"), new Amount(1, Weight.KILOGRAM));
 
-        Amount requiredLeft = updateStorageService.takeAmount("Brot", new Amount(200, Weight.GRAM), readStorageService.listItemLocations("Brot").get(0).getId());
+        Amount requiredLeft = takeAmountService.takeAmount("Brot", new Amount(200, Weight.GRAM), readStorageService.listItemLocations("Brot").get(0).getId());
 
         StoredItem storedItem = readStorageService.getStoredItem("Brot");
         List<ItemLocation> itemLocations = readStorageService.listItemLocations("Brot");
@@ -198,7 +202,7 @@ public class UpdateStorageServiceTest {
     public void takeFromStoredItem_notEnough() {
         updateStorageService.createAndStoreItem("Brot", new Location("Regal"), new Amount(1, Weight.KILOGRAM));
 
-        Amount requiredLeft = updateStorageService.takeAmount("Brot", new Amount(2, Weight.KILOGRAM), readStorageService.listItemLocations("Brot").get(0).getId());
+        Amount requiredLeft = takeAmountService.takeAmount("Brot", new Amount(2, Weight.KILOGRAM), readStorageService.listItemLocations("Brot").get(0).getId());
 
         StoredItem storedItem = readStorageService.getStoredItem("Brot");
         List<ItemLocation> itemLocations = readStorageService.listItemLocations("Brot");
@@ -214,8 +218,8 @@ public class UpdateStorageServiceTest {
         ItemLocation firstItemLocation = readStorageService.listItemLocations("Brot").get(0);
         ItemLocation secondItemLocation = readStorageService.listItemLocations("Brot").get(1);
 
-        Amount requiredLeft = updateStorageService.takeAmount("Brot", new Amount(1.2, Weight.KILOGRAM), firstItemLocation.getId());
-        requiredLeft = updateStorageService.takeAmount("Brot", requiredLeft, secondItemLocation.getId());
+        Amount requiredLeft = takeAmountService.takeAmount("Brot", new Amount(1.2, Weight.KILOGRAM), firstItemLocation.getId());
+        requiredLeft = takeAmountService.takeAmount("Brot", requiredLeft, secondItemLocation.getId());
 
         StoredItem storedItem = readStorageService.getStoredItem("Brot");
         List<ItemLocation> itemLocations = readStorageService.listItemLocations("Brot");
@@ -229,7 +233,7 @@ public class UpdateStorageServiceTest {
     @Test
     public void takeFromStoredItem_storedItemMissing() {
         assertThrows(StoredItemNotFoundException.class, () -> {
-            updateStorageService.takeAmount("Brot", new Amount(200, Weight.GRAM), readStorageService.listItemLocations("Brot").get(0).getId());
+            takeAmountService.takeAmount("Brot", new Amount(200, Weight.GRAM), readStorageService.listItemLocations("Brot").get(0).getId());
         });
     }
 
