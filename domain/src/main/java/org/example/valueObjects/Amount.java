@@ -1,5 +1,6 @@
 package org.example.valueObjects;
 
+import org.example.exceptions.UnitMismatchException;
 import org.example.units.Unit;
 
 import java.text.DecimalFormat;
@@ -26,22 +27,25 @@ public final class Amount {
         return unit;
     }
 
-    public boolean isMoreThan(Amount amount) {
-        return value > amount.getValueInUnit(unit);
+    public boolean isMoreThan(Amount comparedAmount) {
+        validateUnits(comparedAmount);
+        return value > comparedAmount.getValueInUnit(unit);
     }
 
     public Amount add(Amount addend) {
-        if (!unit.getType().equals(addend.getUnit().getType())) {
-            throw new RuntimeException("");
-        }
+        validateUnits(addend);
         return new Amount(value + addend.getValueInUnit(unit), unit);
     }
 
     public Amount sub(Amount subtrahend) {
-        if (!unit.getType().equals(subtrahend.getUnit().getType())) {
-            throw new RuntimeException("");
-        }
+        validateUnits(subtrahend);
         return new Amount(value - subtrahend.getValueInUnit(unit), unit);
+    }
+
+    private void validateUnits(Amount comparedAmount) {
+        if (!unit.getType().equals(comparedAmount.getUnit().getType())) {
+            throw new UnitMismatchException(unit.getType(), comparedAmount.getUnit().getType());
+        }
     }
 
     @Override
