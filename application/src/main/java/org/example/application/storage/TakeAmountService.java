@@ -1,5 +1,6 @@
 package org.example.application.storage;
 
+import org.example.application.storage.oberserver.CheckMinimumAmountObserver;
 import org.example.application.storage.oberserver.ItemLocationObserver;
 import org.example.application.storage.oberserver.ObservableItemLocation;
 import org.example.application.storage.oberserver.RemoveEmptyItemLocationsObserver;
@@ -24,10 +25,12 @@ public class TakeAmountService implements ObservableItemLocation {
     @Autowired
     public TakeAmountService(ReadStorageService readStorageService,
                              UpdateStorageService updateStorageService,
-                             RemoveEmptyItemLocationsObserver removeEmptyItemLocationsObserver) {
+                             RemoveEmptyItemLocationsObserver removeEmptyItemLocationsObserver,
+                             CheckMinimumAmountObserver checkMinimumAmountObserver) {
         this.readStorageService = readStorageService;
         this.updateStorageService = updateStorageService;
         addObserver(removeEmptyItemLocationsObserver);
+        addObserver(checkMinimumAmountObserver);
     }
 
     public Amount takeAmount(String itemName, Amount requestedAmount, UUID itemLocationId) {
