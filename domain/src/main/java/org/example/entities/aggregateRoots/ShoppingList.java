@@ -18,6 +18,8 @@ public class ShoppingList {
 
     private final ItemUtilService itemUtilService = new ItemUtilService();
 
+    public static final String DEFAULT_SHOPPING_LIST = "default";
+
     public ShoppingList(String listName) {
         this(listName, new HashSet<>());
     }

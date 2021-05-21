@@ -23,8 +23,7 @@ public class CheckMinimumAmountObserver implements ItemLocationObserver {
         Amount minimumAmount = storedItem.getMinimumAmount().getAmount();
         Amount totalAmount = storedItem.getTotalAmount();
         if (minimumAmount.isMoreThan(totalAmount)) {
-//            TODO
-            updateShoppingListEntriesService.addEntry("default", storedItem.getItemReference(), minimumAmount.sub(totalAmount));
+            updateShoppingListEntriesService.addEntry(storedItem.getItemReference(), minimumAmount.sub(totalAmount));
         }
     }
 }

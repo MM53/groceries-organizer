@@ -22,6 +22,10 @@ public class UpdateShoppingListEntriesService {
         this.readShoppingListService = readShoppingListService;
     }
 
+    public void addEntry(String itemName, Amount amount) {
+        addEntry(ShoppingList.DEFAULT_SHOPPING_LIST, itemName, amount);
+    }
+
     public void addEntry(String listName, String itemName, Amount amount) {
         ShoppingList shoppingList = readShoppingListService.getShoppingList(listName);
         shoppingList.addShoppingListItem(itemName, amount);

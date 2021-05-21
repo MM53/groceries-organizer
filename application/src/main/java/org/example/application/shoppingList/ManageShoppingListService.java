@@ -15,6 +15,7 @@ public class ManageShoppingListService {
     @Autowired
     public ManageShoppingListService(ShoppingListRepository shoppingListRepository) {
         this.shoppingListRepository = shoppingListRepository;
+        createDefaultShoppingList();
     }
 
     public void createShoppingList(String name) {
@@ -27,11 +28,20 @@ public class ManageShoppingListService {
     }
 
     public void deleteShoppingList(String name) {
+        if (name.equals(ShoppingList.DEFAULT_SHOPPING_LIST)) {
+            throw new RuntimeException();
+        }
         shoppingListRepository.findByListName(name)
                               .ifPresentOrElse(shoppingListRepository::delete,
                                                () -> {
                                                    throw new ShoppingListNotFoundException(name);
                                                });
+    }
+
+    private void createDefaultShoppingList() {
+        if (shoppingListRepository.findByListName(ShoppingList.DEFAULT_SHOPPING_LIST).isEmpty()) {
+            shoppingListRepository.save(new ShoppingList(ShoppingList.DEFAULT_SHOPPING_LIST));
+        }
     }
 
 }

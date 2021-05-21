@@ -5,9 +5,11 @@ import org.example.entities.ShoppingListItem;
 import org.example.entities.aggregateRoots.ShoppingList;
 import org.example.repositories.ShoppingListRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Service
 public class ReadShoppingListService {
 
     private final ShoppingListRepository shoppingListRepository;
