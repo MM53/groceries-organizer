@@ -32,6 +32,10 @@ public final class Amount {
         return value > comparedAmount.getValueInUnit(unit);
     }
 
+    public boolean isEmpty() {
+        return value == 0;
+    }
+
     public Amount add(Amount addend) {
         validateUnits(addend);
         return new Amount(value + addend.getValueInUnit(unit), unit);

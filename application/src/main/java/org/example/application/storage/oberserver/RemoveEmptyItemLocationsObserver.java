@@ -25,7 +25,7 @@ public class RemoveEmptyItemLocationsObserver implements ItemLocationObserver {
                                            .orElseThrow(() -> new ItemLocationNotFoundException(itemLocationId, storedItem.getId()))
                                            .getAmount();
 
-        if (!availableAmount.isMoreThan(new Amount(0, availableAmount.getUnit()))) {
+        if (availableAmount.isEmpty()) {
             updateStorageService.removeItemLocation(storedItem.getItemReference(), itemLocationId);
         }
     }
