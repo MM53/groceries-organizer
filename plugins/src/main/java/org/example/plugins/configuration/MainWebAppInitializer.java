@@ -22,7 +22,7 @@ public class MainWebAppInitializer implements WebApplicationInitializer {
         environment.setActiveProfiles("production");
         root.setEnvironment(environment);
 
-        root.scan("org.org.example");
+        root.scan("org.example");
 
         sc.addListener(new ContextLoaderListener(root));
 
