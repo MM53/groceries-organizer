@@ -35,7 +35,7 @@ public class ShoppingList {
 
     public void addShoppingListItem(ShoppingListItem shoppingListItem) {
         itemUtilService.validateExistence(shoppingListItem.getItemReference());
-        itemUtilService.validate(shoppingListItem.getItemReference(), shoppingListItem.getAmount().getUnit().getType());
+        itemUtilService.validateUnit(shoppingListItem.getItemReference(), shoppingListItem.getAmount().getUnit().getType());
         if (findShoppingListItem(shoppingListItem.getItemReference()).isPresent()) {
             throw new ShoppingListItemAlreadyExistsException(shoppingListItem.getItemReference());
         }
@@ -68,7 +68,7 @@ public class ShoppingList {
     }
 
     public void updateAmountOfShoppingListItem(String itemReference, Amount amount) {
-        itemUtilService.validate(itemReference, amount.getUnit().getType());
+        itemUtilService.validateUnit(itemReference, amount.getUnit().getType());
 
         ShoppingListItem entry = findShoppingListItem(itemReference).orElseThrow(() -> new ShoppingListItemNotFoundException(itemReference));
         entry.setAmount(amount);

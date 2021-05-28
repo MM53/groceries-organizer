@@ -24,7 +24,7 @@ public class ItemUtilService implements ApplicationContextAware {
         itemRepository = applicationContext.getBean(ItemRepository.class);
     }
 
-    public void validate(String itemReference, UnitType actual) {
+    public void validateUnit(String itemReference, UnitType actual) {
         UnitType expected = itemRepository.findItemById(itemReference)
                                           .map(Item::getUnitType)
                                           .orElseThrow(() -> new ItemNotFoundException(itemReference));

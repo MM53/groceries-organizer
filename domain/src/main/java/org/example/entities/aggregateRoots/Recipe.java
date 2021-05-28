@@ -64,7 +64,7 @@ public class Recipe {
 
     public void addIngredient(Ingredient ingredient) {
         itemUtilService.validateExistence(ingredient.getItemReference());
-        itemUtilService.validate(ingredient.getItemReference(), ingredient.getAmount().getUnit().getType());
+        itemUtilService.validateUnit(ingredient.getItemReference(), ingredient.getAmount().getUnit().getType());
         if (findIngredient(ingredient.getId()).or(() -> findIngredient(ingredient.getItemReference())).isPresent()) {
             throw new IngredientAlreadyExistsException(ingredient.getId(), name);
         }

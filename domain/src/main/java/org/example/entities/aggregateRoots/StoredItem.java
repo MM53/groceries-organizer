@@ -56,7 +56,7 @@ public class StoredItem {
     }
 
     public void addItemLocation(ItemLocation itemLocation) {
-        itemUtilService.validate(itemReference, itemLocation.getAmount().getUnit().getType());
+        itemUtilService.validateUnit(itemReference, itemLocation.getAmount().getUnit().getType());
         if (findItemLocation(itemLocation.getId()).or(() -> findItemLocation(itemLocation.getLocation())).isPresent()) {
             throw new ItemLocationAlreadyExistsException(itemLocation.getId(), id);
         }
@@ -65,11 +65,11 @@ public class StoredItem {
     }
 
     public void addItemLocation(Location location, Amount amount) {
-        addItemLocation(new ItemLocation(this.id, location, amount));
+        addItemLocation(new ItemLocation(location, amount));
     }
 
     public void updateItemLocationAmount(UUID itemLocationId, Amount amount) {
-        itemUtilService.validate(itemReference, amount.getUnit().getType());
+        itemUtilService.validateUnit(itemReference, amount.getUnit().getType());
 
         ItemLocation itemLocation = findItemLocation(itemLocationId).orElseThrow(() -> new ItemLocationNotFoundException(itemLocationId, id));
         itemLocation.setAmount(itemLocation.getAmount().add(amount));
@@ -91,7 +91,7 @@ public class StoredItem {
     }
 
     public void setMinimumAmount(MinimumAmount minimumAmount) {
-        itemUtilService.validate(itemReference, minimumAmount.getAmount().getUnit().getType());
+        itemUtilService.validateUnit(itemReference, minimumAmount.getAmount().getUnit().getType());
         this.minimumAmount = minimumAmount;
     }
 
