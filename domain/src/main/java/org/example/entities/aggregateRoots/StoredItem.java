@@ -72,7 +72,7 @@ public class StoredItem {
         itemUtilService.validateUnit(itemReference, amount.getUnit().getType());
 
         ItemLocation itemLocation = findItemLocation(itemLocationId).orElseThrow(() -> new ItemLocationNotFoundException(itemLocationId, id));
-        itemLocation.setAmount(itemLocation.getAmount().add(amount));
+        itemLocation.setAmount(amount);
     }
 
     public void removeLocation(UUID itemLocationId) {
