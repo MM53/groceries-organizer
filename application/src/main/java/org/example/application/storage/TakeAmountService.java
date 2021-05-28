@@ -1,9 +1,9 @@
 package org.example.application.storage;
 
-import org.example.application.storage.oberserver.CheckMinimumAmountObserver;
-import org.example.application.storage.oberserver.ItemLocationObserver;
-import org.example.application.storage.oberserver.ObservableItemLocation;
-import org.example.application.storage.oberserver.RemoveEmptyItemLocationsObserver;
+import org.example.application.storage.observer.CheckMinimumAmountObserver;
+import org.example.application.storage.observer.ItemLocationObserver;
+import org.example.application.storage.observer.ObservableItemLocation;
+import org.example.application.storage.observer.RemoveEmptyItemLocationsObserver;
 import org.example.entities.aggregateRoots.StoredItem;
 import org.example.exceptions.ItemLocationNotFoundException;
 import org.example.valueObjects.Amount;
@@ -23,7 +23,7 @@ public class TakeAmountService implements ObservableItemLocation {
     private final Set<ItemLocationObserver> observers = new HashSet<>();
 
     @Autowired
-    public TakeAmountService(ReadStorageService readStorageService,
+        public TakeAmountService(ReadStorageService readStorageService,
                              UpdateStorageService updateStorageService,
                              RemoveEmptyItemLocationsObserver removeEmptyItemLocationsObserver,
                              CheckMinimumAmountObserver checkMinimumAmountObserver) {
@@ -40,7 +40,6 @@ public class TakeAmountService implements ObservableItemLocation {
                                            .getAmount();
         Amount requiredAmountLeft;
         if (requestedAmount.isMoreThan(availableAmount) || requestedAmount.equals(availableAmount)) {
-//            updateStorageService.removeItemLocation(itemName, itemLocationId);
             updateStorageService.updateAmount(itemName, itemLocationId, new Amount(0, availableAmount.getUnit()));
             requiredAmountLeft = requestedAmount.sub(availableAmount);
         } else {

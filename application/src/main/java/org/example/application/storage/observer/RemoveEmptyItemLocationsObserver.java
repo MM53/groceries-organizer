@@ -1,4 +1,4 @@
-package org.example.application.storage.oberserver;
+package org.example.application.storage.observer;
 
 import org.example.application.storage.UpdateStorageService;
 import org.example.entities.aggregateRoots.StoredItem;
