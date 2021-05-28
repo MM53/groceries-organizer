@@ -59,6 +59,11 @@ public class JooqShoppingListRepository implements ShoppingListRepository {
     }
 
     @Override
+    public boolean checkExistenceByListName(String listName) {
+        return context.fetchExists(SHOPPING_LIST, SHOPPING_LIST.NAME.eq(listName));
+    }
+
+    @Override
     public List<ShoppingList> getAll() {
         return context.fetch(JOINED_TABLE)
                       .stream()

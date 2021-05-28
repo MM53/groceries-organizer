@@ -10,6 +10,8 @@ public interface ShoppingListRepository {
 
     public Optional<ShoppingList> findByListName(String listName);
 
+    public boolean checkExistenceByListName(String listName);
+
     public List<ShoppingList> getAll();
 
     public void delete(ShoppingList shoppingList);

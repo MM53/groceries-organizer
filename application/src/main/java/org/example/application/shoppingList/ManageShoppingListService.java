@@ -39,7 +39,7 @@ public class ManageShoppingListService {
     }
 
     private void createDefaultShoppingList() {
-        if (shoppingListRepository.findByListName(ShoppingList.DEFAULT_SHOPPING_LIST).isEmpty()) {
+        if (!shoppingListRepository.checkExistenceByListName(ShoppingList.DEFAULT_SHOPPING_LIST)) {
             shoppingListRepository.save(new ShoppingList(ShoppingList.DEFAULT_SHOPPING_LIST));
         }
     }

@@ -34,8 +34,10 @@ public class ItemUtilService implements ApplicationContextAware {
     }
 
     public void validateExistence(String itemReference) {
-        itemRepository.findItemById(itemReference)
-                      .orElseThrow(() -> new ItemNotFoundException(itemReference));
+        if (!itemRepository.checkExistenceById(itemReference))
+        {
+            throw new ItemNotFoundException(itemReference);
+        }
     }
 
     public Unit getUnit(String itemReference) {

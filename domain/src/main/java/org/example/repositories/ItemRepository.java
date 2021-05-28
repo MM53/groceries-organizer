@@ -10,6 +10,8 @@ public interface ItemRepository {
 
     public Optional<Item> findItemById(String id);
 
+    public boolean checkExistenceById(String id);
+
     public Optional<Item> findItemByName(String name);
 
     public List<Item> getAll();

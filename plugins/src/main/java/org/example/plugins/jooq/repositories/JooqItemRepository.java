@@ -54,6 +54,11 @@ public class JooqItemRepository implements ItemRepository {
     }
 
     @Override
+    public boolean checkExistenceById(String id) {
+        return context.fetchExists(JOINED_TABLE, ITEM.ID.eq(id));
+    }
+
+    @Override
     public Optional<Item> findItemByName(String name) {
         return context.fetchOptional(ITEM_NAME, ITEM_NAME.NAME.eq(name))
                       .flatMap(record -> findItemById(record.getItemReference()));
