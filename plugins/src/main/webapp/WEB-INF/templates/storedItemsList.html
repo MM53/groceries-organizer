@@ -15,6 +15,13 @@
         <th scope="col" class="col-2"></th>
       </tr>
       <tbody>
+      <tr>
+        <td colspan="4">
+          <button type="button" class="btn btn-success" style="width: 100%" data-toggle="modal" data-target="#storeAmountModal">
+            Store New
+          </button>
+        </td>
+      </tr>
       <tr th:each="storedItem: ${storedItems}" th:data-item-id="${storedItem.itemName}"
           th:data-item-locations="${storedItem.locationsJson}">
         <th class="align-middle" scope="row" th:text="${storedItem.itemName}"></th>
@@ -26,12 +33,10 @@
         <td class="align-middle d-none d-md-table-cell" th:text="${storedItem.locationCount}">7</td>
         <td>
           <div class="float-right">
-            <button type="button" class="btn btn-warning mr-2" data-toggle="modal" data-target="#itemLocationsModal"
-                    data-modal-action="take">
+            <button type="button" class="btn btn-warning mr-2" data-toggle="modal" data-target="#takeAmountModal">
               Take
             </button>
-            <button type="button" class="btn btn-success" data-toggle="modal" data-target="#itemLocationsModal"
-                    data-modal-action="store">
+            <button type="button" class="btn btn-success" data-toggle="modal" data-target="#storeAmountModal">
               Store
             </button>
           </div>
@@ -41,7 +46,8 @@
     </table>
   </div>
 
-  <div th:insert="modal/updateLocations :: content"></div>
+  <div th:insert="modal/takeAmount :: content"></div>
+  <div th:insert="modal/storeAmount :: content"></div>
   <div th:insert="modal/setMinimumAmount :: content"></div>
 </div>
 

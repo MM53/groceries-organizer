@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      lang="en">
+<body>
+
+<div th:fragment="content">
+  <div class="modal fade" id="storeAmountModal" tabindex="-1" role="dialog" aria-labelledby="storeAmountModalTitle"
+       aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="storeAmountModalTitle"><!-- Title ist set dynamically with JS--></h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form id="storeAmountForm" method="post">
+            <div id="item-name-container" style="display: none">
+              <label id="item-label">Item name</label>
+              <input id="item-name" type="text" class="form-control" placeholder="item name" aria-label="item-label">
+            </div>
+            <label id="amount-label">Amount</label>
+            <input type="text" class="form-control" name="amount" value="100g" aria-label="amount-label">
+            <input type="hidden" name="location" id="storeLocation">
+          </form>
+          <table class="table table-hover mb-0">
+            <tbody id="storeItemLocationsList">
+            <!-- Content ist set dynamically with JS-->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+  $('#storeAmountModal').keydown(function (event) {
+    if (event.keyCode === 13) {
+      event.preventDefault();
+      return false;
+    }
+  })
+
+  function selectAndStore(location, item) {
+    if (!location) {
+      location = $("#newLocationName").val()
+    }
+    if (!item) {
+      item = $('#item-name').val()
+    }
+    $('#storeLocation').val(location)
+    $('#storeAmountForm').attr('action', '/storage/' + item + '/store')
+    $('#storeAmountForm').submit()
+  }
+
+  $('#storeAmountModal').on('show.bs.modal', function (event) {
+    const button = $(event.relatedTarget)
+    const modal = $(this)
+
+    const item = button.closest('tr').data('item-id')
+    let itemPath = escape(JSON.stringify(item))
+    const locations = button.closest('tr').data('item-locations')
+
+    if (item) {
+      modal.find('.modal-title').text('Store' + item)
+      $("#item-name-container").hide()
+    } else {
+      modal.find('.modal-title').text('Store new item')
+      $("#item-name-container").show()
+    }
+
+    let locationsList = '            <tr>\n' +
+                        '              <th class="align-middle" scope="row"><input id="newLocationName" placeholder="name"></th>\n' +
+                        '              <td>\n' +
+                        '                <a class="btn btn-success float-right" type="button" id="" href="javascript:selectAndStore(null, ' + itemPath + ')">+</a>\n' +
+                        '              </td>\n' +
+                        '            </tr>'
+    if (locations) {
+      locationsList += Object.keys(locations)
+                             .reduce((result, id) => result +=
+                               '         <tr>\n' +
+                               '            <th class="align-middle" scope="row">' + locations[id].name + ' <small>' + locations[id].amount + '</small></th>\n' +
+                               '            <td>\n' +
+                               '              <a class="btn btn-success float-right" type="button" id="" href="javascript:selectAndStore(\'' + locations[id].name + '\', ' + itemPath + ')">+</a>\n' +
+                               '            </td>\n' +
+                               '          </tr>', '')
+    }
+    $("#storeItemLocationsList").html(locationsList)
+  })
+  </script>
+</div>
+
+</body>
+</html>

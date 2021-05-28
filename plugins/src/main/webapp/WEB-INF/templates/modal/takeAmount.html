@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      lang="en">
+<body>
+
+<div th:fragment="content">
+  <div class="modal fade" id="takeAmountModal" tabindex="-1" role="dialog" aria-labelledby="takeAmountModalTitle"
+       aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="takeAmountModalTitle"><!-- Title ist set dynamically with JS--></h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form id="takeAmountForm" method="post">
+            <label id="amount-label">Amount</label>
+            <input type="text" class="form-control" name="amount" value="100g" aria-label="amount-label">
+            <input type="hidden" name="location-id" id="takeLocation">
+          </form>
+          <table class="table table-hover mb-0">
+            <tbody id="takeItemLocationsList">
+            <!-- Content ist set dynamically with JS-->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+  $('#takeAmountForm').keydown(function (event) {
+    if (event.keyCode === 13) {
+      event.preventDefault();
+      return false;
+    }
+  })
+
+  function selectAndTake(locationId) {
+    $('#takeLocation').val(locationId)
+    $('#takeAmountForm').submit()
+  }
+
+  $('#takeAmountModal').on('show.bs.modal', function (event) {
+    const button = $(event.relatedTarget)
+    const modal = $(this)
+
+    const item = button.closest('tr').data('item-id')
+    const locations = button.closest('tr').data('item-locations')
+
+    $('#takeAmountForm').attr('action', '/storage/' + item + '/take')
+    modal.find('.modal-title').text('Take ' + item)
+    let locationsList = Object.keys(locations)
+                          .reduce((result, id) => result +=
+                            '         <tr>\n' +
+                            '            <th class="align-middle" scope="row">' + locations[id].name + ' <small>' + locations[id].amount + '</small></th>\n' +
+                            '            <td>\n' +
+                            '              <a class="btn btn-danger float-right" type="button" id="" href="javascript:selectAndTake(\'' + id + '\')">-</a>\n' +
+                            '            </td>\n' +
+                            '          </tr>', '')
+    $("#takeItemLocationsList").html(locationsList)
+  })
+  </script>
+</div>
+
+</body>
+</html>
