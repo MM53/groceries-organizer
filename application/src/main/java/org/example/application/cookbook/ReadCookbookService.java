@@ -24,7 +24,7 @@ public class ReadCookbookService {
         this.tagRepository = tagRepository;
     }
 
-    public List<Recipe> listItems() {
+    public List<Recipe> listRecipes() {
         return recipeRepository.getAll();
     }
 
