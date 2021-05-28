@@ -29,4 +29,11 @@ public class ReadShoppingListService {
                                         .stream()
                                         .toList();
     }
+
+    public List<String> getShoppingListNames() {
+        return shoppingListRepository.getAll()
+                                     .stream()
+                                     .map(ShoppingList::getName)
+                                     .toList();
+    }
 }

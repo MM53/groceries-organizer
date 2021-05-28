@@ -1,0 +1,44 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      lang="en">
+<body>
+
+<div class="" th:fragment="content">
+  <nav class="nav nav-pills nav-justified" th:each="shoppingListName: ${shoppingLists}">
+    <a class="nav-item nav-link"
+       th:classappend="${activeShoppingList.equals(shoppingListName) ? 'active' : ''}"
+       th:text="${shoppingListName}" th:href="'/shopping-list/' + ${shoppingListName}"></a>
+  </nav>
+
+  <div class="card border m-3">
+    <div class="card-header pb-0">
+      <form style="width: 50%;" class="d-inline" method="post"
+            th:action="'/shopping-list/' + ${activeShoppingList} + '/entries'">
+        <input name="item-name" placeholder="Item">
+        <input name="amount" placeholder="200g">
+        <button class="btn btn-success">Add</button>
+      </form>
+      <form style="width: 50%;" class="d-inline float-right" method="post"
+            th:action="'/shopping-list/' + ${activeShoppingList} + '/entries/clear'">
+        <button class="btn btn-danger float-right">Clear All</button>
+      </form>
+    </div>
+    <div class="card-body p-0">
+      <ul class="list-group list-group-flush" th:each="entry: ${entries}">
+        <li class="list-group-item" style="cursor: pointer" onclick="$(this).find('form').submit()">
+          <b th:if="${!entry.bought}" th:text="${entry.itemReference}"></b>
+          <span th:if="${!entry.bought}" th:text="${entry.amount}" class="text-muted"></span>
+          <del class="text-muted" th:if="${entry.bought}" th:text="${entry.itemReference}"></del>
+          <form style="display: none"
+                th:action="'/shopping-list/' + ${activeShoppingList} + '/entries/' + (${entry.bought} ? 'requested' : 'bought')"
+                method="post">
+            <input name="item-name" th:value="${entry.itemReference}">
+          </form>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>
