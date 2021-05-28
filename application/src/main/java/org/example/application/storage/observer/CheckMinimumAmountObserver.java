@@ -20,6 +20,9 @@ public class CheckMinimumAmountObserver implements ItemLocationObserver {
 
     @Override
     public void onItemLocationAmountChanged(StoredItem storedItem, UUID itemLocationId) {
+        if (storedItem.getMinimumAmount() == null) {
+            return;
+        }
         Amount minimumAmount = storedItem.getMinimumAmount().getAmount();
         Amount totalAmount = storedItem.getTotalAmount();
         if (minimumAmount.isMoreThan(totalAmount)) {
