@@ -1,0 +1,33 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      lang="en">
+<body>
+
+<div class="card border m-3" th:fragment="content">
+  <div class="card-header bg-secondary">
+    <h3 class="d-inline" th:text="${recipe.name}"></h3>
+    <a th:href="'/cookbook/recipes/edit/' + ${recipe.id}" class="btn btn-warning float-right">Edit</a>
+  </div>
+  <div class="card-body p-0">
+    <div class="card-body p-0 row">
+      <div class="col-2 pr-0">
+        <div class="border-right border-bottom px-2">
+          <h4>Ingredients</h4>
+          <div class="list-group list-group-flush">
+            <div class="list-group-item pl-2 pr-0" th:each="ingredient: ${recipe.ingredients}">
+              <b th:text="${ingredient.itemReference}"></b>
+              <span class="text-muted" th:text="${ingredient.amount}"></span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-10">
+        <h4>Description</h4>
+        <pre class="p-2" th:text="${recipe.description}"></pre>
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

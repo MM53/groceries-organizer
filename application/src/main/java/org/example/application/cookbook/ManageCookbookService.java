@@ -23,9 +23,10 @@ public class ManageCookbookService {
         this.tagRepository = tagRepository;
     }
 
-    public void createRecipe(String name) {
+    public Recipe createRecipe(String name) {
         Recipe recipe = new Recipe(name);
         recipeRepository.save(recipe);
+        return recipe;
     }
 
     public void deleteRecipe(UUID recipeId) {

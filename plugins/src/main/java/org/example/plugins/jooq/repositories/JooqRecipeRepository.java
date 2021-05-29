@@ -39,7 +39,7 @@ public class JooqRecipeRepository implements RecipeRepository {
 
     @Override
     public void save(Recipe recipe) {
-        context.newRecord(RECIPE, recipe).delete();
+        context.newRecord(RECIPE, recipe).merge();
 
         List<String> referencesTags = context.fetch(RECIPE_TAG, RECIPE_TAG.RECIPE_REFERENCE.eq(recipe.getId().toString()))
                                              .into(RECIPE_TAG.TAG_REFERENCE)
@@ -72,7 +72,7 @@ public class JooqRecipeRepository implements RecipeRepository {
                                                                                   .map(Ingredient::getId)
                                                                                   .toList()));
         }
-        context.delete(SHOPPING_LIST_ITEM).where(ingredientsRemoved).execute();
+        context.delete(INGREDIENT).where(ingredientsRemoved).execute();
     }
 
     @Override
