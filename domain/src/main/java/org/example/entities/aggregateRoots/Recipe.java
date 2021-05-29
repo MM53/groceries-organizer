@@ -26,6 +26,10 @@ public class Recipe {
         this(id, name, new HashSet<>(), new HashSet<>(), "");
     }
 
+    public Recipe(UUID id, String name, String description) {
+        this(id, name, new HashSet<>(), new HashSet<>(), description);
+    }
+
     public Recipe(UUID id, String name, Set<Tag> tages, Set<Ingredient> ingredients, String description) {
         this.id = id;
         this.name = name;
