@@ -29,7 +29,7 @@ public class UpdateRecipeService {
 
     public void setDescription(UUID recipeId, String description) {
         Recipe recipe = readCookbookService.getRecipe(recipeId);
-        recipe.setName(description);
+        recipe.setDescription(description);
         recipeRepository.save(recipe);
     }
 
