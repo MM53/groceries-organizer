@@ -41,30 +41,18 @@ public class JooqRecipeRepository implements RecipeRepository {
     public void save(Recipe recipe) {
         context.newRecord(RECIPE, recipe).merge();
 
-        List<String> referencesTags = context.fetch(RECIPE_TAG, RECIPE_TAG.RECIPE_REFERENCE.eq(recipe.getId().toString()))
-                                             .into(RECIPE_TAG.TAG_REFERENCE)
-                                             .into(String.class);
+        saveIngredients(recipe);
+        deleteRemovedIngredients(recipe);
 
-        recipe.getTages()
-              .stream()
-              .filter(tag -> !referencesTags.contains(tag.getName()))
-              .forEach(tag -> context.newRecord(RECIPE_TAG, new RecipeTagRecord(UUID.randomUUID().toString(),
-                                                                                recipe.getId().toString(),
-                                                                                tag.getName())));
-        List<String> existingTags = recipe.getTages()
-                                          .stream()
-                                          .map(Tag::getName)
-                                          .toList();
+        updateTags(recipe);
+    }
 
-        referencesTags.stream()
-                      .filter(tag -> !existingTags.contains(tag))
-                      .forEach(tag -> context.deleteFrom(RECIPE_TAG)
-                                             .where(RECIPE_TAG.RECIPE_REFERENCE.eq(recipe.getId().toString()))
-                                             .and(RECIPE_TAG.TAG_REFERENCE.eq(tag)));
-
+    private void saveIngredients(Recipe recipe) {
         IngredientMapper.extractRecords(recipe)
                         .forEach(ingredientRecord -> context.newRecord(INGREDIENT, ingredientRecord).merge());
+    }
 
+    private void deleteRemovedIngredients(Recipe recipe) {
         Condition ingredientsRemoved = INGREDIENT.RECIPE_REFERENCE.eq(recipe.getId().toString());
         if (recipe.getIngredients().size() > 0) {
             ingredientsRemoved = ingredientsRemoved.and(INGREDIENT.ID.notIn(recipe.getIngredients()
@@ -73,6 +61,37 @@ public class JooqRecipeRepository implements RecipeRepository {
                                                                                   .toList()));
         }
         context.delete(INGREDIENT).where(ingredientsRemoved).execute();
+    }
+
+    private void updateTags(Recipe recipe) {
+        List<String> alreadySavedTags = context.fetch(RECIPE_TAG, RECIPE_TAG.RECIPE_REFERENCE.eq(recipe.getId().toString()))
+                                               .into(RECIPE_TAG.TAG_REFERENCE)
+                                               .into(String.class);
+        saveTags(recipe, alreadySavedTags);
+        deleteRemovedTagReferences(recipe, alreadySavedTags);
+
+    }
+
+    private void saveTags(Recipe recipe, List<String> alreadySavedTags) {
+        recipe.getTages()
+              .stream()
+              .filter(tag -> !alreadySavedTags.contains(tag.getName()))
+              .forEach(tag -> context.newRecord(RECIPE_TAG, new RecipeTagRecord(UUID.randomUUID().toString(),
+                                                                                recipe.getId().toString(),
+                                                                                tag.getName())));
+    }
+
+    private void deleteRemovedTagReferences(Recipe recipe, List<String> alreadySavedTags) {
+        List<String> existingTags = recipe.getTages()
+                                          .stream()
+                                          .map(Tag::getName)
+                                          .toList();
+
+        alreadySavedTags.stream()
+                        .filter(tag -> !existingTags.contains(tag))
+                        .forEach(tag -> context.deleteFrom(RECIPE_TAG)
+                                               .where(RECIPE_TAG.RECIPE_REFERENCE.eq(recipe.getId().toString()))
+                                               .and(RECIPE_TAG.TAG_REFERENCE.eq(tag)));
     }
 
     @Override

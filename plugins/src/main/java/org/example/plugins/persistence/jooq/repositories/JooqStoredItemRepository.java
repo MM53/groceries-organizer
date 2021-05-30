@@ -40,20 +40,37 @@ public class JooqStoredItemRepository implements StoredItemRepository {
 
     @Override
     public void save(StoredItem storedItem) {
+        saveMinimumAmount(storedItem);
+
+        saveStoredItem(storedItem);
+
+        saveItemLocations(storedItem);
+        deleteRemovedItemLocations(storedItem);
+
+    }
+
+    private void saveStoredItem(StoredItem storedItem) {
         StoredItemRecord storedItemRecord = context.newRecord(STORED_ITEM);
         storedItemRecord.setId(storedItem.getId().toString());
         storedItemRecord.setItemReference(storedItem.getItemReference());
-
         if (storedItem.getMinimumAmount() != null) {
-            context.newRecord(MINIMUM_AMOUNT, MinimumAmountMapper.extractRecord(storedItem)).merge();
             storedItemRecord.setMinimumAmountReference(storedItem.getMinimumAmount().getId().toString());
         }
-
         storedItemRecord.merge();
+    }
 
+    private void saveMinimumAmount(StoredItem storedItem) {
+        if (storedItem.getMinimumAmount() != null) {
+            context.newRecord(MINIMUM_AMOUNT, MinimumAmountMapper.extractRecord(storedItem)).merge();
+        }
+    }
+
+    private void saveItemLocations(StoredItem storedItem) {
         ItemLocationMapper.extractRecords(storedItem)
                           .forEach(record -> context.newRecord(ITEM_LOCATION, record).merge());
+    }
 
+    private void deleteRemovedItemLocations(StoredItem storedItem) {
         Condition itemLocationsRemoved = ITEM_LOCATION.STORED_ITEM_REFERENCE.eq(storedItem.getId().toString());
         if (storedItem.getItemLocations().size() > 0) {
             itemLocationsRemoved = itemLocationsRemoved.and(ITEM_LOCATION.ID.notIn(storedItem.getItemLocations()

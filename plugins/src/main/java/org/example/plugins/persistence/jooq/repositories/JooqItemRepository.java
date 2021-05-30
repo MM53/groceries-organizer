@@ -36,7 +36,16 @@ public class JooqItemRepository implements ItemRepository {
     public void save(Item item) {
         context.newRecord(ITEM, item).merge();
 
-        item.getNames().forEach(itemName -> context.newRecord(ITEM_NAME, itemName).merge());
+        saveItemNames(item);
+        deleteRemovedItemNames(item);
+    }
+
+    private void saveItemNames(Item item) {
+        item.getNames()
+            .forEach(itemName -> context.newRecord(ITEM_NAME, itemName).merge());
+    }
+
+    private void deleteRemovedItemNames(Item item) {
         context.delete(ITEM_NAME)
                .where(ITEM_NAME.ITEM_REFERENCE.eq(item.getId())
                                               .and(ITEM_NAME.NAME.notIn(item.getNames()
