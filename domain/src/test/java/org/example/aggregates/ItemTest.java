@@ -46,11 +46,7 @@ class ItemTest {
     @Test
     public void removeName_success() {
         Item item = new Item("Test", UnitType.WEIGHT);
-
         item.addAlternativeName("Test2");
-
-        assertEquals(2, item.getNames().size());
-        assertTrue(item.getNames().contains(new ItemName("Test2", "Test")));
 
         item.removeAlternativeName("Test2");
 
