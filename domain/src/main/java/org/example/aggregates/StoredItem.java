@@ -28,7 +28,9 @@ public class StoredItem {
         this.id = id;
         this.itemReference = itemReference;
         this.itemLocations = itemLocations;
-        this.minimumAmount = minimumAmount;
+        if (minimumAmount != null) {
+            setMinimumAmount(minimumAmount);
+        }
     }
 
     public UUID getId() {
