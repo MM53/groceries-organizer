@@ -20,6 +20,7 @@ public final class Amount {
     }
 
     public double getValueInUnit(Unit targetUnit) {
+        validateUnits(targetUnit);
         return (value * unit.getFactor()) / targetUnit.getFactor();
     }
 
@@ -46,10 +47,14 @@ public final class Amount {
         return new Amount(value - subtrahend.getValueInUnit(unit), unit);
     }
 
-    private void validateUnits(Amount comparedAmount) {
-        if (!unit.getType().equals(comparedAmount.getUnit().getType())) {
-            throw new UnitMismatchException(unit.getType(), comparedAmount.getUnit().getType());
+    private void validateUnits(Unit unitToCompare) {
+        if (!unit.getType().equals(unitToCompare.getType())) {
+            throw new UnitMismatchException(unit.getType(), unitToCompare.getType());
         }
+    }
+
+    private void validateUnits(Amount comparedAmount) {
+        validateUnits(comparedAmount.getUnit());
     }
 
     @Override
