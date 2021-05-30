@@ -1,10 +1,10 @@
-package org.example.plugins.jooq.repositories;
+package org.example.plugins.persistence.jooq.repositories;
 
 import org.example.adapter.persistence.jooq.mapper.collectors.ShoppingListCollector;
 import org.example.adapter.persistence.jooq.mapper.records.ShoppingListItemMapper;
 import org.example.entities.ShoppingListItem;
 import org.example.entities.aggregateRoots.ShoppingList;
-import org.example.plugins.jooq.configuration.JooqConnection;
+import org.example.plugins.persistence.jooq.configuration.JooqConnection;
 import org.example.repositories.ShoppingListRepository;
 import org.jooq.Condition;
 import org.jooq.DSLContext;

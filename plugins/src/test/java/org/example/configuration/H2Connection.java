@@ -1,7 +1,7 @@
 package org.example.configuration;
 
-import org.example.plugins.jooq.configuration.CustomRecordMapperProvider;
-import org.example.plugins.jooq.configuration.JooqConnection;
+import org.example.plugins.persistence.jooq.configuration.CustomRecordMapperProvider;
+import org.example.plugins.persistence.jooq.configuration.JooqConnection;
 import org.jooq.Configuration;
 import org.jooq.DSLContext;
 import org.jooq.SQLDialect;

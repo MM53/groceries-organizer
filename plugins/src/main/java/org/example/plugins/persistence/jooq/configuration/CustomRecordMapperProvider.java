@@ -1,4 +1,4 @@
-package org.example.plugins.jooq.configuration;
+package org.example.plugins.persistence.jooq.configuration;
 
 import org.example.adapter.persistence.jooq.mapper.records.IngredientMapper;
 import org.example.adapter.persistence.jooq.mapper.records.ItemLocationMapper;

@@ -1,7 +1,7 @@
-package org.example.plugins;
+package org.example.plugins.ui.thymleaf;
 
-import org.example.adapter.AmountAdapter;
-import org.example.adapter.StoredItemWeb;
+import org.example.adapter.ui.AmountAdapter;
+import org.example.adapter.ui.StoredItemWeb;
 import org.example.application.storage.ReadStorageService;
 import org.example.application.storage.TakeAmountService;
 import org.example.application.storage.UpdateStorageService;

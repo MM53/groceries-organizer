@@ -1,6 +1,6 @@
-package org.example.plugins;
+package org.example.plugins.ui.thymleaf;
 
-import org.example.adapter.ItemAmountTupelMapper;
+import org.example.adapter.ui.ItemAmountTupelMapper;
 import org.example.application.cookbook.ManageCookbookService;
 import org.example.application.cookbook.ReadCookbookService;
 import org.example.application.cookbook.UpdateRecipeService;

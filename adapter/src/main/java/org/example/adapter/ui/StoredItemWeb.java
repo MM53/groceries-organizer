@@ -1,4 +1,4 @@
-package org.example.adapter;
+package org.example.adapter.ui;
 
 import org.example.entities.aggregateRoots.StoredItem;
 import org.example.valueObjects.Amount;

@@ -1,4 +1,4 @@
-package org.example.plugins.jooq.repositories;
+package org.example.plugins.persistence.jooq.repositories;
 
 import org.example.adapter.persistence.jooq.generated.tables.records.StoredItemRecord;
 import org.example.adapter.persistence.jooq.mapper.collectors.StoredItemCollector;
@@ -7,7 +7,7 @@ import org.example.adapter.persistence.jooq.mapper.records.MinimumAmountMapper;
 import org.example.entities.ItemLocation;
 import org.example.entities.aggregateRoots.Item;
 import org.example.entities.aggregateRoots.StoredItem;
-import org.example.plugins.jooq.configuration.JooqConnection;
+import org.example.plugins.persistence.jooq.configuration.JooqConnection;
 import org.example.repositories.StoredItemRepository;
 import org.jooq.Condition;
 import org.jooq.DSLContext;

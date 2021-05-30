@@ -1,12 +1,12 @@
 package org.example.application;
 
+import org.example.application.exceptions.ItemAlreadyExistsException;
 import org.example.application.items.ManageItemsService;
 import org.example.application.items.ReadItemsService;
 import org.example.configuration.TestConfig;
-import org.example.application.exceptions.ItemAlreadyExistsException;
 import org.example.entities.aggregateRoots.Item;
 import org.example.exceptions.ItemNotFoundException;
-import org.example.plugins.jooq.configuration.JooqConnection;
+import org.example.plugins.persistence.jooq.configuration.JooqConnection;
 import org.example.repositories.ItemRepository;
 import org.example.units.UnitType;
 import org.junit.jupiter.api.AfterEach;

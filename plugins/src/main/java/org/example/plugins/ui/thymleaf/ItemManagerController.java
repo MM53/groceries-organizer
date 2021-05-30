@@ -1,4 +1,4 @@
-package org.example.plugins;
+package org.example.plugins.ui.thymleaf;
 
 import org.example.application.items.ManageItemsService;
 import org.example.application.items.ReadItemsService;

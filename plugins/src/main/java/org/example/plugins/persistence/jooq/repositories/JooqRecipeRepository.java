@@ -1,4 +1,4 @@
-package org.example.plugins.jooq.repositories;
+package org.example.plugins.persistence.jooq.repositories;
 
 import org.example.adapter.persistence.jooq.generated.tables.records.RecipeTagRecord;
 import org.example.adapter.persistence.jooq.mapper.collectors.RecipeCollector;
@@ -6,7 +6,7 @@ import org.example.adapter.persistence.jooq.mapper.records.IngredientMapper;
 import org.example.entities.Ingredient;
 import org.example.entities.aggregateRoots.Recipe;
 import org.example.entities.aggregateRoots.Tag;
-import org.example.plugins.jooq.configuration.JooqConnection;
+import org.example.plugins.persistence.jooq.configuration.JooqConnection;
 import org.example.repositories.RecipeRepository;
 import org.jooq.Condition;
 import org.jooq.DSLContext;
