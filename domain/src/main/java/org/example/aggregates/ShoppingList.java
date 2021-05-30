@@ -1,4 +1,4 @@
-package org.example.entities.aggregateRoots;
+package org.example.aggregates;
 
 import org.example.entities.ShoppingListItem;
 import org.example.exceptions.ShoppingListItemAlreadyExistsException;

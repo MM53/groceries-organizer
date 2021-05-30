@@ -1,6 +1,6 @@
 package org.example.repositories;
 
-import org.example.entities.aggregateRoots.Tag;
+import org.example.aggregates.Tag;
 
 import java.util.List;
 import java.util.Optional;

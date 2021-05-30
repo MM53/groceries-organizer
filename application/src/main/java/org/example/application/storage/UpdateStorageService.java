@@ -1,10 +1,8 @@
 package org.example.application.storage;
 
+import org.example.aggregates.Item;
+import org.example.aggregates.StoredItem;
 import org.example.application.items.ManageItemsService;
-import org.example.entities.aggregateRoots.Item;
-import org.example.entities.aggregateRoots.ShoppingList;
-import org.example.entities.aggregateRoots.StoredItem;
-import org.example.exceptions.ItemLocationNotFoundException;
 import org.example.repositories.StoredItemRepository;
 import org.example.valueObjects.Amount;
 import org.example.valueObjects.Location;

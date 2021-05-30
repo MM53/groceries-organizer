@@ -1,7 +1,7 @@
 package org.example.adapter.persistence.jooq.mapper.collectors;
 
+import org.example.aggregates.Item;
 import org.example.entities.ItemName;
-import org.example.entities.aggregateRoots.Item;
 import org.jooq.Record;
 
 import static org.example.adapter.persistence.jooq.generated.Tables.ITEM;

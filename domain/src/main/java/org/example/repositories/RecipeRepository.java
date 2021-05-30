@@ -1,7 +1,7 @@
 package org.example.repositories;
 
-import org.example.entities.aggregateRoots.Tag;
-import org.example.entities.aggregateRoots.Recipe;
+import org.example.aggregates.Recipe;
+import org.example.aggregates.Tag;
 
 import java.util.List;
 import java.util.Optional;

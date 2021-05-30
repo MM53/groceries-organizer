@@ -1,13 +1,13 @@
 package org.example.application;
 
 import org.example.AppConfig;
+import org.example.aggregates.ShoppingList;
 import org.example.application.items.ManageItemsService;
 import org.example.application.items.ReadItemsService;
 import org.example.application.storage.ReadStorageService;
 import org.example.application.storage.TakeAmountService;
 import org.example.application.storage.UpdateStorageService;
 import org.example.entities.ItemLocation;
-import org.example.entities.aggregateRoots.ShoppingList;
 import org.example.repositories.ShoppingListRepository;
 import org.example.repositories.StoredItemRepository;
 import org.example.units.Weight;

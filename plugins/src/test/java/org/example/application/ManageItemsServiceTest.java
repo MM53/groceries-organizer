@@ -1,10 +1,10 @@
 package org.example.application;
 
+import org.example.aggregates.Item;
 import org.example.application.exceptions.ItemAlreadyExistsException;
 import org.example.application.items.ManageItemsService;
 import org.example.application.items.ReadItemsService;
 import org.example.configuration.TestConfig;
-import org.example.entities.aggregateRoots.Item;
 import org.example.exceptions.ItemNotFoundException;
 import org.example.plugins.persistence.jooq.configuration.JooqConnection;
 import org.example.repositories.ItemRepository;

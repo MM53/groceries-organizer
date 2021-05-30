@@ -1,8 +1,8 @@
 package org.example.adapter.persistence.jooq.mapper.records;
 
 import org.example.adapter.persistence.jooq.generated.tables.records.IngredientRecord;
+import org.example.aggregates.Recipe;
 import org.example.entities.Ingredient;
-import org.example.entities.aggregateRoots.Recipe;
 import org.example.units.Pieces;
 import org.example.units.UnitType;
 import org.example.units.Volume;

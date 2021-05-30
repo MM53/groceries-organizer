@@ -1,7 +1,7 @@
 package org.example.application.items;
 
+import org.example.aggregates.Item;
 import org.example.application.exceptions.ItemAlreadyExistsException;
-import org.example.entities.aggregateRoots.Item;
 import org.example.repositories.ItemRepository;
 import org.example.units.UnitType;
 import org.springframework.beans.factory.annotation.Autowired;

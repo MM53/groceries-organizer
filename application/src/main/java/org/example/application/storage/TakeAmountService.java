@@ -1,10 +1,10 @@
 package org.example.application.storage;
 
+import org.example.aggregates.StoredItem;
 import org.example.application.storage.observer.CheckMinimumAmountObserver;
 import org.example.application.storage.observer.ItemLocationObserver;
 import org.example.application.storage.observer.ObservableItemLocation;
 import org.example.application.storage.observer.RemoveEmptyItemLocationsObserver;
-import org.example.entities.aggregateRoots.StoredItem;
 import org.example.exceptions.ItemLocationNotFoundException;
 import org.example.valueObjects.Amount;
 import org.springframework.beans.factory.annotation.Autowired;

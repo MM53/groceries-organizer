@@ -1,11 +1,11 @@
 package org.example.plugins.ui.thymleaf;
 
 import org.example.adapter.ui.ItemAmountTupelMapper;
+import org.example.aggregates.Recipe;
 import org.example.application.cookbook.ManageCookbookService;
 import org.example.application.cookbook.ReadCookbookService;
 import org.example.application.cookbook.UpdateRecipeService;
 import org.example.application.cookbook.UseRecipeService;
-import org.example.entities.aggregateRoots.Recipe;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

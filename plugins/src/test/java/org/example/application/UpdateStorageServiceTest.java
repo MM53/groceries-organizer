@@ -1,5 +1,8 @@
 package org.example.application;
 
+import org.example.aggregates.Item;
+import org.example.aggregates.StoredItem;
+import org.example.application.exceptions.StoredItemNotFoundException;
 import org.example.application.items.ManageItemsService;
 import org.example.application.items.ReadItemsService;
 import org.example.application.storage.ReadStorageService;
@@ -8,10 +11,7 @@ import org.example.application.storage.UpdateStorageService;
 import org.example.configuration.H2Connection;
 import org.example.configuration.TestConfig;
 import org.example.entities.ItemLocation;
-import org.example.entities.aggregateRoots.Item;
-import org.example.entities.aggregateRoots.StoredItem;
 import org.example.exceptions.ItemNotFoundException;
-import org.example.application.exceptions.StoredItemNotFoundException;
 import org.example.repositories.StoredItemRepository;
 import org.example.units.UnitType;
 import org.example.units.Weight;
@@ -24,7 +24,6 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static org.example.adapter.persistence.jooq.generated.Tables.*;
 import static org.junit.jupiter.api.Assertions.*;

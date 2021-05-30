@@ -1,8 +1,8 @@
 package org.example.plugins.persistence.jooq.repositories;
 
 import org.example.adapter.persistence.jooq.mapper.collectors.ItemCollector;
+import org.example.aggregates.Item;
 import org.example.entities.ItemName;
-import org.example.entities.aggregateRoots.Item;
 import org.example.plugins.persistence.jooq.configuration.JooqConnection;
 import org.example.repositories.ItemRepository;
 import org.jooq.DSLContext;

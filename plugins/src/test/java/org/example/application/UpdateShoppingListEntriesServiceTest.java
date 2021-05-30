@@ -1,15 +1,15 @@
 package org.example.application;
 
+import org.example.aggregates.ShoppingList;
+import org.example.application.exceptions.ShoppingListAlreadyExistsException;
+import org.example.application.exceptions.ShoppingListNotFoundException;
 import org.example.application.items.ManageItemsService;
 import org.example.application.shoppingList.ManageShoppingListService;
 import org.example.application.shoppingList.ReadShoppingListService;
 import org.example.application.shoppingList.UpdateShoppingListEntriesService;
 import org.example.configuration.H2Connection;
 import org.example.configuration.TestConfig;
-import org.example.application.exceptions.ShoppingListAlreadyExistsException;
-import org.example.application.exceptions.ShoppingListNotFoundException;
 import org.example.entities.ShoppingListItem;
-import org.example.entities.aggregateRoots.ShoppingList;
 import org.example.exceptions.ItemNotFoundException;
 import org.example.exceptions.ShoppingListItemNotFoundException;
 import org.example.repositories.ShoppingListRepository;
@@ -24,7 +24,8 @@ import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
 import java.util.List;
 
-import static org.example.adapter.persistence.jooq.generated.Tables.*;
+import static org.example.adapter.persistence.jooq.generated.Tables.ITEM;
+import static org.example.adapter.persistence.jooq.generated.Tables.SHOPPING_LIST;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringJUnitConfig(classes = TestConfig.class)

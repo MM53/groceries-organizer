@@ -1,4 +1,4 @@
-package org.example.entities.aggregateRoots;
+package org.example.aggregates;
 
 import org.example.entities.Ingredient;
 import org.example.exceptions.IngredientAlreadyExistsException;

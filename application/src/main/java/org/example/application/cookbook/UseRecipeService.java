@@ -1,11 +1,11 @@
 package org.example.application.cookbook;
 
+import org.example.aggregates.StoredItem;
 import org.example.application.shoppingList.UpdateShoppingListEntriesService;
 import org.example.application.storage.ReadStorageService;
 import org.example.application.storage.TakeAmountService;
 import org.example.entities.Ingredient;
 import org.example.entities.ItemLocation;
-import org.example.entities.aggregateRoots.StoredItem;
 import org.example.valueObjects.Amount;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

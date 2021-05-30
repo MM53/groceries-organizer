@@ -1,14 +1,14 @@
 package org.example.adapter.persistence.jooq.mapper.records;
 
+import org.example.adapter.persistence.jooq.generated.tables.records.MinimumAmountRecord;
+import org.example.aggregates.StoredItem;
 import org.example.entities.MinimumAmount;
-import org.example.entities.aggregateRoots.StoredItem;
 import org.example.units.Pieces;
 import org.example.units.UnitType;
 import org.example.units.Volume;
 import org.example.units.Weight;
 import org.example.valueObjects.Amount;
 import org.jooq.RecordMapper;
-import org.example.adapter.persistence.jooq.generated.tables.records.MinimumAmountRecord;
 
 import java.util.UUID;
 

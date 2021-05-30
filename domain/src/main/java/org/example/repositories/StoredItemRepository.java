@@ -1,7 +1,7 @@
 package org.example.repositories;
 
-import org.example.entities.aggregateRoots.Item;
-import org.example.entities.aggregateRoots.StoredItem;
+import org.example.aggregates.Item;
+import org.example.aggregates.StoredItem;
 
 import java.util.List;
 import java.util.Optional;

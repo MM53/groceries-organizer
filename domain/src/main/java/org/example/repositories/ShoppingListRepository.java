@@ -1,6 +1,6 @@
 package org.example.repositories;
 
-import org.example.entities.aggregateRoots.ShoppingList;
+import org.example.aggregates.ShoppingList;
 
 import java.util.List;
 import java.util.Optional;

@@ -1,6 +1,6 @@
 package org.example.application.storage.observer;
 
-import org.example.entities.aggregateRoots.StoredItem;
+import org.example.aggregates.StoredItem;
 
 import java.util.UUID;
 

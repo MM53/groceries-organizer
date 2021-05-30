@@ -1,6 +1,6 @@
 package org.example.services;
 
-import org.example.entities.aggregateRoots.Item;
+import org.example.aggregates.Item;
 import org.example.exceptions.ItemNotFoundException;
 import org.example.exceptions.UnitMismatchException;
 import org.example.repositories.ItemRepository;

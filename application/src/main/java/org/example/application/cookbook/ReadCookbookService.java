@@ -1,9 +1,9 @@
 package org.example.application.cookbook;
 
+import org.example.aggregates.Recipe;
+import org.example.aggregates.Tag;
 import org.example.application.exceptions.RecipeNotFoundException;
 import org.example.application.exceptions.TagNotFoundException;
-import org.example.entities.aggregateRoots.Recipe;
-import org.example.entities.aggregateRoots.Tag;
 import org.example.repositories.RecipeRepository;
 import org.example.repositories.TagRepository;
 import org.springframework.beans.factory.annotation.Autowired;

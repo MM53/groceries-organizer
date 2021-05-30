@@ -1,6 +1,6 @@
 package org.example.plugins.persistence.jooq.repositories;
 
-import org.example.entities.aggregateRoots.Tag;
+import org.example.aggregates.Tag;
 import org.example.plugins.persistence.jooq.configuration.JooqConnection;
 import org.example.repositories.TagRepository;
 import org.jooq.DSLContext;

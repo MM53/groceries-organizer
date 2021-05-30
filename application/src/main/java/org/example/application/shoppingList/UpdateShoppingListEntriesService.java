@@ -1,7 +1,7 @@
 package org.example.application.shoppingList;
 
+import org.example.aggregates.ShoppingList;
 import org.example.entities.ShoppingListItem;
-import org.example.entities.aggregateRoots.ShoppingList;
 import org.example.repositories.ShoppingListRepository;
 import org.example.valueObjects.Amount;
 import org.springframework.beans.factory.annotation.Autowired;

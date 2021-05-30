@@ -1,9 +1,9 @@
 package org.example.application.storage;
 
+import org.example.aggregates.Item;
+import org.example.aggregates.StoredItem;
 import org.example.application.exceptions.StoredItemNotFoundException;
 import org.example.entities.ItemLocation;
-import org.example.entities.aggregateRoots.Item;
-import org.example.entities.aggregateRoots.StoredItem;
 import org.example.repositories.StoredItemRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

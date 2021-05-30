@@ -1,8 +1,8 @@
 package org.example.adapter.persistence.jooq.mapper.collectors;
 
+import org.example.aggregates.StoredItem;
 import org.example.entities.ItemLocation;
 import org.example.entities.MinimumAmount;
-import org.example.entities.aggregateRoots.StoredItem;
 import org.example.exceptions.ItemNotFoundException;
 import org.example.exceptions.UnitMismatchException;
 import org.jooq.Record;

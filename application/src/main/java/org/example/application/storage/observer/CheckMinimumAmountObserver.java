@@ -1,7 +1,7 @@
 package org.example.application.storage.observer;
 
+import org.example.aggregates.StoredItem;
 import org.example.application.shoppingList.UpdateShoppingListEntriesService;
-import org.example.entities.aggregateRoots.StoredItem;
 import org.example.valueObjects.Amount;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

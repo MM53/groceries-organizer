@@ -1,4 +1,4 @@
-package org.example.entities.aggregateRoots;
+package org.example.aggregates;
 
 import java.util.Objects;
 

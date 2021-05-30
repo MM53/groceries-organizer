@@ -1,7 +1,7 @@
 package org.example.application.storage.observer;
 
+import org.example.aggregates.StoredItem;
 import org.example.application.storage.UpdateStorageService;
-import org.example.entities.aggregateRoots.StoredItem;
 import org.example.exceptions.ItemLocationNotFoundException;
 import org.example.valueObjects.Amount;
 import org.springframework.beans.factory.annotation.Autowired;

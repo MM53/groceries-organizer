@@ -1,8 +1,8 @@
 package org.example.adapter.persistence.jooq.mapper.collectors;
 
+import org.example.aggregates.Recipe;
+import org.example.aggregates.Tag;
 import org.example.entities.Ingredient;
-import org.example.entities.aggregateRoots.Recipe;
-import org.example.entities.aggregateRoots.Tag;
 import org.jooq.Record;
 
 import static org.example.adapter.persistence.jooq.generated.Tables.*;

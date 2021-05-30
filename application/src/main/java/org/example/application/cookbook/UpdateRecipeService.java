@@ -1,7 +1,7 @@
 package org.example.application.cookbook;
 
-import org.example.entities.aggregateRoots.Recipe;
-import org.example.entities.aggregateRoots.Tag;
+import org.example.aggregates.Recipe;
+import org.example.aggregates.Tag;
 import org.example.repositories.RecipeRepository;
 import org.example.valueObjects.Amount;
 import org.springframework.beans.factory.annotation.Autowired;

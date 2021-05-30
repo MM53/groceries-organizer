@@ -1,7 +1,5 @@
 package org.example.application.exceptions;
 
-import org.example.entities.aggregateRoots.Tag;
-
 import java.util.UUID;
 
 public class RecipeNotFoundException extends RuntimeException {

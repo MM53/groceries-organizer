@@ -1,7 +1,7 @@
 package org.example.adapter.persistence.jooq.mapper.collectors;
 
+import org.example.aggregates.ShoppingList;
 import org.example.entities.ShoppingListItem;
-import org.example.entities.aggregateRoots.ShoppingList;
 import org.jooq.Record;
 
 import static org.example.adapter.persistence.jooq.generated.Tables.SHOPPING_LIST;

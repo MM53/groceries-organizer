@@ -1,8 +1,8 @@
 package org.example.application.shoppingList;
 
+import org.example.aggregates.ShoppingList;
 import org.example.application.exceptions.ShoppingListAlreadyExistsException;
 import org.example.application.exceptions.ShoppingListNotFoundException;
-import org.example.entities.aggregateRoots.ShoppingList;
 import org.example.repositories.ShoppingListRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
