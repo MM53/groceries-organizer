@@ -1,6 +1,6 @@
 package org.example.plugins.ui.thymleaf;
 
-import org.example.adapter.ui.AmountAdapter;
+import org.example.adapter.ui.mapper.AmountAdapter;
 import org.example.aggregates.ShoppingList;
 import org.example.application.shoppingList.ReadShoppingListService;
 import org.example.application.shoppingList.UpdateShoppingListEntriesService;

@@ -1,4 +1,4 @@
-package org.example.adapter.ui;
+package org.example.adapter.ui.mapper;
 
 import org.example.units.Pieces;
 import org.example.units.Unit;

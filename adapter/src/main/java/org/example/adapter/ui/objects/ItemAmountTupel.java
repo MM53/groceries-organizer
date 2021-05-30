@@ -1,4 +1,4 @@
-package org.example.adapter.ui;
+package org.example.adapter.ui.objects;
 
 import org.example.valueObjects.Amount;
 

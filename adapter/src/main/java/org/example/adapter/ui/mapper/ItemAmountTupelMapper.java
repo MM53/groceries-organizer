@@ -1,5 +1,6 @@
-package org.example.adapter.ui;
+package org.example.adapter.ui.mapper;
 
+import org.example.adapter.ui.objects.ItemAmountTupel;
 import org.example.application.items.ReadItemsService;
 import org.example.valueObjects.Amount;
 import org.springframework.beans.factory.annotation.Autowired;
