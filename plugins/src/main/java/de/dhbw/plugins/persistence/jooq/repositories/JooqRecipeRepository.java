@@ -1,13 +1,13 @@
 package de.dhbw.plugins.persistence.jooq.repositories;
 
-import de.dhbw.adapter.persistence.jooq.generated.Tables;
-import de.dhbw.adapter.persistence.jooq.generated.tables.records.RecipeTagRecord;
-import de.dhbw.adapter.persistence.jooq.mapper.collectors.RecipeCollector;
-import de.dhbw.adapter.persistence.jooq.mapper.records.IngredientMapper;
 import de.dhbw.aggregates.Recipe;
 import de.dhbw.aggregates.Tag;
 import de.dhbw.entities.Ingredient;
 import de.dhbw.plugins.persistence.jooq.configuration.JooqConnection;
+import de.dhbw.plugins.persistence.jooq.generated.Tables;
+import de.dhbw.plugins.persistence.jooq.generated.tables.records.RecipeTagRecord;
+import de.dhbw.plugins.persistence.jooq.mapper.collectors.RecipeCollector;
+import de.dhbw.plugins.persistence.jooq.mapper.records.IngredientMapper;
 import de.dhbw.repositories.RecipeRepository;
 import org.jooq.Condition;
 import org.jooq.DSLContext;

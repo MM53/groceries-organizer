@@ -1,8 +1,8 @@
 package de.dhbw.plugins.persistence.jooq.repositories;
 
-import de.dhbw.adapter.persistence.jooq.generated.Tables;
 import de.dhbw.aggregates.Tag;
 import de.dhbw.plugins.persistence.jooq.configuration.JooqConnection;
+import de.dhbw.plugins.persistence.jooq.generated.Tables;
 import de.dhbw.repositories.TagRepository;
 import org.jooq.DSLContext;
 import org.springframework.beans.factory.annotation.Autowired;

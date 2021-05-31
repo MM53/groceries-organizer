@@ -1,4 +1,4 @@
-package de.dhbw.adapter.persistence.jooq.mapper.collectors.generic;
+package de.dhbw.plugins.persistence.jooq.mapper.collectors.generic;
 
 import org.jooq.Record;
 

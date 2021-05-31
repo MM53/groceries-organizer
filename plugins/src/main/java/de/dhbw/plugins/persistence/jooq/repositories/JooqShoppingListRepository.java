@@ -1,11 +1,11 @@
 package de.dhbw.plugins.persistence.jooq.repositories;
 
-import de.dhbw.adapter.persistence.jooq.generated.Tables;
-import de.dhbw.adapter.persistence.jooq.mapper.collectors.ShoppingListCollector;
-import de.dhbw.adapter.persistence.jooq.mapper.records.ShoppingListItemMapper;
 import de.dhbw.aggregates.ShoppingList;
 import de.dhbw.entities.ShoppingListItem;
 import de.dhbw.plugins.persistence.jooq.configuration.JooqConnection;
+import de.dhbw.plugins.persistence.jooq.generated.Tables;
+import de.dhbw.plugins.persistence.jooq.mapper.collectors.ShoppingListCollector;
+import de.dhbw.plugins.persistence.jooq.mapper.records.ShoppingListItemMapper;
 import de.dhbw.repositories.ShoppingListRepository;
 import org.jooq.Condition;
 import org.jooq.DSLContext;

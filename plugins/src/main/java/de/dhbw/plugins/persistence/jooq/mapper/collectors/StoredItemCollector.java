@@ -1,11 +1,11 @@
-package de.dhbw.adapter.persistence.jooq.mapper.collectors;
+package de.dhbw.plugins.persistence.jooq.mapper.collectors;
 
-import de.dhbw.adapter.persistence.jooq.generated.Tables;
 import de.dhbw.aggregates.StoredItem;
 import de.dhbw.entities.ItemLocation;
 import de.dhbw.entities.MinimumAmount;
 import de.dhbw.exceptions.ItemNotFoundException;
 import de.dhbw.exceptions.UnitMismatchException;
+import de.dhbw.plugins.persistence.jooq.generated.Tables;
 import org.jooq.Record;
 
 import java.util.HashSet;

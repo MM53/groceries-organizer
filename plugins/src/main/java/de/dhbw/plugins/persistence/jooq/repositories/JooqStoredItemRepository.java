@@ -1,14 +1,14 @@
 package de.dhbw.plugins.persistence.jooq.repositories;
 
-import de.dhbw.adapter.persistence.jooq.generated.Tables;
-import de.dhbw.adapter.persistence.jooq.generated.tables.records.StoredItemRecord;
-import de.dhbw.adapter.persistence.jooq.mapper.collectors.StoredItemCollector;
-import de.dhbw.adapter.persistence.jooq.mapper.records.ItemLocationMapper;
-import de.dhbw.adapter.persistence.jooq.mapper.records.MinimumAmountMapper;
 import de.dhbw.aggregates.Item;
 import de.dhbw.aggregates.StoredItem;
 import de.dhbw.entities.ItemLocation;
 import de.dhbw.plugins.persistence.jooq.configuration.JooqConnection;
+import de.dhbw.plugins.persistence.jooq.generated.Tables;
+import de.dhbw.plugins.persistence.jooq.generated.tables.records.StoredItemRecord;
+import de.dhbw.plugins.persistence.jooq.mapper.collectors.StoredItemCollector;
+import de.dhbw.plugins.persistence.jooq.mapper.records.ItemLocationMapper;
+import de.dhbw.plugins.persistence.jooq.mapper.records.MinimumAmountMapper;
 import de.dhbw.repositories.StoredItemRepository;
 import org.jooq.Condition;
 import org.jooq.DSLContext;

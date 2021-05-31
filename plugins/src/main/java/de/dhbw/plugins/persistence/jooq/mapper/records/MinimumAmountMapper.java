@@ -1,8 +1,8 @@
-package de.dhbw.adapter.persistence.jooq.mapper.records;
+package de.dhbw.plugins.persistence.jooq.mapper.records;
 
-import de.dhbw.adapter.persistence.jooq.generated.tables.records.MinimumAmountRecord;
 import de.dhbw.aggregates.StoredItem;
 import de.dhbw.entities.MinimumAmount;
+import de.dhbw.plugins.persistence.jooq.generated.tables.records.MinimumAmountRecord;
 import de.dhbw.units.Pieces;
 import de.dhbw.units.UnitType;
 import de.dhbw.units.Volume;

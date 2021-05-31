@@ -1,8 +1,8 @@
-package de.dhbw.adapter.persistence.jooq.mapper.records;
+package de.dhbw.plugins.persistence.jooq.mapper.records;
 
-import de.dhbw.adapter.persistence.jooq.generated.tables.records.IngredientRecord;
 import de.dhbw.aggregates.Recipe;
 import de.dhbw.entities.Ingredient;
+import de.dhbw.plugins.persistence.jooq.generated.tables.records.IngredientRecord;
 import de.dhbw.units.Pieces;
 import de.dhbw.units.UnitType;
 import de.dhbw.units.Volume;

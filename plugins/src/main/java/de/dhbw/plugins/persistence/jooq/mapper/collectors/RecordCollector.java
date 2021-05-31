@@ -1,7 +1,7 @@
-package de.dhbw.adapter.persistence.jooq.mapper.collectors;
+package de.dhbw.plugins.persistence.jooq.mapper.collectors;
 
-import de.dhbw.adapter.persistence.jooq.mapper.collectors.generic.ListRecordCollector;
-import de.dhbw.adapter.persistence.jooq.mapper.collectors.generic.OptionalRecordCollector;
+import de.dhbw.plugins.persistence.jooq.mapper.collectors.generic.ListRecordCollector;
+import de.dhbw.plugins.persistence.jooq.mapper.collectors.generic.OptionalRecordCollector;
 import org.jooq.Record;
 import org.jooq.TableField;
 

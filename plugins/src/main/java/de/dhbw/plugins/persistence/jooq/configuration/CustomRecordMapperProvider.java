@@ -1,13 +1,13 @@
 package de.dhbw.plugins.persistence.jooq.configuration;
 
-import de.dhbw.adapter.persistence.jooq.mapper.records.IngredientMapper;
-import de.dhbw.adapter.persistence.jooq.mapper.records.ItemLocationMapper;
-import de.dhbw.adapter.persistence.jooq.mapper.records.MinimumAmountMapper;
-import de.dhbw.adapter.persistence.jooq.mapper.records.ShoppingListItemMapper;
 import de.dhbw.entities.Ingredient;
 import de.dhbw.entities.ItemLocation;
 import de.dhbw.entities.MinimumAmount;
 import de.dhbw.entities.ShoppingListItem;
+import de.dhbw.plugins.persistence.jooq.mapper.records.IngredientMapper;
+import de.dhbw.plugins.persistence.jooq.mapper.records.ItemLocationMapper;
+import de.dhbw.plugins.persistence.jooq.mapper.records.MinimumAmountMapper;
+import de.dhbw.plugins.persistence.jooq.mapper.records.ShoppingListItemMapper;
 import org.jooq.Record;
 import org.jooq.RecordMapper;
 import org.jooq.RecordMapperProvider;

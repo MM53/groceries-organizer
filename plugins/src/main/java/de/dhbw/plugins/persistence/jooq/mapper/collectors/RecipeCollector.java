@@ -1,9 +1,9 @@
-package de.dhbw.adapter.persistence.jooq.mapper.collectors;
+package de.dhbw.plugins.persistence.jooq.mapper.collectors;
 
-import de.dhbw.adapter.persistence.jooq.generated.Tables;
 import de.dhbw.aggregates.Recipe;
 import de.dhbw.aggregates.Tag;
 import de.dhbw.entities.Ingredient;
+import de.dhbw.plugins.persistence.jooq.generated.Tables;
 import org.jooq.Record;
 
 import java.util.UUID;

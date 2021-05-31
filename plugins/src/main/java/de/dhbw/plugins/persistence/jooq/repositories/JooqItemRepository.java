@@ -1,10 +1,10 @@
 package de.dhbw.plugins.persistence.jooq.repositories;
 
-import de.dhbw.adapter.persistence.jooq.generated.Tables;
-import de.dhbw.adapter.persistence.jooq.mapper.collectors.ItemCollector;
 import de.dhbw.aggregates.Item;
 import de.dhbw.entities.ItemName;
 import de.dhbw.plugins.persistence.jooq.configuration.JooqConnection;
+import de.dhbw.plugins.persistence.jooq.generated.Tables;
+import de.dhbw.plugins.persistence.jooq.mapper.collectors.ItemCollector;
 import de.dhbw.repositories.ItemRepository;
 import org.jooq.DSLContext;
 import org.jooq.Record;
