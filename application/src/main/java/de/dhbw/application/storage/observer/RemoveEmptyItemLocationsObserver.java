@@ -1,7 +1,7 @@
 package de.dhbw.application.storage.observer;
 
 import de.dhbw.aggregates.StoredItem;
-import de.dhbw.application.storage.UpdateStorageService;
+import de.dhbw.application.storage.ManageStorageService;
 import de.dhbw.exceptions.ItemLocationNotFoundException;
 import de.dhbw.valueObjects.Amount;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,11 +12,11 @@ import java.util.UUID;
 @Component
 public class RemoveEmptyItemLocationsObserver implements ItemLocationObserver {
 
-    private final UpdateStorageService updateStorageService;
+    private final ManageStorageService manageStorageService;
 
     @Autowired
-    public RemoveEmptyItemLocationsObserver(UpdateStorageService updateStorageService) {
-        this.updateStorageService = updateStorageService;
+    public RemoveEmptyItemLocationsObserver(ManageStorageService manageStorageService) {
+        this.manageStorageService = manageStorageService;
     }
 
     @Override
@@ -26,7 +26,7 @@ public class RemoveEmptyItemLocationsObserver implements ItemLocationObserver {
                                            .getAmount();
 
         if (availableAmount.isEmpty()) {
-            updateStorageService.removeItemLocation(storedItem.getItemReference(), itemLocationId);
+            manageStorageService.removeItemLocation(storedItem.getItemReference(), itemLocationId);
         }
     }
 }

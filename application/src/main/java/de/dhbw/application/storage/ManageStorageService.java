@@ -12,14 +12,14 @@ import org.springframework.stereotype.Service;
 import java.util.UUID;
 
 @Service
-public class UpdateStorageService {
+public class ManageStorageService {
 
     private final StoredItemRepository storedItemRepository;
     private final ManageItemsService manageItemsService;
     private final ReadStorageService readStorageService;
 
     @Autowired
-    public UpdateStorageService(StoredItemRepository storedItemRepository, ManageItemsService manageItemsService, ReadStorageService readStorageService) {
+    public ManageStorageService(StoredItemRepository storedItemRepository, ManageItemsService manageItemsService, ReadStorageService readStorageService) {
         this.storedItemRepository = storedItemRepository;
         this.manageItemsService = manageItemsService;
         this.readStorageService = readStorageService;

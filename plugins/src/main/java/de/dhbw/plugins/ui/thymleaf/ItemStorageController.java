@@ -2,9 +2,9 @@ package de.dhbw.plugins.ui.thymleaf;
 
 import de.dhbw.adapter.ui.mapper.AmountAdapter;
 import de.dhbw.adapter.ui.objects.StoredItemWeb;
+import de.dhbw.application.storage.ManageStorageService;
 import de.dhbw.application.storage.ReadStorageService;
 import de.dhbw.application.storage.TakeAmountService;
-import de.dhbw.application.storage.UpdateStorageService;
 import de.dhbw.exceptions.ItemNotFoundException;
 import de.dhbw.valueObjects.Location;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,13 +22,13 @@ import java.util.UUID;
 @Controller
 public class ItemStorageController {
 
-    private UpdateStorageService updateStorageService;
+    private ManageStorageService manageStorageService;
     private ReadStorageService readStorageService;
     private TakeAmountService takeAmountService;
 
     @Autowired
-    public ItemStorageController(UpdateStorageService updateStorageService, ReadStorageService readStorageService, TakeAmountService takeAmountService) {
-        this.updateStorageService = updateStorageService;
+    public ItemStorageController(ManageStorageService manageStorageService, ReadStorageService readStorageService, TakeAmountService takeAmountService) {
+        this.manageStorageService = manageStorageService;
         this.readStorageService = readStorageService;
         this.takeAmountService = takeAmountService;
     }
@@ -47,9 +47,9 @@ public class ItemStorageController {
     @PostMapping("/storage/{itemReference}/store")
     public RedirectView storeAmount(@PathVariable("itemReference") String itemReference, @RequestParam String location, @RequestParam String amount) {
         try {
-            updateStorageService.storeItem(itemReference, new Location(location), AmountAdapter.ExtractFromString(amount));
+            manageStorageService.storeItem(itemReference, new Location(location), AmountAdapter.ExtractFromString(amount));
         } catch (ItemNotFoundException e) {
-            updateStorageService.createAndStoreItem(itemReference, new Location(location), AmountAdapter.ExtractFromString(amount));
+            manageStorageService.createAndStoreItem(itemReference, new Location(location), AmountAdapter.ExtractFromString(amount));
         }
         return new RedirectView("/storage");
     }
@@ -62,7 +62,7 @@ public class ItemStorageController {
 
     @PostMapping("/storage/{itemReference}/minimumAmount")
     public RedirectView setMinimumAmount(@PathVariable("itemReference") String itemReference, @RequestParam String amount) {
-        updateStorageService.setMinimumAmount(itemReference, AmountAdapter.ExtractFromString(amount));
+        manageStorageService.setMinimumAmount(itemReference, AmountAdapter.ExtractFromString(amount));
         return new RedirectView("/storage");
     }
 }

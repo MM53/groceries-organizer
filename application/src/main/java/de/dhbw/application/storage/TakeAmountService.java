@@ -18,17 +18,17 @@ import java.util.UUID;
 public class TakeAmountService implements ObservableItemLocation {
 
     private final ReadStorageService readStorageService;
-    private final UpdateStorageService updateStorageService;
+    private final ManageStorageService manageStorageService;
 
     private final Set<ItemLocationObserver> observers = new HashSet<>();
 
     @Autowired
         public TakeAmountService(ReadStorageService readStorageService,
-                             UpdateStorageService updateStorageService,
-                             RemoveEmptyItemLocationsObserver removeEmptyItemLocationsObserver,
-                             CheckMinimumAmountObserver checkMinimumAmountObserver) {
+                                 ManageStorageService manageStorageService,
+                                 RemoveEmptyItemLocationsObserver removeEmptyItemLocationsObserver,
+                                 CheckMinimumAmountObserver checkMinimumAmountObserver) {
         this.readStorageService = readStorageService;
-        this.updateStorageService = updateStorageService;
+        this.manageStorageService = manageStorageService;
         addObserver(removeEmptyItemLocationsObserver);
         addObserver(checkMinimumAmountObserver);
     }
@@ -40,10 +40,10 @@ public class TakeAmountService implements ObservableItemLocation {
                                            .getAmount();
         Amount requiredAmountLeft;
         if (requestedAmount.isMoreThan(availableAmount) || requestedAmount.equals(availableAmount)) {
-            updateStorageService.updateAmount(itemName, itemLocationId, new Amount(0, availableAmount.getUnit()));
+            manageStorageService.updateAmount(itemName, itemLocationId, new Amount(0, availableAmount.getUnit()));
             requiredAmountLeft = requestedAmount.sub(availableAmount);
         } else {
-            updateStorageService.updateAmount(itemName, itemLocationId, availableAmount.sub(requestedAmount));
+            manageStorageService.updateAmount(itemName, itemLocationId, availableAmount.sub(requestedAmount));
             requiredAmountLeft = new Amount(0, requestedAmount.getUnit());
         }
         notifyItemLocationAmountChanged(readStorageService.getStoredItem(itemName), itemLocationId);
