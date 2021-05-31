@@ -77,7 +77,7 @@ public class Recipe {
     }
 
     public void addIngredient(String itemReference, Amount amount) {
-        addIngredient(new Ingredient(id, itemReference, amount));
+        addIngredient(new Ingredient(itemReference, amount));
     }
 
     public void removeIngredient(UUID ingredientId) {
