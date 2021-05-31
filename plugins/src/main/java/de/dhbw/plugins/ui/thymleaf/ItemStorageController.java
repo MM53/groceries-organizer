@@ -33,7 +33,7 @@ public class ItemStorageController {
         this.takeAmountService = takeAmountService;
     }
 
-    @GetMapping("/storage")
+    @GetMapping({"", "/storage"})
     public String listStoredItems(Model model) {
         model.addAttribute("template", "storedItemsList");
         final List<StoredItemWeb> storedItems = readStorageService.listStoredItems()
