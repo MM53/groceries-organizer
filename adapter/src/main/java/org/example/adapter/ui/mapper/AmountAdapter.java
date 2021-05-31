@@ -1,5 +1,6 @@
 package org.example.adapter.ui.mapper;
 
+import org.example.adapter.ui.exceptions.NoUnitFoundException;
 import org.example.units.Pieces;
 import org.example.units.Unit;
 import org.example.units.Volume;
@@ -16,7 +17,7 @@ public class AmountAdapter {
             case "l" -> Volume.LITER;
             case "ml" -> Volume.MILLILITER;
             case "" -> Pieces.PIECES;
-            default -> throw new RuntimeException();
+            default -> throw new NoUnitFoundException(amountString);
         };
         return new Amount(value, unit);
     }

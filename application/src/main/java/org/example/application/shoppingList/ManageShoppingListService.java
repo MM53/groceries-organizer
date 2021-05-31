@@ -1,6 +1,7 @@
 package org.example.application.shoppingList;
 
 import org.example.aggregates.ShoppingList;
+import org.example.application.exceptions.RemoveDefaultShoppingListException;
 import org.example.application.exceptions.ShoppingListAlreadyExistsException;
 import org.example.application.exceptions.ShoppingListNotFoundException;
 import org.example.repositories.ShoppingListRepository;
@@ -29,7 +30,7 @@ public class ManageShoppingListService {
 
     public void deleteShoppingList(String name) {
         if (name.equals(ShoppingList.DEFAULT_SHOPPING_LIST)) {
-            throw new RuntimeException();
+            throw new RemoveDefaultShoppingListException();
         }
         shoppingListRepository.findByListName(name)
                               .ifPresentOrElse(shoppingListRepository::delete,

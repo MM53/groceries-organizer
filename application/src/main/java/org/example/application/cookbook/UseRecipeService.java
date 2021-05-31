@@ -1,6 +1,7 @@
 package org.example.application.cookbook;
 
 import org.example.aggregates.StoredItem;
+import org.example.application.exceptions.MissingIngredientsException;
 import org.example.application.exceptions.StoredItemNotFoundException;
 import org.example.application.shoppingList.UpdateShoppingListEntriesService;
 import org.example.application.storage.ReadStorageService;
@@ -51,7 +52,7 @@ public class UseRecipeService {
         boolean allIngredientsAvailable = checkIngredients(recipeId).stream()
                                                                     .allMatch(ingredient -> ingredient.getAmount().isEmpty());
         if (!allIngredientsAvailable) {
-            throw new RuntimeException();
+            throw new MissingIngredientsException(readCookbookService.getRecipe(recipeId));
         }
 
         readCookbookService.getRecipe(recipeId)
@@ -97,7 +98,7 @@ public class UseRecipeService {
             amountToTake = takeAmountService.takeAmount(ingredient.getItemReference(), amountToTake, currentItemLocation.getId());
         }
         if (!amountToTake.isEmpty()) {
-            throw new RuntimeException();
+            throw new MissingIngredientsException(ingredient);
         }
     }
 }

@@ -3,6 +3,8 @@ package org.example.aggregates;
 import org.example.entities.Ingredient;
 import org.example.exceptions.IngredientAlreadyExistsException;
 import org.example.exceptions.IngredientNotFoundException;
+import org.example.exceptions.TagAlreadyExistsException;
+import org.example.exceptions.TagNotFoundException;
 import org.example.services.ItemUtilService;
 import org.example.valueObjects.Amount;
 
@@ -57,13 +59,13 @@ public class Recipe {
 
     public void addTag(Tag tag) {
         if (!tags.add(tag)) {
-            throw new RuntimeException();
+            throw new TagAlreadyExistsException(tag.getName(), name);
         }
     }
 
     public void removeTag(Tag tag) {
         if (!tags.remove(tag)) {
-            throw new RuntimeException();
+            throw new TagNotFoundException(tag.getName(), name);
         }
     }
 
