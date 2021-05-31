@@ -4,32 +4,43 @@
 <body>
 
 <div class="card border m-3" th:fragment="content">
-  <div class="card-header bg-secondary">
-    <h3 class="d-inline" th:text="${recipe.name}"></h3>
-    <a th:href="'/cookbook/recipes/edit/' + ${recipe.id}" class="btn btn-warning float-right">Edit</a>
-  </div>
-  <div class="card-body p-0">
-    <div class="card-body p-0 row">
-      <div class="col-2 pr-0">
-        <div class="border-right border-bottom px-2">
-          <h4>Ingredients</h4>
-          <div class="list-group list-group-flush">
-            <div class="list-group-item pl-2 pr-0" th:each="ingredient: ${recipe.ingredients}">
-              <b th:text="${ingredient.itemReference}"></b>
-              <span class="text-muted" th:text="${ingredient.amount}"></span>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="col-10">
-        <div class="py-2">
-          <a class="btn btn-info" th:each="tag: ${recipe.tags}" th:text="${tag.name}" th:href="'/cookbook/recipes?tag=' + ${tag.name}"></a>
-        </div>
-        <h4>Description</h4>
-        <pre class="p-2" th:text="${recipe.description}"></pre>
-      </div>
+    <div class="card-header bg-secondary">
+        <h3 class="d-inline" th:text="${recipe.name}"></h3>
+        <a th:href="'/cookbook/recipes/edit/' + ${recipe.id}" class="btn btn-warning float-right">Edit</a>
+        <form th:if="${cookable}" th:class="d-inline" action="/cookbook/recipes/cook" method="post">
+            <input type="hidden" name="recipe-id" th:value="${recipe.id}">
+            <button class="btn btn-success mr-2 float-right" type="submit">Cook</button>
+        </form>
+        <form th:if="${!cookable}" th:class="d-inline" action="/cookbook/recipes/plan" method="post">
+            <input type="hidden" name="recipe-id" th:value="${recipe.id}">
+            <button class="btn btn-primary mr-2 float-right" type="submit">Plan</button>
+        </form>
     </div>
-  </div>
+    <div class="card-body p-0">
+        <div class="card-body p-0 row">
+            <div class="col-2 pr-0">
+                <div class="border-right border-bottom px-2">
+                    <h4>Ingredients</h4>
+                    <div class="list-group list-group-flush">
+                        <div class="list-group-item pl-2 pr-0" th:each="ingredient,iter: ${recipe.ingredients}">
+                            <b th:text="${ingredient.itemReference}"></b>
+                            <span class="text-muted" th:text="${ingredient.amount}"></span>
+                            <span class="text-danger" th:if="${!missingIngredients[iter.index].amount.isEmpty}"
+                                  th:text="${missingIngredients[iter.index].amount}"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-10">
+                <div class="py-2">
+                    <a class="btn btn-info mr-2" th:each="tag: ${recipe.tags}" th:text="${tag.name}"
+                       th:href="'/cookbook/recipes?tag=' + ${tag.name}"></a>
+                </div>
+                <h4>Description</h4>
+                <pre class="p-2" th:text="${recipe.description}"></pre>
+            </div>
+        </div>
+    </div>
 </div>
 
 </body>

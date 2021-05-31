@@ -7,6 +7,7 @@ import org.example.application.cookbook.ManageCookbookService;
 import org.example.application.cookbook.ReadCookbookService;
 import org.example.application.cookbook.UpdateRecipeService;
 import org.example.application.cookbook.UseRecipeService;
+import org.example.entities.Ingredient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -60,7 +61,11 @@ public class CookbookController {
     @GetMapping("/cookbook/recipes/{recipe-id}")
     public String showRecipe(@PathVariable("recipe-id") String recipeId, Model model) {
         model.addAttribute("template", "recipe");
-        model.addAttribute("recipe", readCookbookService.getRecipe(UUID.fromString(recipeId)));
+        UUID id = UUID.fromString(recipeId);
+        model.addAttribute("recipe", readCookbookService.getRecipe(id));
+        List<Ingredient> checkIngredients = useRecipeService.checkIngredients(id);
+        model.addAttribute("missingIngredients", checkIngredients);
+        model.addAttribute("cookable", checkIngredients.stream().allMatch(ingredient -> ingredient.getAmount().isEmpty()));
         return "layout/main";
     }
 
@@ -107,5 +112,17 @@ public class CookbookController {
         List<String> tagNames = Arrays.stream(tags.split(",")).filter(tag -> !tag.equals("")).toList();
         updateRecipeService.updateTags(recipeId, tagNames);
         return new RedirectView("/cookbook/recipes/" + recipeId);
+    }
+
+    @PostMapping("/cookbook/recipes/cook")
+    public RedirectView cookRecipe(@RequestParam("recipe-id") String recipeId) {
+        useRecipeService.cookRecipe(UUID.fromString(recipeId));
+        return new RedirectView("/storage");
+    }
+
+    @PostMapping("/cookbook/recipes/plan")
+    public RedirectView planRecipe(@RequestParam("recipe-id") String recipeId) {
+        useRecipeService.planRecipe(UUID.fromString(recipeId));
+        return new RedirectView("/shopping-list/default");
     }
 }
