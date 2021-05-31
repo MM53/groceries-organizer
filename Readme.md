@@ -34,7 +34,7 @@ jdbc.url=jdbc:postgresql://localhost:5432/groceries-organizer
 ```
 
 ### Webserver
-The project is compiled into a single `war`-file which can be used be tomcat.
+The project is compiled into a single `war`-file which can be used by tomcat.
 It was tested with tomcat 9.0.46 as version 10 doesn't work with the `javax` packages.
 
 The easiest way to start the server is to run it via intelliJ.
