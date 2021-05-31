@@ -7,6 +7,8 @@ import org.example.valueObjects.Amount;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -62,6 +64,19 @@ public class UpdateRecipeService {
         Recipe recipe = readCookbookService.getRecipe(recipeId);
         Tag tag = readCookbookService.getTag(tagName);
         recipe.removeTag(tag);
+        recipeRepository.save(recipe);
+    }
+
+    public void updateTags(UUID recipeId, List<String> tagNames) {
+        Recipe recipe = readCookbookService.getRecipe(recipeId);
+        new ArrayList<>(recipe.getTags())
+                .stream()
+                .filter(tag -> !tagNames.contains(tag.getName()))
+                .forEach(recipe::removeTag);
+        tagNames.stream()
+                .map(Tag::new)
+                .filter(tag -> !recipe.getTags().contains(tag))
+                .forEach(recipe::addTag);
         recipeRepository.save(recipe);
     }
 

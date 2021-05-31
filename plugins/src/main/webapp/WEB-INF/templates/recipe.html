@@ -22,6 +22,9 @@
         </div>
       </div>
       <div class="col-10">
+        <div class="py-2">
+          <a class="btn btn-info" th:each="tag: ${recipe.tags}" th:text="${tag.name}" th:href="'/cookbook/recipes?tag=' + ${tag.name}"></a>
+        </div>
         <h4>Description</h4>
         <pre class="p-2" th:text="${recipe.description}"></pre>
       </div>

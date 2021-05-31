@@ -12,7 +12,7 @@ public class Recipe {
 
     private final UUID id;
     private String name;
-    private Set<Tag> tages;
+    private Set<Tag> tags;
     private Set<Ingredient> ingredients;
     private String description;
 
@@ -30,10 +30,10 @@ public class Recipe {
         this(id, name, new HashSet<>(), new HashSet<>(), description);
     }
 
-    public Recipe(UUID id, String name, Set<Tag> tages, Set<Ingredient> ingredients, String description) {
+    public Recipe(UUID id, String name, Set<Tag> tags, Set<Ingredient> ingredients, String description) {
         this.id = id;
         this.name = name;
-        this.tages = tages;
+        this.tags = tags;
         this.ingredients = ingredients;
         this.description = description;
     }
@@ -50,18 +50,18 @@ public class Recipe {
         this.name = name;
     }
 
-    public Set<Tag> getTages() {
-        return tages;
+    public Set<Tag> getTags() {
+        return tags;
     }
 
     public void addTag(Tag tag) {
-        if (!tages.add(tag)) {
+        if (!tags.add(tag)) {
             throw new RuntimeException();
         }
     }
 
     public void removeTag(Tag tag) {
-        if (!tages.remove(tag)) {
+        if (!tags.remove(tag)) {
             throw new RuntimeException();
         }
     }

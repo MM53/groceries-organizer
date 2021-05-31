@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.view.RedirectView;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.UUID;
 
 @Controller
@@ -58,6 +59,7 @@ public class CookbookController {
     public String createRecipe(Model model) {
         model.addAttribute("template", "editRecipe");
         model.addAttribute("recipe", new Recipe(null, ""));
+        model.addAttribute("availableTags", readCookbookService.listTags());
         return "layout/main";
     }
 
@@ -65,6 +67,7 @@ public class CookbookController {
     public String editRecipe(@PathVariable("recipe-id") String recipeId, Model model) {
         model.addAttribute("template", "editRecipe");
         model.addAttribute("recipe", readCookbookService.getRecipe(UUID.fromString(recipeId)));
+        model.addAttribute("availableTags", readCookbookService.listTags());
         return "layout/main";
     }
 
@@ -73,7 +76,8 @@ public class CookbookController {
                                    @RequestParam("recipe-name") String recipeName,
                                    @RequestParam String description,
                                    @RequestParam("added-ingredients") String addedIngredients,
-                                   @RequestParam("removed-ingredients") String removedIngredients) {
+                                   @RequestParam("removed-ingredients") String removedIngredients,
+                                   @RequestParam String tags) {
         UUID recipeId;
         if (recipeIdString == null) {
             recipeId = manageCookbookService.createRecipe(recipeName).getId();
@@ -90,6 +94,9 @@ public class CookbookController {
         Arrays.stream(removedIngredients.split(","))
               .filter(ingredient -> !ingredient.equals(""))
               .forEach(ingredient -> updateRecipeService.removeIngredient(recipeId, UUID.fromString(ingredient)));
+
+        List<String> tagNames = Arrays.stream(tags.split(",")).filter(tag -> !tag.equals("")).toList();
+        updateRecipeService.updateTags(recipeId, tagNames);
         return new RedirectView("/cookbook/recipes/" + recipeId);
     }
 }
