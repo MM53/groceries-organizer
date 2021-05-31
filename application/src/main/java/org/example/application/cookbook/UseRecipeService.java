@@ -1,6 +1,7 @@
 package org.example.application.cookbook;
 
 import org.example.aggregates.StoredItem;
+import org.example.application.exceptions.StoredItemNotFoundException;
 import org.example.application.shoppingList.UpdateShoppingListEntriesService;
 import org.example.application.storage.ReadStorageService;
 import org.example.application.storage.TakeAmountService;
@@ -48,7 +49,7 @@ public class UseRecipeService {
 
     public void cookRecipe(UUID recipeId) {
         boolean allIngredientsAvailable = checkIngredients(recipeId).stream()
-                                                                    .anyMatch(ingredient -> !ingredient.getAmount().isEmpty());
+                                                                    .allMatch(ingredient -> ingredient.getAmount().isEmpty());
         if (!allIngredientsAvailable) {
             throw new RuntimeException();
         }
@@ -59,28 +60,36 @@ public class UseRecipeService {
     }
 
     private Ingredient checkIngredient(Ingredient ingredient) {
-        StoredItem storedItem = readStorageService.getStoredItem(ingredient.getItemReference());
-        if (storedItem.getTotalAmount().isMoreThan(ingredient.getAmount())) {
-            ingredient.setAmount(new Amount(0, ingredient.getAmount().getUnit()));
-        } else {
-            ingredient.setAmount(storedItem.getTotalAmount().sub(ingredient.getAmount()));
+        try {
+            StoredItem storedItem = readStorageService.getStoredItem(ingredient.getItemReference());
+            if (storedItem.getTotalAmount().isMoreThan(ingredient.getAmount())) {
+                ingredient.setAmount(new Amount(0, ingredient.getAmount().getUnit()));
+            } else {
+                ingredient.setAmount(storedItem.getTotalAmount().sub(ingredient.getAmount()));
+            }
+        } catch (StoredItemNotFoundException e) {
+            ingredient.setAmount(new Amount(-ingredient.getAmount().getValue(), ingredient.getAmount().getUnit()));
         }
         return ingredient;
     }
 
     private void planIngredient(Ingredient ingredient) {
-        StoredItem storedItem = readStorageService.getStoredItem(ingredient.getItemReference());
-        if (ingredient.getAmount().isMoreThan(storedItem.getTotalAmount())) {
-            updateShoppingListEntriesService.addEntry(ingredient.getItemReference(),
-                                                      ingredient.getAmount().sub(storedItem.getTotalAmount()));
-            ingredient.setAmount(storedItem.getTotalAmount());
+        try {
+            StoredItem storedItem = readStorageService.getStoredItem(ingredient.getItemReference());
+            if (ingredient.getAmount().isMoreThan(storedItem.getTotalAmount())) {
+                updateShoppingListEntriesService.addEntry(ingredient.getItemReference(),
+                                                          ingredient.getAmount().sub(storedItem.getTotalAmount()));
+                ingredient.setAmount(storedItem.getTotalAmount());
+            }
+            takeIngredientFromStorage(ingredient);
+        } catch (StoredItemNotFoundException e) {
+            updateShoppingListEntriesService.addEntry(ingredient.getItemReference(), ingredient.getAmount());
         }
-        takeIngredientFromStorage(ingredient);
     }
 
     private void takeIngredientFromStorage(Ingredient ingredient) {
         List<ItemLocation> itemLocations = readStorageService.listItemLocations(ingredient.getItemReference());
-        Iterator<ItemLocation> itemLocationIterator =  itemLocations.iterator();
+        Iterator<ItemLocation> itemLocationIterator = itemLocations.iterator();
 
         Amount amountToTake = ingredient.getAmount();
         while (!amountToTake.isEmpty() && itemLocationIterator.hasNext()) {
