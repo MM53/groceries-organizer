@@ -37,7 +37,8 @@
                     <h4>Tags</h4>
                     <input type="hidden" name="tags" id="tags-list">
                     <div class="form-check" th:each="tag: ${availableTags}">
-                        <input class="form-check-input" type="checkbox" th:id="${tag.name}" th:value="${tag.name}">
+                        <input class="form-check-input" type="checkbox" th:id="${tag.name}" th:value="${tag.name}"
+                               th:attrappend="checked=${recipe.tags.contains(tag)}?'checked'">
                         <label class="form-check-label" th:for="${tag.name}" th:text="${tag.name}">
                         </label>
                     </div>
@@ -81,14 +82,14 @@
             entry.remove();
         }
 
-        $(".form-check-input").change(function () {
+        function updateTags() {
             let tags = $('.form-check-input:checked').map(function () {
                 return $(this).val();
             })
                 .get()
                 .join();
             $("#tags-list").val(tags);
-        });
+        }
 
         $("#added-ingredients").val("");
         $("#removed-ingredients").val("");
@@ -104,7 +105,10 @@
 
         $(".remove-ingredient-btn").click(removeIngredient);
 
-
+        $(".form-check-input").change(function () {
+            updateTags();
+        });
+        updateTags();
     </script>
 </div>
 
