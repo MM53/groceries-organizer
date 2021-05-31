@@ -33,11 +33,11 @@ public class ReadCookbookService {
                                .orElseThrow(() -> new RecipeNotFoundException(id));
     }
 
-    public List<Recipe> getRecipes(String name) {
+    public List<Recipe> searchByName(String name) {
         return recipeRepository.findByRecipeNameLike(name);
     }
 
-    public List<Recipe> getRecipes(Tag tag) {
+    public List<Recipe> searchByTag(Tag tag) {
         return recipeRepository.findByTag(tag);
     }
 
