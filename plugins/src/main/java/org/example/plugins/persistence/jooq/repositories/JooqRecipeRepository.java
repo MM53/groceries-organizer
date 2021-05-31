@@ -30,7 +30,9 @@ public class JooqRecipeRepository implements RecipeRepository {
     private static final Table<Record> JOINED_TABLE = RECIPE.leftJoin(INGREDIENT)
                                                             .on(INGREDIENT.RECIPE_REFERENCE.eq(RECIPE.ID))
                                                             .leftJoin(RECIPE_TAG)
-                                                            .on(RECIPE_TAG.RECIPE_REFERENCE.eq(RECIPE.ID));
+                                                            .on(RECIPE_TAG.RECIPE_REFERENCE.eq(RECIPE.ID))
+                                                            .leftJoin(TAG)
+                                                            .on(TAG.NAME.eq(RECIPE_TAG.TAG_REFERENCE));
 
     @Autowired
     public JooqRecipeRepository(JooqConnection connection) {
@@ -73,16 +75,16 @@ public class JooqRecipeRepository implements RecipeRepository {
     }
 
     private void saveTags(Recipe recipe, List<String> alreadySavedTags) {
-        recipe.getTages()
+        recipe.getTags()
               .stream()
               .filter(tag -> !alreadySavedTags.contains(tag.getName()))
               .forEach(tag -> context.newRecord(RECIPE_TAG, new RecipeTagRecord(UUID.randomUUID().toString(),
                                                                                 recipe.getId().toString(),
-                                                                                tag.getName())));
+                                                                                tag.getName())).merge());
     }
 
     private void deleteRemovedTagReferences(Recipe recipe, List<String> alreadySavedTags) {
-        List<String> existingTags = recipe.getTages()
+        List<String> existingTags = recipe.getTags()
                                           .stream()
                                           .map(Tag::getName)
                                           .toList();

@@ -16,15 +16,11 @@ public class RecipeCollector extends RecordCollector<Recipe> {
 
     @Override
     Recipe updateEntityFromRecord(Record record, Recipe recipe) {
-        try {
-            Ingredient ingredient = record.into(INGREDIENT).into(Ingredient.class);
-            recipe.addIngredient(ingredient);
-        } catch (Exception ignored) {
+        if (record.get(INGREDIENT.ID) != null){
+            recipe.addIngredient(record.into(INGREDIENT).into(Ingredient.class));
         }
-        try {
-            Tag tag = record.into(TAG).into(Tag.class);
-            recipe.addTag(tag);
-        } catch (Exception ignored) {
+        if (record.get(TAG.NAME) != null) {
+            recipe.addTag(record.into(TAG).into(Tag.class));
         }
         return recipe;
     }
