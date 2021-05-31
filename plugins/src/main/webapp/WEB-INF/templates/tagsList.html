@@ -1,0 +1,43 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      lang="en">
+<body>
+
+<div class="card border m-3" th:fragment="content">
+  <h3 class="card-header bg-secondary">Tags</h3>
+  <div class="card-body p-0">
+    <table class="table table-hover mb-0">
+      <tbody>
+      <tr>
+        <th class="align-middle" scope="row">
+          <form action="/cookbook/tags" method="post" id="createNewTag">
+            <div class="form-row">
+              <div class="form-group col-md-6 mb-0">
+                <input type="text" class="form-control" placeholder="Tag Name" name="name">
+              </div>
+            </div>
+          </form>
+        </th>
+        <td>
+          <a class="btn btn-success float-right" href="javascript:document.getElementById('createNewTag').submit();">Create</a>
+        </td>
+
+      </tr>
+      <tr th:each="tag: ${tags}">
+        <th class="align-middle" scope="row" th:text="${tag.name}"></th>
+        <td>
+          <div class="float-right form-row">
+            <form action="/cookbook/tags/delete" method="post" class="mb-0">
+              <input type="hidden" name="name" th:value="${tag.name}">
+              <button class="btn btn-danger float-right" type="submit">Delete</button>
+            </form>
+          </div>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+</body>
+</html>
