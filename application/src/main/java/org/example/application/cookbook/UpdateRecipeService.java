@@ -2,6 +2,7 @@ package org.example.application.cookbook;
 
 import org.example.aggregates.Recipe;
 import org.example.aggregates.Tag;
+import org.example.entities.Ingredient;
 import org.example.repositories.RecipeRepository;
 import org.example.valueObjects.Amount;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -37,7 +39,12 @@ public class UpdateRecipeService {
 
     public void addIngredient(UUID recipeId, String itemName, Amount amount) {
         Recipe recipe = readCookbookService.getRecipe(recipeId);
-        recipe.addIngredient(itemName, amount);
+        Optional<Ingredient> ingredient = recipe.findIngredient(itemName);
+        if (ingredient.isPresent()) {
+            recipe.updateIngredientAmount(ingredient.get().getId(), ingredient.get().getAmount().add(amount));
+        } else {
+            recipe.addIngredient(itemName, amount);
+        }
         recipeRepository.save(recipe);
     }
 
