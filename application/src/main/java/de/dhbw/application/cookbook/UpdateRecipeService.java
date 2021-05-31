@@ -2,6 +2,7 @@ package de.dhbw.application.cookbook;
 
 import de.dhbw.aggregates.Recipe;
 import de.dhbw.aggregates.Tag;
+import de.dhbw.application.items.ManageItemsService;
 import de.dhbw.entities.Ingredient;
 import de.dhbw.repositories.RecipeRepository;
 import de.dhbw.valueObjects.Amount;
@@ -18,11 +19,13 @@ public class UpdateRecipeService {
 
     private final ReadCookbookService readCookbookService;
     private final RecipeRepository recipeRepository;
+    private final ManageItemsService manageItemsService;
 
     @Autowired
-    public UpdateRecipeService(ReadCookbookService readCookbookService, RecipeRepository recipeRepository) {
+    public UpdateRecipeService(ReadCookbookService readCookbookService, RecipeRepository recipeRepository, ManageItemsService manageItemsService) {
         this.readCookbookService = readCookbookService;
         this.recipeRepository = recipeRepository;
+        this.manageItemsService = manageItemsService;
     }
 
     public void setName(UUID recipeId, String name) {
@@ -39,6 +42,7 @@ public class UpdateRecipeService {
 
     public void addIngredient(UUID recipeId, String itemName, Amount amount) {
         Recipe recipe = readCookbookService.getRecipe(recipeId);
+        manageItemsService.createItemIfMissing(itemName, amount.getUnit().getType());
         Optional<Ingredient> ingredient = recipe.findIngredient(itemName);
         if (ingredient.isPresent()) {
             recipe.updateIngredientAmount(ingredient.get().getId(), ingredient.get().getAmount().add(amount));

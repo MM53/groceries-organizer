@@ -27,6 +27,12 @@ public class ManageItemsService {
         itemRepository.save(item);
     }
 
+    public void createItemIfMissing(String name, UnitType unitType) {
+        if (itemRepository.findItemByName(name).isEmpty()) {
+            itemRepository.save(new Item(name, unitType));
+        }
+    }
+
     public void addName(String itemName, String name) {
         Item item = readItemsService.getItem(itemName);
         item.addAlternativeName(name);

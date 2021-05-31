@@ -1,6 +1,7 @@
 package de.dhbw.application.shoppingList;
 
 import de.dhbw.aggregates.ShoppingList;
+import de.dhbw.application.items.ManageItemsService;
 import de.dhbw.entities.ShoppingListItem;
 import de.dhbw.repositories.ShoppingListRepository;
 import de.dhbw.valueObjects.Amount;
@@ -16,11 +17,13 @@ public class UpdateShoppingListEntriesService {
 
     private final ShoppingListRepository shoppingListRepository;
     private final ReadShoppingListService readShoppingListService;
+    private final ManageItemsService manageItemsService;
 
     @Autowired
-    public UpdateShoppingListEntriesService(ShoppingListRepository shoppingListRepository, ReadShoppingListService readShoppingListService) {
+    public UpdateShoppingListEntriesService(ShoppingListRepository shoppingListRepository, ReadShoppingListService readShoppingListService, ManageItemsService manageItemsService) {
         this.shoppingListRepository = shoppingListRepository;
         this.readShoppingListService = readShoppingListService;
+        this.manageItemsService = manageItemsService;
     }
 
     public void addEntry(String itemName, Amount amount) {
@@ -29,6 +32,7 @@ public class UpdateShoppingListEntriesService {
 
     public void addEntry(String listName, String itemName, Amount amount) {
         ShoppingList shoppingList = readShoppingListService.getShoppingList(listName);
+        manageItemsService.createItemIfMissing(itemName, amount.getUnit().getType());
         Optional<ShoppingListItem> shoppingListItem = shoppingList.findShoppingListItem(itemName);
         if (shoppingListItem.isPresent()) {
             if (shoppingListItem.get().isBought()) {
