@@ -125,4 +125,10 @@ public class CookbookController {
         useRecipeService.planRecipe(UUID.fromString(recipeId));
         return new RedirectView("/shopping-list/default");
     }
+
+    @PostMapping("/cookbook/recipes/delete")
+    public RedirectView deleteRecipe(@RequestParam("recipe-id") String recipeId) {
+        manageCookbookService.deleteRecipe(UUID.fromString(recipeId));
+        return new RedirectView("/cookbook/recipes");
+    }
 }

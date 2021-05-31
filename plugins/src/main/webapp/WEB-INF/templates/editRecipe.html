@@ -4,11 +4,18 @@
 <body>
 
 <div class="card border m-3" th:fragment="content">
+    <form th:if="${recipe.id!=null}" action="/cookbook/recipes/delete" method="post" id="delete-recipe-form">
+        <input type="hidden" name="recipe-id" th:value="${recipe.id}">
+    </form>
     <form action="/cookbook/recipes" method="post">
         <input th:if="${recipe.id!=null}" type="hidden" name="recipe-id" th:value="${recipe.id}">
         <div class="card-header bg-secondary">
             <input th:value="${recipe.name}" name="recipe-name" placeholder="Recipe name">
-            <button class="btn btn-primary float-right">Save</button>
+            <button th:if="${recipe.id!=null}" class="btn btn-danger float-right" type="button"
+                    onclick="document.getElementById('delete-recipe-form').submit()">
+                Delete
+            </button>
+            <button class="btn btn-primary float-right mr-2">Save</button>
         </div>
         <div class="card-body p-0 row">
             <div class="col-2 pr-0">
