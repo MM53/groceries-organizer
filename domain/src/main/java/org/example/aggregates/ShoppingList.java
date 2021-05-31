@@ -10,6 +10,7 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public class ShoppingList {
 
@@ -36,7 +37,7 @@ public class ShoppingList {
     public void addShoppingListItem(ShoppingListItem shoppingListItem) {
         itemUtilService.validateExistence(shoppingListItem.getItemReference());
         itemUtilService.validateUnit(shoppingListItem.getItemReference(), shoppingListItem.getAmount().getUnit().getType());
-        if (findShoppingListItem(shoppingListItem.getItemReference()).isPresent()) {
+        if (getOriginalShoppingListItem(shoppingListItem.getItemReference()).isPresent()) {
             throw new ShoppingListItemAlreadyExistsException(shoppingListItem.getItemReference());
         }
 
@@ -48,8 +49,7 @@ public class ShoppingList {
     }
 
     public void removeShoppingListItem(String itemReference) {
-//        TODO
-        removeShoppingListItem(findShoppingListItem(itemReference).get());
+        getOriginalShoppingListItem(itemReference).ifPresent(this::removeShoppingListItem);
     }
 
     public void removeShoppingListItems(Set<ShoppingListItem> itemsToRemove) {
@@ -63,25 +63,31 @@ public class ShoppingList {
     }
 
     public void updateBoughtStateOfShoppingListItem(String itemReference, boolean bought) {
-        ShoppingListItem entry = findShoppingListItem(itemReference).orElseThrow(() -> new ShoppingListItemNotFoundException(itemReference));
+        ShoppingListItem entry = getOriginalShoppingListItem(itemReference).orElseThrow(() -> new ShoppingListItemNotFoundException(itemReference));
         entry.setBought(bought);
     }
 
     public void updateAmountOfShoppingListItem(String itemReference, Amount amount) {
         itemUtilService.validateUnit(itemReference, amount.getUnit().getType());
 
-        ShoppingListItem entry = findShoppingListItem(itemReference).orElseThrow(() -> new ShoppingListItemNotFoundException(itemReference));
+        ShoppingListItem entry = getOriginalShoppingListItem(itemReference).orElseThrow(() -> new ShoppingListItemNotFoundException(itemReference));
         entry.setAmount(amount);
     }
 
     public Set<ShoppingListItem> getShoppingListItems() {
-        return shoppingListItems;
+        return shoppingListItems.stream()
+                                .map(ShoppingListItem::copy)
+                                .collect(Collectors.toSet());
     }
 
-    public Optional<ShoppingListItem> findShoppingListItem(String itemReference) {
+    private Optional<ShoppingListItem> getOriginalShoppingListItem(String itemReference) {
         return shoppingListItems.stream()
                                 .filter(shoppingListItem -> shoppingListItem.getItemReference().equals(itemReference))
                                 .findAny();
+    }
+
+    public Optional<ShoppingListItem> findShoppingListItem(String itemReference) {
+        return getOriginalShoppingListItem(itemReference).map(ShoppingListItem::copy);
     }
 
     @Override

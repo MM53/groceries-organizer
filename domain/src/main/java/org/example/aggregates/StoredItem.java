@@ -9,6 +9,7 @@ import org.example.valueObjects.Amount;
 import org.example.valueObjects.Location;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class StoredItem {
 
@@ -42,24 +43,31 @@ public class StoredItem {
     }
 
     public Set<ItemLocation> getItemLocations() {
-        return itemLocations;
+        return itemLocations.stream()
+                            .map(ItemLocation::copy)
+                            .collect(Collectors.toSet());
     }
 
-    public Optional<ItemLocation> findItemLocation(UUID itemLocationId) {
+    private Optional<ItemLocation> getOriginalItemLocation(UUID itemLocationId) {
         return itemLocations.stream()
                             .filter(i -> i.getId().equals(itemLocationId))
                             .findAny();
     }
 
+    public Optional<ItemLocation> findItemLocation(UUID itemLocationId) {
+        return getOriginalItemLocation(itemLocationId).map(ItemLocation::copy);
+    }
+
     public Optional<ItemLocation> findItemLocation(Location location) {
         return itemLocations.stream()
                             .filter(i -> i.getLocation().equals(location))
+                            .map(ItemLocation::copy)
                             .findAny();
     }
 
     public void addItemLocation(ItemLocation itemLocation) {
         itemUtilService.validateUnit(itemReference, itemLocation.getAmount().getUnit().getType());
-        if (findItemLocation(itemLocation.getId()).or(() -> findItemLocation(itemLocation.getLocation())).isPresent()) {
+        if (getOriginalItemLocation(itemLocation.getId()).or(() -> findItemLocation(itemLocation.getLocation())).isPresent()) {
             throw new ItemLocationAlreadyExistsException(itemLocation.getId(), id);
         }
 
@@ -73,12 +81,12 @@ public class StoredItem {
     public void updateItemLocationAmount(UUID itemLocationId, Amount amount) {
         itemUtilService.validateUnit(itemReference, amount.getUnit().getType());
 
-        ItemLocation itemLocation = findItemLocation(itemLocationId).orElseThrow(() -> new ItemLocationNotFoundException(itemLocationId, id));
+        ItemLocation itemLocation = getOriginalItemLocation(itemLocationId).orElseThrow(() -> new ItemLocationNotFoundException(itemLocationId, id));
         itemLocation.setAmount(amount);
     }
 
     public void removeLocation(UUID itemLocationId) {
-        findItemLocation(itemLocationId).ifPresent(itemLocations::remove);
+        getOriginalItemLocation(itemLocationId).ifPresent(itemLocations::remove);
     }
 
     public Amount getTotalAmount() {
@@ -89,7 +97,10 @@ public class StoredItem {
     }
 
     public MinimumAmount getMinimumAmount() {
-        return minimumAmount;
+        if (minimumAmount == null) {
+            return null;
+        }
+        return minimumAmount.copy();
     }
 
     public void setMinimumAmount(MinimumAmount minimumAmount) {

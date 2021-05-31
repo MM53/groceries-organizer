@@ -28,6 +28,10 @@ public class ItemName {
         this.itemReference = itemReference;
     }
 
+    public ItemName copy() {
+        return new ItemName(name, itemReference);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

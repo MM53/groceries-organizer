@@ -37,6 +37,10 @@ public class Ingredient {
         this.amount = amount;
     }
 
+    public Ingredient copy() {
+        return new Ingredient(id, itemReference, amount);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

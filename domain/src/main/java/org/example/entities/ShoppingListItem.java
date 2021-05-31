@@ -50,12 +50,8 @@ public class ShoppingListItem {
         this.amount = amount;
     }
 
-    public void addAmount(Amount amount) {
-        if (this.amount == null) {
-            this.amount = amount;
-        } else {
-            this.amount = this.amount.add(amount);
-        }
+    public ShoppingListItem copy() {
+        return new ShoppingListItem(id, itemReference, bought, amount);
     }
 
     @Override

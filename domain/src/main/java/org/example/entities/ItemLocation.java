@@ -9,7 +9,6 @@ import java.util.UUID;
 public class ItemLocation {
 
     private UUID id;
-    private UUID storedItemReference;
     private Location location;
     private Amount amount;
 
@@ -45,6 +44,10 @@ public class ItemLocation {
 
     public void setAmount(Amount amount) {
         this.amount = amount;
+    }
+
+    public ItemLocation copy() {
+        return new ItemLocation(id, location, amount);
     }
 
     @Override

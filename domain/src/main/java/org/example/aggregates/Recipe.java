@@ -7,6 +7,7 @@ import org.example.services.ItemUtilService;
 import org.example.valueObjects.Amount;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class Recipe {
 
@@ -85,24 +86,31 @@ public class Recipe {
     }
 
     public void updateIngredientAmount(UUID ingredientId, Amount amount) {
-        findIngredient(ingredientId).orElseThrow(() -> new IngredientNotFoundException(ingredientId, name))
-                                    .setAmount(amount);
+        ingredients.stream()
+                   .filter(ingredient -> ingredient.getId().equals(ingredientId))
+                   .findAny()
+                   .orElseThrow(() -> new IngredientNotFoundException(ingredientId, name))
+                   .setAmount(amount);
     }
 
     public Optional<Ingredient> findIngredient(UUID ingredientId) {
         return ingredients.stream()
                           .filter(ingredient -> ingredient.getId().equals(ingredientId))
+                          .map(Ingredient::copy)
                           .findAny();
     }
 
     public Optional<Ingredient> findIngredient(String itemReference) {
         return ingredients.stream()
                           .filter(ingredient -> ingredient.getItemReference().equals(itemReference))
+                          .map(Ingredient::copy)
                           .findAny();
     }
 
     public Set<Ingredient> getIngredients() {
-        return ingredients;
+        return ingredients.stream()
+                          .map(Ingredient::copy)
+                          .collect(Collectors.toSet());
     }
 
     public String getDescription() {

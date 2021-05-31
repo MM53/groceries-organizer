@@ -38,6 +38,10 @@ public class MinimumAmount {
         this.amount = amount;
     }
 
+    public MinimumAmount copy() {
+        return new MinimumAmount(id, amount);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
