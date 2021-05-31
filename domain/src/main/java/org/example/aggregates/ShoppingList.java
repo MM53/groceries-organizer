@@ -78,7 +78,7 @@ public class ShoppingList {
         return shoppingListItems;
     }
 
-    private Optional<ShoppingListItem> findShoppingListItem(String itemReference) {
+    public Optional<ShoppingListItem> findShoppingListItem(String itemReference) {
         return shoppingListItems.stream()
                                 .filter(shoppingListItem -> shoppingListItem.getItemReference().equals(itemReference))
                                 .findAny();

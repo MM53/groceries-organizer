@@ -7,6 +7,7 @@ import org.example.valueObjects.Amount;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -28,7 +29,17 @@ public class UpdateShoppingListEntriesService {
 
     public void addEntry(String listName, String itemName, Amount amount) {
         ShoppingList shoppingList = readShoppingListService.getShoppingList(listName);
-        shoppingList.addShoppingListItem(itemName, amount);
+        Optional<ShoppingListItem> shoppingListItem = shoppingList.findShoppingListItem(itemName);
+        if (shoppingListItem.isPresent()) {
+            if (shoppingListItem.get().isBought()) {
+                shoppingList.removeShoppingListItem(itemName);
+                shoppingList.addShoppingListItem(itemName, amount);
+            } else {
+                shoppingList.updateAmountOfShoppingListItem(itemName, shoppingListItem.get().getAmount().add(amount));
+            }
+        } else {
+            shoppingList.addShoppingListItem(itemName, amount);
+        }
         shoppingListRepository.save(shoppingList);
     }
 
