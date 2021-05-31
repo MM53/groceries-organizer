@@ -1,5 +1,22 @@
 # groceries-organizer
 
+## Start with docker-compose
+The easiest way to start this project using docker-compose.
+First you need to configure a username and password for postgres using a properties-file under ` plugins/src/main/resources/postgres-db.properties` which contains all the information required to connect:
+```properties
+jdbc.user=admin
+jdbc.password=admin
+jdbc.url=jdbc:postgresql://postgres:5432/groceries-organizer
+```
+
+Then you can build the maven project and docker container to start everything together:
+```bash
+mvn clean install 
+docker-compose build
+docker-compose up
+```
+
+
 ## How to use
 
 ### Maven
@@ -20,7 +37,7 @@ The easiest way to set this up is to use Docker.
 A Dockerfile which install all the required schemas is included under `plugins/src/main/resources/postgres.dockerfile`.
 To build the image simply run:
 ```bash
-docker build -f plugins/src/main/resources/postgres.dockerfile plugins/src/main/resources -t postgres:groceries-organizer 
+docker build -f postgres.dockerfile ./ -t postgres:groceries-organizer 
 ```
 Then you need to set a username and password and run the container:
 ```bash
