@@ -144,7 +144,7 @@
                                     <includes>.*</includes>
                                 </database>
                                 <target>
-                                    <packageName>org.example.adapter.persistence.jooq.generated</packageName>
+                                    <packageName>de.dhbw.adapter.persistence.jooq.generated</packageName>
                                 </target>
                             </generator>
                         </configuration>
