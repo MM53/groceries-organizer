@@ -101,13 +101,13 @@ public class CookbookController {
         }
 
         updateRecipeService.setDescription(recipeId, description);
+        Arrays.stream(removedIngredients.split(","))
+              .filter(ingredient -> !ingredient.equals(""))
+              .forEach(ingredient -> updateRecipeService.removeIngredient(recipeId, UUID.fromString(ingredient)));
         Arrays.stream(addedIngredients.split(","))
               .filter(ingredient -> !ingredient.equals(""))
               .map(itemAmountTupelMapper::extractFromString)
               .forEach(itemAmountTupel -> updateRecipeService.addIngredient(recipeId, itemAmountTupel.getItem(), itemAmountTupel.getAmount()));
-        Arrays.stream(removedIngredients.split(","))
-              .filter(ingredient -> !ingredient.equals(""))
-              .forEach(ingredient -> updateRecipeService.removeIngredient(recipeId, UUID.fromString(ingredient)));
 
         List<String> tagNames = Arrays.stream(tags.split(",")).filter(tag -> !tag.equals("")).toList();
         updateRecipeService.updateTags(recipeId, tagNames);
