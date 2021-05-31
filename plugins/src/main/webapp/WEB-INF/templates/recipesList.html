@@ -4,17 +4,28 @@
 <body>
 
 <div class="card border m-3" th:fragment="content">
-  <h3 class="card-header bg-secondary">Recipes</h3>
-  <div class="card-body p-0">
-    <div class="list-group list-group-flush">
-      <div class="list-group-item">
-        <a href="/cookbook/recipes/create" class="btn btn-success btn-block">Create New</a>
-      </div>
-      <a class="list-group-item" th:each="recipe: ${recipes}" th:href="'/cookbook/recipes/' + ${recipe.id}">
-        <b th:text="${recipe.name}"></b>
-      </a>
+    <div class="card-header bg-secondary">
+        <h3 class="d-inline">Recipes</h3>
+        <form class="col-2 d-inline float-right mb-0" method="get" action="/cookbook/recipes">
+            <div class="input-group">
+                <input type="text" class="form-control" placeholder="Name" name="search">
+                <div class="input-group-append">
+                    <button class="btn btn-primary" type="submit">Search</button>
+                </div>
+            </div>
+        </form>
+
     </div>
-  </div>
+    <div class="card-body p-0">
+        <div class="list-group list-group-flush">
+            <div class="list-group-item">
+                <a href="/cookbook/recipes/create" class="btn btn-success btn-block">Create New</a>
+            </div>
+            <a class="list-group-item" th:each="recipe: ${recipes}" th:href="'/cookbook/recipes/' + ${recipe.id}">
+                <b th:text="${recipe.name}"></b>
+            </a>
+        </div>
+    </div>
 </div>
 
 </body>

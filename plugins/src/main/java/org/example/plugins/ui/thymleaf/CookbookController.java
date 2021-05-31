@@ -2,6 +2,7 @@ package org.example.plugins.ui.thymleaf;
 
 import org.example.adapter.ui.mapper.ItemAmountTupelMapper;
 import org.example.aggregates.Recipe;
+import org.example.aggregates.Tag;
 import org.example.application.cookbook.ManageCookbookService;
 import org.example.application.cookbook.ReadCookbookService;
 import org.example.application.cookbook.UpdateRecipeService;
@@ -42,9 +43,17 @@ public class CookbookController {
     }
 
     @GetMapping("/cookbook/recipes")
-    public String listRecipes(Model model) {
+    public String listRecipes(@RequestParam(name = "tag", required = false) String tag,
+                              @RequestParam(name = "search", required = false) String search,
+                              Model model) {
         model.addAttribute("template", "recipesList");
-        model.addAttribute("recipes", readCookbookService.listRecipes());
+        if (search != null) {
+            model.addAttribute("recipes", readCookbookService.searchByName(search));
+        } else if (tag != null) {
+            model.addAttribute("recipes", readCookbookService.searchByTag(new Tag(tag)));
+        } else {
+            model.addAttribute("recipes", readCookbookService.listRecipes());
+        }
         return "layout/main";
     }
 

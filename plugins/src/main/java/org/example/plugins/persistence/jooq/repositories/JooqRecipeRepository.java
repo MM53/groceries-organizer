@@ -112,9 +112,10 @@ public class JooqRecipeRepository implements RecipeRepository {
 
     @Override
     public List<Recipe> findByTag(Tag tag) {
-        List<String> ids = context.fetch(TAG.where(TAG.NAME.eq(tag.getName()))
-                                            .leftJoin(RECIPE_TAG)
-                                            .on(RECIPE_TAG.TAG_REFERENCE.eq(TAG.NAME)))
+        List<String> ids = context.fetch(TAG.leftJoin(RECIPE_TAG)
+                                            .on(RECIPE_TAG.TAG_REFERENCE.eq(TAG.NAME)),
+                                         TAG.NAME.eq(tag.getName())
+                                        )
                                   .map(record -> record.into(RECIPE_TAG.RECIPE_REFERENCE)
                                                        .into(String.class));
         return context.fetch(JOINED_TABLE, RECIPE.ID.in(ids))
