@@ -93,7 +93,8 @@ public class JooqRecipeRepository implements RecipeRepository {
                         .filter(tag -> !existingTags.contains(tag))
                         .forEach(tag -> context.deleteFrom(RECIPE_TAG)
                                                .where(RECIPE_TAG.RECIPE_REFERENCE.eq(recipe.getId().toString()))
-                                               .and(RECIPE_TAG.TAG_REFERENCE.eq(tag)));
+                                               .and(RECIPE_TAG.TAG_REFERENCE.eq(tag))
+                                               .execute());
     }
 
     @Override
